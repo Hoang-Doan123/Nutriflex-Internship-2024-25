@@ -1,0 +1,301 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/SCREEN"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="24dp">
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back"
+                android:padding="4dp"
+                android:layout_marginEnd="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting"
+                android:textSize="44sp"
+                android:textStyle="bold"
+                android:textColor="@color/tab_text_color" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#AAAAAA"
+            android:layout_marginVertical="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/avatar_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_avatar"
+                android:layout_marginEnd="16dp" />
+            <TextView
+                android:id="@+id/username_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/tab_text_color" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#AAAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="24dp"
+            android:paddingTop="24dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_username" />
+            <TextView
+                android:id="@+id/change_username_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/change_username"
+                android:textSize="16sp"
+                android:textColor="@color/tab_text_color"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_forward"
+                android:contentDescription="Arrow" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#AAAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_language" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                android:textSize="16sp"
+                android:textColor="@color/tab_text_color"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <RadioGroup
+                android:id="@+id/language_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/vietnamese_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tab_text_color"
+                    android:text="@string/Vietnamese"/>
+
+                <RadioButton
+                    android:id="@+id/english_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tab_text_color"
+                    android:text="@string/English"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#AAAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_dark_mode" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/Dark_Mode"
+                android:textSize="16sp"
+                android:textColor="@color/tab_text_color"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1" />
+            <Switch
+                android:id="@+id/dark_light_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D1D1D1" />
+
+        <!-- Font Size -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/white"
+                android:src="@drawable/aa_icon" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/Font_Size"
+                android:textColor="@color/tab_text_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/font_size_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/font_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Small"
+                android:textColor="@color/option_text_color"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Medium"
+                android:textColor="@color/option_text_color"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/font_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Large"
+                android:textColor="@color/option_text_color"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D1D1D1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D1D1D1" />
+
+        <!-- Developer -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_developer" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/Developer"
+                android:textSize="16sp"
+                android:textColor="@color/tab_text_color"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theo dõi nguồn"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/tab_text_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Youtube: Đỗ Mixi"
+            android:textColor="@color/tab_text_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Facebook: TRẦN CƯỜNG "
+            android:textColor="@color/tab_text_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Liên hệ góp ý cho chúng mình qua số hotline: 1900 1234"
+            android:textColor="@color/tab_text_color"/>
+    </LinearLayout>
+</ScrollView>

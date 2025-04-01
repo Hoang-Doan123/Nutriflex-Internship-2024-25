@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/NewsFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SCREEN"
+        android:elevation="4dp">
+
+        <ImageButton
+            android:id="@+id/ic_user"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:focusable="true"
+            android:src="@drawable/ic_user"
+            android:background="@color/black"
+            android:clickable="true"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="start" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:text="@string/news_part_title"
+            android:textSize="32sp"
+            android:textAlignment="center"
+            android:textColor="@color/app_title_color"/>
+
+        <ImageView
+            android:id="@+id/aa"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:focusable="true"
+            android:src="@drawable/dm_doi"
+            android:background="@color/white"
+            android:clickable="true"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="end" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:layout_margin="15dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/round_corner">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/app_logo"
+            android:layout_marginEnd="8dp"/>
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Search..."
+            android:textColorHint="@color/black"
+            android:padding="12dp"
+            android:drawablePadding="8dp"/>
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/search_icon"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/news"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        style="@style/SCREEN"
+        android:layout_below="@id/search_bar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/highlight"
+                android:background="#67D6FE">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_fire_highlight"
+                    android:id="@+id/firehere">
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TECH NEWS"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_toRightOf="@id/firehere">
+                </TextView>
+
+                <HorizontalScrollView
+                    android:id="@+id/highlightScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_below="@id/firehere">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/HotNews"
+                            android:layout_margin="5dp">
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                </HorizontalScrollView>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@id/highlight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/NewsList"
+                android:layout_margin="5dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1"
+                android:layout_gravity="center" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

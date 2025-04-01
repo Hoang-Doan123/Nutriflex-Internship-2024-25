@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/video_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/SCREEN"
+    tools:context=".videopackage.VideoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/SCREEN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/ic_user"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:background="@color/black"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_user" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/video_part_title"
+            android:textAlignment="center"
+            android:textColor="@color/app_title_color"
+            android:textSize="32sp" />
+
+        <ImageView
+            android:id="@+id/bookmark"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            style="@style/SCREEN"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/bookmark_icon" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:layout_width="400dp"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:layout_margin="15dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/round_corner"
+        android:focusable="true"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/app_icon"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/app_logo"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Search..."
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:drawablePadding="8dp"/>
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_search"/>
+
+    </LinearLayout>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_bar"
+        app:tabMode="scrollable"
+        style="@style/SCREEN"
+        app:labelVisibilityMode="unlabeled"
+        app:tabTextColor="@color/tab_text_color" />
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tab_layout" />
+</RelativeLayout>

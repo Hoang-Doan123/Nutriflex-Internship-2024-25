@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/like_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_favorite"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/number_of_likes"
+        android:layout_width="56dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        style="@style/SCREEN"
+        android:textColor="@color/tab_text_color" />
+
+</LinearLayout>

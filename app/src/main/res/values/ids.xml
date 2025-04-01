@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tab_layout" type="id" />
+    <item name="view_pager" type="id" />
+    <item name="thumbnailImageView" type="id" />
+    <item name="videoView" type="id" />
+    <item name="ic_user" type="id" />
+    <item name="xiaomi_part" type="id" />
+    <item name="xiaomi_logo" type="id" />
+    <item name="xiaomi_video" type="id" />
+    <item name="xiaomi_12t_pro" type="id" />
+    <item name="xiaomi_14t_series" type="id" />
+    <item name="xiaomi_mi_drone" type="id" />
+    <item name="xiaomi_smart_factory" type="id" />
+</resources>

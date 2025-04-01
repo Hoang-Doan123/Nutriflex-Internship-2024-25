@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BÀI ĐĂNG CÔNG NGHỆ</string>
+    <string name="loginScreenHeader">Biệt danh</string>
+    <string name="loginScreenButtonText">Tạo hồ sơ</string>
+    <string name="loginScreenText">Không có biệt danh? Tiếp theo</string>
+
+    <string name="project_name">DỰ ÁN USTH</string>
+    <string name="project_copyright">\@BẢN QUYỀN USTH</string>
+    <string name="content_description">Tránh cảnh báo</string>
+    <!-- TODO: Xóa hoặc thay đổi đoạn văn bản mẫu này -->
+
+    <string name="apple_company">Công ty Apple</string>
+    <string name="apple_watch_series10_description">Giới thiệu Apple Watch Series 10 | Apple</string>
+    <string name="airpods4_description">Giới thiệu AirPods 4 hoàn toàn mới | Apple</string>
+    <string name="iphone16_pro_description">Giới thiệu iPhone 16 Pro | Apple</string>
+    <string name="ipad_pro_description">Giới thiệu iPad Pro hoàn toàn mới | Apple</string>
+    <string name="videos">Video</string>
+    <string name="news">Tin tức</string>
+    <string name="video_part_title">VIDEO CÔNG NGHỆ</string>
+    <string name="news_part_title">BÀI BÁO CÔNG NGHỆ</string>
+    <string name="save_part_title">LƯU</string>
+
+    <string name="search_hint_light">Tìm kiếm (Chế độ sáng)</string>
+    <string name="search_hint_dark">Tìm kiếm (Chế độ tối)</string>
+    <string name="profile_description">Hình ảnh hồ sơ</string>
+    <string name="logo_description">Biểu trưng</string>
+    <string name="main_logo">Biểu trưng chính của ứng dụng</string>
+
+
+
+
+    <string name="setting">Cài đặt</string>
+    <string name="save">Lưu</string>
+    <string name="change_username">Thay đổi tên/ảnh đại diện người dùng</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="Vietnamese">Tiếng Việt</string>
+    <string name="English">Tiếng Anh</string>
+    <string name="Dark_Mode">Chế độ tối</string>
+    <string name="Font_Size">Kích thước phông chữ</string>
+    <string name="Small">Nhỏ</string>
+    <string name="Medium">Trung bình</string>
+    <string name="Large">Lớn</string>
+    <string name="Developer">Nhà phát triển</string>
+
+
+
+    <string name="back">Quay lại</string>
+    <string name="next">Tiếp theo</string>
+    <string name="choice_question">Bạn quan tâm đến công ty công nghệ nào?</string>
+    <string name="all">Tất cả</string>
+    <string name="apple">Apple</string>
+    <string name="samsung">Samsung</string>
+    <string name="xiaomi">Xiaomi</string>
+    <string name="asus">Asus</string>
+    <string name="huawei">Huawei</string>
+    <string name="microsoft">Microsoft</string>
+    <string name="delete_history">Xóa lịch sử tìm kiếm</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="newest">Mới nhất</string>
+    <string name="hot">Nổi bật</string>
+    <string name="old_posts">Bài cũ</string>
+    <string name="trends">Xu hướng</string>
+    <string name="history">Lịch sử</string>
+    <string name="no_result">Không tìm thấy kết quả</string>
+    <string name="title_activity_scrolling_news">Hoạt động Cuộn Tin tức</string>
+    <string name="large_text">
+
+    "Vật liệu là ẩn dụ.\n\n"
+
+    "Một ẩn dụ vật liệu là lý thuyết thống nhất của không gian hợp lý và hệ thống chuyển động."
+    "Vật liệu được lấy cảm hứng từ thực tế xúc giác, từ nghiên cứu về giấy và mực, nhưng lại "
+    "tiên tiến về mặt công nghệ và mở ra trí tưởng tượng và phép thuật.\n"
+    "Các bề mặt và cạnh của vật liệu cung cấp gợi ý hình ảnh được định hình trong thực tế. Việc "
+    "sử dụng các thuộc tính xúc giác quen thuộc giúp người dùng nhanh chóng hiểu được các chức năng. Tuy nhiên, "
+    "sự linh hoạt của vật liệu tạo ra các chức năng mới vượt xa thực tế vật lý, mà không phá vỡ quy luật vật lý.\n"
+    "Các yếu tố cơ bản của ánh sáng, bề mặt và chuyển động là chìa khóa để truyền đạt cách các vật thể di chuyển, "
+    "tương tác, và tồn tại trong không gian và trong mối quan hệ với nhau. Ánh sáng thực tế cho thấy "
+    "đường nối, chia không gian, và chỉ ra các phần chuyển động.\n\n"
+
+    "Táo bạo, đồ họa, có chủ ý.\n\n"
+
+    "Các yếu tố cơ bản của thiết kế in ấn như kiểu chữ, lưới, không gian, tỷ lệ, màu sắc, "
+    "và việc sử dụng hình ảnh dẫn dắt các cách xử lý trực quan. Các yếu tố này không chỉ đơn thuần làm hài lòng mắt nhìn. "
+    "Chúng tạo ra sự phân cấp, ý nghĩa và trọng tâm. Sự lựa chọn màu sắc có chủ đích, hình ảnh tràn cạnh, "
+    "kiểu chữ lớn và không gian trắng có chủ ý tạo nên giao diện táo bạo và đồ họa, đưa người dùng đắm chìm vào trải nghiệm.\n"
+    "Sự nhấn mạnh vào hành động của người dùng làm cho các chức năng cốt lõi trở nên rõ ràng ngay lập tức và cung cấp "
+    "các điểm dẫn đường cho người dùng.\n\n"
+
+    "Chuyển động mang ý nghĩa.\n\n"
+
+    "Chuyển động tôn trọng và củng cố người dùng như là người chủ động chính. Các hành động chính của người dùng là "
+    "những điểm nhấn bắt đầu chuyển động, biến đổi toàn bộ thiết kế.\n"
+    "Tất cả hành động diễn ra trong một môi trường duy nhất. Các đối tượng được trình bày cho người dùng mà không "
+    "phá vỡ sự liên tục của trải nghiệm ngay cả khi chúng biến đổi và tổ chức lại.\n"
+    "Chuyển động có ý nghĩa và phù hợp, giúp tập trung sự chú ý và duy trì sự liên tục. "
+    "Phản hồi tinh tế nhưng rõ ràng. Các chuyển đổi hiệu quả nhưng nhất quán.\n\n"
+
+    "Thế giới 3D.\n\n"
+
+    "Môi trường vật liệu là không gian 3D, nghĩa là tất cả các đối tượng có các chiều x, y và z. "
+    "Trục z được sắp xếp vuông góc với mặt phẳng hiển thị, với trục z dương hướng về phía người dùng. "
+    "Mỗi tấm vật liệu chiếm một vị trí duy nhất dọc theo trục z và có độ dày tiêu chuẩn 1dp.\n"
+    "Trên web, trục z được sử dụng để xếp chồng và không dành cho phối cảnh. Thế giới 3D được "
+    "mô phỏng bằng cách thao tác trục y.\n\n"
+        "Câu sẽ là: Tôi đang làm một trường hợp thử nghiệm cho đến khi mục tiêu này \n"
+"Tôi đang làm một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang làm một trường hợp thử nghiệm cho đến khi mục tiêu này. ... case cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. Tôi đang thực hiện một trường hợp thử nghiệm cho đến khi đạt được mục tiêu này. \n"
+"Vì vậy, nó sẽ loại trừ dấu gạch chéo n \n"
+</string>
+
+    <string name="test_in_around_four_thousand">"Đây là một đoạn văn bản kiểm tra với khoảng 4000 ký tự \n"
+    "Để kiểm tra hệ thống có hoạt động hay không, tôi đang tạo một chuỗi chứa khoảng 4000 ký tự để xem liệu nó có nhận hết tất cả ký tự hay sẽ loại trừ dấu xuống dòng (slash n).\n"
+    "Câu kiểm tra sẽ được lặp lại nhiều lần cho đến khi đạt khoảng 4000 ký tự.\n"
+</string>
+
+    <string name="large_text_2">
+        Lorem ipsum dolor ngồi amet consectetur adipisicing elit. cực đại mollitia,
+molestiae quas vel sint hàng hóa thoái lui hậu quả của tình trạng lao động
+numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
+optio, mỗi rerum! Provident similique acusantium nemo autem. chân lý
+obcaecati tenetur iure eius Earum ut molestias Architecto voluptate aliquam
+không, thậm chí là một lỗi nhỏ của officia aut! Impedit sit sunt quaerat, odit,
+lỗi nguyên tắc, harum nesciunt ipsum ghi nợ quas chất lỏng. Xin lỗi,
+quia. Quo neque lỗi có thể xảy ra không? Ipsa laudantium molestias eos
+sapiente officis modi at sunt ngoại trừ expedita sint? Sed quibusdam
+lỗi bí danh recusandae harum maxime adipisci amet labum. Perspiciatis
+mức tối thiểu không đáng có! Officiis iure rerum voluptates a cumque velit
+quibusdam sed amet tempora. Ngồi lao động ab, eius fugit doloribus tenetur
+fugiat, temporibus enim commodi iusto libero magni deleniti quod quam
+hậu quả! Hàng hóa cực tiểu ngoại trừ Repudiandae velit hic maxime
+doloremque. Quaerat Provident commodi consectetur veniam similique ad
+taium omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo
+fugiat, dolorum eligendi quam cupiditate ngoại trừ mollitia maiores lao động
+có nghi ngờ gì không? Không, đặt chỗ. Voluptatem quaerat non Architecto ab laudantium
+modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam
+totamratione voluptas quod exerciteem fuga. Possimus quis tai veniam
+quasi aliquam eligendi, placeat qui corporis!</string>
+
+    <string name="small_new_image_desc">Hình ảnh chính cho các bài viết nhỏ (tổng quan).</string>
+    <string name="comment_image_desc">Hình ảnh Bình luận</string>
+    <string name="default_title">Tiêu đề Mặc định</string>
+    <string name="default_date">Thứ Hai, ngày 1 tháng 1 năm 2018</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="email">Email</string>
+    <string name="password">Mat khau</string>
+    <string name="retype_password">Nhap lai mat khau</string>
+
+    <string name="login">Dang Nhap</string>
+    <string name="register">Dang Ky</string>
+
+    <string name="forgot_password">Quen Mat Khau?</string>
+    <string name="registerBtn">Dang Ky Tai Khoan</string>
+    <string name="loginBtn">Da Co Tai Khoan? Dang Nhap</string>
+
+    <string name="enter_your_email">Nhap Email Cua Ban</string>
+
+    <string name="sendEmail">Gui Email</string>
+</resources>
