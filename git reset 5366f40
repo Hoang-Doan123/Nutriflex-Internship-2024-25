@@ -1,0 +1,63 @@
+[33m5366f40[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge remote-tracking branch 'origin/main'
+[33mcda7155[m Change small things
+[33mfdc213a[m Merge pull request #19 from VitNguyen2003/main
+[33mbc5e61e[m  Testing sync font size change (WORK)
+[33m8367bde[m Testing change avatar (can go to gallery but can't show pics)
+[33mf5ab425[m Pull
+[33m9fbb9fb[m fix search activity
+[33m69f7476[m delete un used folder
+[33m2875cc3[m fix manifest error syntax
+[33me0186dc[m updated from Viet, resolve conflict
+[33m4e9b682[m merge from Viet
+[33m7f9f1c5[m Merge pull request #15 from Hoang-Doan123/main
+[33m41e3d97[m B Merge branch 'main' of https://github.com/Hoang-Doan123/Group-Project-2024-2025 i Redesign Video UI
+[33m6d206c9[m Redesign VideoFragment UI
+[33m2b302fc[m Redesign the Video UI
+[33m00aded0[m Merge pull request #14 from Hoang-Doan123/main
+[33me65a9c4[m Update Video Fragment and add Search Activity
+[33m016c6a8[m set back folder
+[33m7ae9337[m Merge pull request #11 from VitNguyen2003/main
+[33ma160850[m Update
+[33mbbd44c2[m Update
+[33m92d2dec[m Update
+[33maa617c8[m Update
+[33m8e7e214[m Merge pull request #7 from NguyenVuTheBinh/main
+[33m0d07b18[m change back videos fragment
+[33me834ada[m Merge pull request #6 from NguyenVuTheBinh/main
+[33m6a684aa[m Merge branch 'main' into main
+[33m2e82196[m Merge https://github.com/Hoang-Doan123/Group-Project-2024-2025
+[33md902da0[m intent from news to activity
+[33mcb6ec5e[m Add files via upload
+[33m658da21[m Add files via upload
+[33mb3de7ca[m Add files via upload
+[33m448e820[m merge code from everyone until 20/11, update main news fragment
+[33mbb48951[m update news fragment
+[33m91e4522[m change night light mode for news
+[33me53e6e3[m manifest into main
+[33md7650dc[m resolve conflict merging from Huy
+[33m3b0c1b7[m update from draft 19/11
+[33md7615a9[m Incomplete Initializing URL
+[33mf2a9559[m merge from Hoang 14/11
+[33mfec5ca8[m maybe update something
+[33mdb62e10[m Update dark and light mode
+[33m4085c57[m Update video fragment and play video activity
+[33m5a66cab[m my info
+[33mff9f6d8[m tech news draft
+[33me2e6f35[m Update README.md
+[33m072b982[m Add files via upload
+[33mfcc1aee[m Update video fragment
+[33m82d68e9[m Update README.md
+[33mcba45f8[m Merge pull request #4 from VitNguyen2003/main
+[33m1ecde65[m Merge pull request #1 from Hoang-Doan123/main
+[33maae0de2[m source for tech news
+[33m4f301c2[m Add Favor Choosing Fragment
+[33m3a7e558[m Update video fragment
+[33m15b8501[m Merge pull request #3 from LamDD21/main
+[33m360c816[m Set up video and news fragment
+[33mc3874e7[m Set up video and news fragment
+[33m036921c[m Update UI part 1
+[33m425d2ce[m Change README
+[33ma0ead19[m  Update Student
+[33m4d6c262[m Merge pull request #1 from WilliamDelnington/main
+[33m5109bdd[m Initial Commit
+[33mfcf3982[m Create README.md
