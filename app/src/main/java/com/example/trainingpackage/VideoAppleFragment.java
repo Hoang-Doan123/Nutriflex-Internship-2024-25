@@ -1,12 +1,11 @@
-package com.example.savepackage;
+package com.example.trainingpackage;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.R;
-import com.example.trainingpackage.PlayVideoActivity;
-import com.example.trainingpackage.Video;
-import com.example.trainingpackage.VideoAdapter;
 import com.google.android.material.tabs.TabLayout;
+
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +32,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SaveVideoFragment#newInstance} factory method to
+ * Use the {@link VideoAppleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SaveVideoFragment extends Fragment {
+public class VideoAppleFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private VideoAdapter videoAdapter;
@@ -49,12 +46,14 @@ public class SaveVideoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String USER_ID = "user_id";
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private Integer userId;
+    private String mParam1;
+    private String mParam2;
 
-    public SaveVideoFragment() {
+    public VideoAppleFragment() {
         // Required empty public constructor
     }
 
@@ -62,14 +61,16 @@ public class SaveVideoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param userId user's id.
-     * @return A new instance of fragment VideoAllFragment.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment VideoAppleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SaveVideoFragment newInstance(int userId) {
-        SaveVideoFragment fragment = new SaveVideoFragment();
+    public static VideoAppleFragment newInstance(String param1, String param2) {
+        VideoAppleFragment fragment = new VideoAppleFragment();
         Bundle args = new Bundle();
-        args.putInt(USER_ID, userId);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +79,8 @@ public class SaveVideoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getInt(USER_ID);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -86,7 +88,7 @@ public class SaveVideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_save_video, container, false);
+        View view = inflater.inflate(R.layout.fragment_video_apple, container, false);
 
         tabLayout = requireActivity().findViewById(R.id.tab_layout_main);
         swipeRefreshLayout = view.findViewById(R.id.swipe_layout);
@@ -98,13 +100,7 @@ public class SaveVideoFragment extends Fragment {
         recyclerView.setAdapter(videoAdapter);
 
         // Setup SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -124,48 +120,50 @@ public class SaveVideoFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     private void refreshData() {
-        videoList.clear();
-        fetchVideos();
+        videoList.clear(); // Remove the current video list
+        fetchVideos(); // Call the API to fetch new data
         swipeRefreshLayout.setRefreshing(false);
     }
 
     private void fetchVideos() {
-
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        SaveAPI saveAPI = retrofit.create(SaveAPI.class);
-        Call<List<Video>> call = saveAPI.getVideos(userId);
+        VideoAPI videoAPI = retrofit.create(VideoAPI.class);
+        Call<List<Video>> call = videoAPI.getVideos("Apple");
         call.enqueue(new Callback<List<Video>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(
-                    @NonNull Call<List<Video>> call,
-                    @NonNull Response<List<Video>> response) {
-                if (response.isSuccessful()
-                        && response.body() != null
-                        && !response.body().isEmpty()) {
-                    videoList.addAll(response.body());
-
-                    videoList.clear();
-                    videoList.addAll(response.body());
-                    videoAdapter.setData(videoList);
-                    videoAdapter.notifyDataSetChanged();
+            public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Video video : response.body()) {
+                        if ("Apple".equals(video.getVideoBrandType())) {
+                            videoList.add(video);
+                            Log.i("Add videos success", video.getVideoUniqueId());
+                        }
+                    }
+                    videoAdapter.setData(videoList); // Update adapter with video list
+                    videoAdapter.shuffleVideos(); // Shuffle the video list
+                    videoAdapter.notifyDataSetChanged(); // Update the adapter after adding video
                 } else {
                     Toast.makeText(getContext(), "No videos available", Toast.LENGTH_SHORT).show();
-                    Log.e("SaveVideoFragment", "Fetch Video Failed: " + response);
                 }
             }
 
             @Override
-            public void onFailure(
-                    @NonNull Call<List<Video>> call,
-                    @NonNull Throwable t) {
-                Toast.makeText(getContext(), "Failed to fetch videos", Toast.LENGTH_SHORT).show();
-                Log.e("SaveVideoFragment", "Fetch Video Failed: " + t);
+            public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Failed to fetch videos", Toast.LENGTH_SHORT).show();
+                }
+                Log.i("Queue error", t.toString());
             }
         });
     }

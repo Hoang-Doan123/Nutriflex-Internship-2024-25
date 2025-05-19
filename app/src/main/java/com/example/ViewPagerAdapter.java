@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.newspackage.NewsFragment;
-import com.example.videopackage.VideoFragment;
+import com.example.nutritionpackage.NewsFragment;
+import com.example.trainingpackage.VideoFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

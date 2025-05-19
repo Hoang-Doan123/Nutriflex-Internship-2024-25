@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 
-import com.example.newspackage.NewsFragment;
+import com.example.nutritionpackage.NewsFragment;
 
 import java.util.ArrayList;
 

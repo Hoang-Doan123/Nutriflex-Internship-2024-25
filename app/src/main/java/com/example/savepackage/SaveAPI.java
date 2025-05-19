@@ -1,7 +1,7 @@
 package com.example.savepackage;
 
-import com.example.newspackage.SmallNews;
-import com.example.videopackage.Video;
+import com.example.nutritionpackage.SmallNews;
+import com.example.trainingpackage.Video;
 
 import java.util.List;
 
