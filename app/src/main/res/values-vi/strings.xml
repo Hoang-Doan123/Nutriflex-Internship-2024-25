@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BÀI ĐĂNG CÔNG NGHỆ</string>
+    <string name="app_name">NutriFlex</string>
     <string name="loginScreenHeader">Biệt danh</string>
     <string name="loginScreenButtonText">Tạo hồ sơ</string>
     <string name="loginScreenText">Không có biệt danh? Tiếp theo</string>
 
-    <string name="project_name">DỰ ÁN USTH</string>
+    <string name="project_name">ĐỒ ÁN TỐT NGHIỆP USTH</string>
     <string name="project_copyright">\@BẢN QUYỀN USTH</string>
     <string name="content_description">Tránh cảnh báo</string>
     <!-- TODO: Xóa hoặc thay đổi đoạn văn bản mẫu này -->

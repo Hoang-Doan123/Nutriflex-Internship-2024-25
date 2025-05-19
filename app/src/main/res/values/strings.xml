@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">TECH POST</string>
+    <string name="app_name">NutriFlex</string>
     <string name="loginScreenHeader">Nickname</string>
     <string name="loginScreenButtonText">Create Profile</string>
     <string name="loginScreenText">Don\'t have nickname? Next</string>
 
-    <string name="project_name">USTH PROJECT</string>
+    <string name="project_name">USTH INTERNSHIP</string>
     <string name="project_copyright">\@USTHCOPYRIGHT</string>
     <string name="content_description">Avoid Warning</string>
     <!-- TODO: Remove or change this placeholder text -->
