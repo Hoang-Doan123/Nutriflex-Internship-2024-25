@@ -11,4 +11,88 @@
     <string name="alredy_have_account">Alredy have an account?</string>
     <string name="login">Login</string>
     <string name="don_t_have_account">Don\'t have an account?</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome">Welcome to NutriFlex</string>
+    <string name="onboarding_body_info">Body Data Information</string>
+    <string name="onboarding_gender">What\'s your gender?</string>
+    <string name="onboarding_male">Male</string>
+    <string name="onboarding_female">Female</string>
+    <string name="onboarding_goal">What\'s your goal?</string>
+    <string name="onboarding_lose_weight">Lose Weight</string>
+    <string name="onboarding_gain_weight">Gain Weight</string>
+    <string name="onboarding_maintain">Maintain Weight</string>
+    <string name="onboarding_motivation">What motivates you?</string>
+    <string name="onboarding_age">What\'s your age?</string>
+    <string name="onboarding_height">What\'s your height?</string>
+    <string name="onboarding_weight">What\'s your current weight?</string>
+    <string name="onboarding_target_weight">What\'s your target weight?</string>
+    <string name="onboarding_body_fat">What\'s your current body fat percentage?</string>
+    <string name="onboarding_target_body_fat">What\'s your target body fat percentage?</string>
+    <string name="onboarding_muscle_mass">What\'s your current muscle mass?</string>
+    <string name="onboarding_target_muscle">What\'s your target muscle mass?</string>
+
+    <!-- Healthcare -->
+    <string name="healthcare_title">Healthcare Information</string>
+    <string name="healthcare_issues">Do you have any health issues?</string>
+    <string name="healthcare_diabetes">Diabetes</string>
+    <string name="healthcare_heart">Heart Disease</string>
+    <string name="healthcare_blood_pressure">High Blood Pressure</string>
+    <string name="healthcare_other">Other</string>
+    <string name="healthcare_sleep">Sleep Problems</string>
+    <string name="healthcare_none">No Issues</string>
+
+    <!-- Injuries -->
+    <string name="injuries_title">Do you have any injuries?</string>
+    <string name="injuries_shoulder">Shoulder</string>
+    <string name="injuries_back">Back</string>
+    <string name="injuries_waist">Waist</string>
+    <string name="injuries_wrist">Wrist</string>
+    <string name="injuries_knee">Knee</string>
+    <string name="injuries_ankle">Ankle</string>
+    <string name="injuries_neck">Neck</string>
+    <string name="injuries_none">No Injuries</string>
+
+    <!-- Nutrition -->
+    <string name="nutrition_title">Do you have any dietary restrictions?</string>
+    <string name="nutrition_vegetarian">Vegetarian</string>
+    <string name="nutrition_allergies">Allergies</string>
+    <string name="nutrition_medical">Medical Restrictions</string>
+    <string name="nutrition_none">No Restrictions</string>
+
+    <!-- Fitness -->
+    <string name="fitness_title">Fitness Level</string>
+    <string name="fitness_experience">How long have you been training?</string>
+    <string name="fitness_beginner">Beginner</string>
+    <string name="fitness_intermediate">Intermediate</string>
+    <string name="fitness_advanced">Advanced</string>
+    <string name="fitness_equipment">What equipment do you have access to?</string>
+    <string name="fitness_none">No Equipment</string>
+    <string name="fitness_basic">Basic Equipment</string>
+    <string name="fitness_gym">Full Gym Access</string>
+    <string name="fitness_days">Which days can you train?</string>
+    <string name="fitness_reminders">Enable Training Reminders</string>
+    <string name="fitness_goal_speed">How fast do you want to reach your goal?</string>
+    <string name="fitness_fast">As Fast as Possible</string>
+    <string name="fitness_balanced">Balanced Progress</string>
+    <string name="fitness_slow">Slow and Steady</string>
+
+    <!-- Main Navigation -->
+    <string name="nav_daily">Daily</string>
+    <string name="nav_workout">Workout</string>
+    <string name="nav_nutrition">Nutrition</string>
+    <string name="nav_area">Area</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_kcal">Kcal</string>
+    <string name="nav_alert">Alert</string>
+    <string name="nav_me">Me</string>
+
+    <!-- Common -->
+    <string name="continue_text">Continue</string>
+    <string name="skip">Skip</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 </resources>
