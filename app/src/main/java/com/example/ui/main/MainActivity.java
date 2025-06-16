@@ -1,4 +1,4 @@
-package com.example;
+package com.example.ui.main;
 
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.MainAdapter;
+import com.example.R;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;

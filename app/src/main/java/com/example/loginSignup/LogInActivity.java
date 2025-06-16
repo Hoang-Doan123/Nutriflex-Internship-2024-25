@@ -10,11 +10,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.MainActivity;
+import com.example.ui.main.MainActivity;
 import com.example.R;
 import com.example.database.DatabaseHelper;
 
