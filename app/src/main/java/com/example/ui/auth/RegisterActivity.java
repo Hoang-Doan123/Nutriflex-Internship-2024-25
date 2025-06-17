@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etConfirmPassword;
     private Button btnRegister;
-    private Button btnLogin;
+    private TextView btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,8 +22,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPassword;
     private Button btnLogin;
-    private Button btnRegister;
-    private Button btnForgotPassword;
+    private TextView btnRegister;
+    private TextView btnForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
