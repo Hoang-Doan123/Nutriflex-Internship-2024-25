@@ -8,9 +8,15 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    <string name="alredy_have_account">Alredy have an account?</string>
+    <string name="alredy_have_account">Alredy have an account? </string>
     <string name="login">Login</string>
-    <string name="don_t_have_account">Don\'t have an account?</string>
+    <string name="don_t_have_account">Don\'t have an account? </string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="register">Register</string>
+    <string name="create_account">Create Account</string>
+    <string name="full_name">Full Name</string>
+    <string name="confirm_password">Confirm Password</string>
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Welcome to NutriFlex</string>
