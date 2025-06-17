@@ -7,14 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
-import com.example.MainAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.R;
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,14 +27,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout_main);
-        ViewPager viewPager = findViewById(R.id.view_pager);
-
-        MainAdapter mainAdapter = new MainAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(mainAdapter);
-
-        tabLayout.setupWithViewPager(viewPager);
-        Objects.requireNonNull(tabLayout.getTabAt(0)).setText(R.string.training);
-        Objects.requireNonNull(tabLayout.getTabAt(1)).setText(R.string.nutrition);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+            BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+            NavigationUI.setupWithNavController(bottomNav, navController);
+        }
     }
 }
