@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.ui.nutrition.NutritionFragment;
+
 public class MainAdapter extends FragmentStatePagerAdapter {
     public MainAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
