@@ -148,9 +148,10 @@ public class KcalBeforeFragment extends Fragment {
             isMeasuring = true;
             startTime = System.currentTimeMillis();
             routePoints.clear();
-            tvResult.setText("\u0110ang đo...");
+            tvResult.setText("Measuring...");
             locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1f, locationListener);
+            // Get the real location when start measuring
             getCurrentLocation(geoPoint -> {
                 lastKnownGeoPoint = geoPoint;
                 mapView.getController().setCenter(geoPoint);
@@ -170,6 +171,7 @@ public class KcalBeforeFragment extends Fragment {
                 for (GeoPoint p : routePoints) {
                     routeStr.append(p.getLongitude()).append(" ").append(p.getLatitude()).append(",");
                 }
+                // If user doesn't move, add current location if not exist
                 if (routePoints.isEmpty() && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Location lastLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (lastLoc != null) {
@@ -180,6 +182,7 @@ public class KcalBeforeFragment extends Fragment {
                 drawRouteOrMarker();
                 KcalRequest request = new KcalRequest(1, distance, duration, 70.0, routeStr.toString());
                 viewModel.measureAndSave(request);
+                // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
             }
@@ -189,8 +192,8 @@ public class KcalBeforeFragment extends Fragment {
             double distance = result != null ? result.getDistance() : 0.0;
             int duration = result != null ? result.getDuration() : 0;
             String pace = (distance > 0 && duration > 0) ? String.format("%.2f", duration / distance) : "--";
-            int elevation = 0;
-            String heartBeat = "--";
+            int elevation = 0; // Not yet measured the real elevation
+            String heartBeat = "--"; // Not yet connect to watch
             String timeStr = String.format("%d min %02d sec", lastElapsedMinutes, lastElapsedSeconds);
             String resultText = String.format(
                     "Distance: %.2f km\nKcal: %d\nPace: %s min/km\nElevation: %d m\nHeart beat: %s\nTime: %s",
@@ -221,7 +224,7 @@ public class KcalBeforeFragment extends Fragment {
             Marker marker = new Marker(mapView);
             marker.setPosition(routePoints.get(0));
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("Vị trí hiện tại");
+            marker.setTitle("Current Location");
             mapView.getOverlays().add(marker);
             mapView.getController().setCenter(routePoints.get(0));
         }

@@ -67,7 +67,7 @@
             android:id="@+id/tvResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kết quả sẽ hiển thị ở đây"
+            android:text="The result will be here"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
             android:gravity="center" />
