@@ -51,6 +51,9 @@ dependencies {
     // FusedLocationProviderClient for accurate location
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    // FatSecret API
+    implementation("com.fatsecret4j:fatsecret-platform:2.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

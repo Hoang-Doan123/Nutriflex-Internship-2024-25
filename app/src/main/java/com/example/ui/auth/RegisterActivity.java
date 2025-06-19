@@ -3,9 +3,11 @@ package com.example.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +16,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.R;
+import com.example.model.User;
+import com.example.network.ApiClient;
+import com.example.network.ApiService;
 import com.example.ui.main.MainActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -55,8 +64,36 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (validateInput(name, email, password, confirmPassword)) {
                 // TODO: Implement actual registration logic
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+//                startActivity(new Intent(this, MainActivity.class));
+//                finish();
+
+                User user = new User(name, email, password);
+
+                ApiService apiService = ApiClient.getClient().create(ApiService.class);
+                apiService.registerUser(user).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.isSuccessful()) {
+                            // Register successfully, move to MainActivity
+                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            // Process error (example: email exist)
+                            runOnUiThread(() ->
+                                    Toast.makeText(RegisterActivity.this, "Registration failed: " + response.message(), Toast.LENGTH_SHORT).show()
+                            );
+                            Log.e("RegisterActivity", "Registration failed: " + response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        runOnUiThread(() ->
+                                Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show()
+                        );
+                        Log.e("RegisterActivity", "Error: " + t.getMessage(), t);
+                    }
+                });
             }
         });
 
