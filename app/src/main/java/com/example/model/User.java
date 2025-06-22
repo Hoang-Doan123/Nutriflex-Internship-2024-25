@@ -1,11 +1,16 @@
 package com.example.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("_id")
+    private String id;
     private String name;
     private String email;
     private String password;
 
     public User() {
+        this.id = "";
         this.name = "";
         this.email = "";
         this.password = "";
@@ -18,6 +23,10 @@ public class User {
     }
 
     // Getters
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -31,6 +40,10 @@ public class User {
     }
 
     // Setters
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
