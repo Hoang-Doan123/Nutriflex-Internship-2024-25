@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.R;
-import com.example.model.OnboardingQuestion;
+import com.example.model.onboarding.OnboardingQuestion;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;

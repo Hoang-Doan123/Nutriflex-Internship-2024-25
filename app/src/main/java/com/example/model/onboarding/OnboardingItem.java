@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.model.onboarding;
 
 public class OnboardingItem {
     private final String title;
