@@ -98,7 +98,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingA
         List<String> options = selectedOptions.get(questionPosition);
         
         // For single select questions, clear previous selection
-        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 3) { // Gender, Motivation, Fitness Experience
+        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 5) { // Gender, Motivation, Fitness Experience
             options.clear();
         }
         

@@ -14,6 +14,8 @@ public class OnboardingQuestion {
         GENDER,
         MOTIVATION,
         HEALTHCARE,
+        INJURIES,
+        DIETARY_RESTRICTIONS,
         FITNESS_EXPERIENCE
     }
 

@@ -78,7 +78,39 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         true,
                         OnboardingQuestion.QuestionType.HEALTHCARE
                 ),
-                // Question 4: Fitness Experience
+                // Question 4: Injuries
+                new OnboardingQuestion(
+                        context.getString(R.string.injuries_title),
+                        "",
+                        R.drawable.ic_injury,
+                        Arrays.asList(
+                                context.getString(R.string.injuries_shoulder),
+                                context.getString(R.string.injuries_back),
+                                context.getString(R.string.injuries_waist),
+                                context.getString(R.string.injuries_wrist),
+                                context.getString(R.string.injuries_knee),
+                                context.getString(R.string.injuries_ankle),
+                                context.getString(R.string.injuries_neck),
+                                context.getString(R.string.injuries_none)
+                        ),
+                        true,
+                        OnboardingQuestion.QuestionType.INJURIES
+                ),
+                // Question 5: Dietary Restrictions
+                new OnboardingQuestion(
+                        context.getString(R.string.nutrition_title),
+                        "",
+                        R.drawable.ic_nutrition,
+                        Arrays.asList(
+                                context.getString(R.string.nutrition_vegetarian),
+                                context.getString(R.string.nutrition_allergies),
+                                context.getString(R.string.nutrition_medical),
+                                context.getString(R.string.nutrition_none)
+                        ),
+                        true,
+                        OnboardingQuestion.QuestionType.DIETARY_RESTRICTIONS
+                ),
+                // Question 6: Fitness Experience
                 new OnboardingQuestion(
                         context.getString(R.string.fitness_experience),
                         "",
@@ -119,7 +151,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         List<String> options = selectedOptions.get(questionPosition);
         
         // For single select questions, clear previous selection
-        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 3) { // Gender, Motivation, Fitness Experience
+        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 5) { // Gender, Motivation, Fitness Experience
             options.clear();
         }
         
