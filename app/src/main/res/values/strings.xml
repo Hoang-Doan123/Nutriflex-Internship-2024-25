@@ -18,13 +18,13 @@
     <string name="full_name">Full Name</string>
     <string name="confirm_password">Confirm Password</string>
 
-    <!-- Onboarding -->
+    <!-- Onboarding - Body Data Information -->
     <string name="onboarding_welcome">Welcome to NutriFlex</string>
     <string name="onboarding_body_info">Body Data Information</string>
     <string name="onboarding_gender">What\'s your gender?</string>
     <string name="onboarding_male">Male</string>
     <string name="onboarding_female">Female</string>
-    <string name="onboarding_goal">What\'s your goal?</string>
+    <string name="onboarding_body_goal">What\'s your body goal?</string>
     <string name="onboarding_lose_weight">Lose Weight</string>
     <string name="onboarding_gain_weight">Gain Weight</string>
     <string name="onboarding_maintain">Maintain Weight</string>
@@ -36,23 +36,26 @@
     <string name="onboarding_motivation_libido">Boosting Libido</string>
     <string name="onboarding_age">What\'s your age?</string>
     <string name="onboarding_height">What\'s your height?</string>
-    <string name="onboarding_weight">What\'s your current weight?</string>
+    <string name="onboarding_current_weight">What\'s your current weight?</string>
     <string name="onboarding_target_weight">What\'s your target weight?</string>
-    <string name="onboarding_body_fat">What\'s your current body fat percentage?</string>
-    <string name="onboarding_target_body_fat">What\'s your target body fat percentage?</string>
-    <string name="onboarding_muscle_mass">What\'s your current muscle mass?</string>
-    <string name="onboarding_target_muscle">What\'s your target muscle mass?</string>
+    <string name="onboarding_weight_loss_percentage">Weight loss percentage</string>
+    <string name="onboarding_weight_gain_percentage">Weight gain percentage</string>
+    <string name="onboarding_estimated_time">Estimated time to reach goal</string>
+    <string name="onboarding_body_fat_current">What\'s your current body fat percentage?</string>
+    <string name="onboarding_body_fat_target">What\'s your target body fat percentage?</string>
+    <string name="onboarding_muscle_mass_current">What\'s your current muscle mass?</string>
+    <string name="onboarding_muscle_mass_target">What\'s your target muscle mass?</string>
+    <string name="onboarding_skip_optional">Skip (Optional)</string>
 
-    <!-- Healthcare -->
+    <!-- Healthcare Information -->
     <string name="healthcare_title">Healthcare Information</string>
     <string name="healthcare_issues">Do you have any of the following health issues?</string>
     <string name="healthcare_diabetes">Diabetes</string>
     <string name="healthcare_heart">Heart Disease</string>
     <string name="healthcare_blood_pressure">High Blood Pressure</string>
+    <string name="healthcare_other">Other (Please specify)</string>
     <string name="healthcare_sleep">Sleep Problems</string>
     <string name="healthcare_none">No Health Issues</string>
-
-    <!-- Injuries -->
     <string name="injuries_title">Do you have any injuries?</string>
     <string name="injuries_shoulder">Shoulder</string>
     <string name="injuries_back">Back</string>
@@ -62,15 +65,13 @@
     <string name="injuries_ankle">Ankle</string>
     <string name="injuries_neck">Neck</string>
     <string name="injuries_none">No Injuries</string>
-
-    <!-- Nutrition -->
     <string name="nutrition_title">Do you have any dietary restrictions?</string>
     <string name="nutrition_vegetarian">Vegetarian</string>
     <string name="nutrition_allergies">Allergies</string>
     <string name="nutrition_medical">Medical Restrictions</string>
     <string name="nutrition_none">No Restrictions</string>
 
-    <!-- Fitness -->
+    <!-- Fitness Level -->
     <string name="fitness_title">Fitness Level</string>
     <string name="fitness_experience">How long have you been training?</string>
     <string name="fitness_beginner">Beginner</string>
@@ -86,6 +87,25 @@
     <string name="fitness_fast">As Fast as Possible</string>
     <string name="fitness_balanced">Balanced Progress</string>
     <string name="fitness_slow">Slow and Steady</string>
+    <string name="fitness_concerns">Do you have concerns about training or nutrition?</string>
+    <string name="fitness_concerns_style">I don\'t know which training style suits me</string>
+    <string name="fitness_concerns_intensity">I\'m unsure about the right training intensity</string>
+    <string name="fitness_concerns_none">No concerns</string>
+
+    <!-- Training Days -->
+    <string name="day_sunday">Sun</string>
+    <string name="day_monday">Mon</string>
+    <string name="day_tuesday">Tue</string>
+    <string name="day_wednesday">Wed</string>
+    <string name="day_thursday">Thu</string>
+    <string name="day_friday">Fri</string>
+    <string name="day_saturday">Sat</string>
+
+    <!-- Units -->
+    <string name="unit_years">years</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_percent">%</string>
 
     <!-- Main Navigation -->
     <string name="nav_daily">Daily</string>
@@ -105,4 +125,5 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="get_started">Get Started</string>
 </resources>
