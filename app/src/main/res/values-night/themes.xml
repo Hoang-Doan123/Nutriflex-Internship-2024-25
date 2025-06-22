@@ -3,5 +3,24 @@
     <style name="Base.Theme.NutriflexInternship202425" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/deep_blue</item>
+        <item name="colorPrimaryVariant">@color/deep_navy</item>
+        <item name="colorSecondary">@color/gray</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/gray</item>
     </style>
+
+    <style name="Theme.NutriflexInternship202425.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Widget.NutriflexInternship202425.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Theme.NutriflexInternship202425" parent="Base.Theme.NutriflexInternship202425" />
 </resources>
