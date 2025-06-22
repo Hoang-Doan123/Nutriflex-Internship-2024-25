@@ -16,10 +16,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.R;
+import com.example.model.PersonalData;
+import com.example.model.RegisterRequest;
+import com.example.model.RegisterResponse;
 import com.example.model.User;
 import com.example.network.ApiClient;
 import com.example.network.ApiService;
 import com.example.ui.main.MainActivity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etConfirmPassword;
     private Button btnRegister;
     private TextView btnLogin;
+    private Map<Integer, List<String>> onboardingData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,16 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         btnLogin = findViewById(R.id.btnLogin);
 
+        // Get onboarding data from intent
+        Intent intent = getIntent();
+        if (intent.hasExtra("onboarding_data")) {
+            @SuppressWarnings("unchecked")
+            Map<Integer, List<String>> data = (Map<Integer, List<String>>) intent.getSerializableExtra("onboarding_data");
+            onboardingData = data != null ? data : new HashMap<>();
+        } else {
+            onboardingData = new HashMap<>();
+        }
+
         setupClickListeners();
     }
 
@@ -63,17 +81,45 @@ public class RegisterActivity extends AppCompatActivity {
             String confirmPassword = etConfirmPassword.getText().toString();
 
             if (validateInput(name, email, password, confirmPassword)) {
-                // TODO: Implement actual registration logic
-//                startActivity(new Intent(this, MainActivity.class));
-//                finish();
+                // Extract onboarding data
+                String gender = getSelectedOption(0); // Question 0: Gender
+                String motivation = getSelectedOption(1); // Question 1: Motivation
+                List<String> healthcareIssues = onboardingData.get(2); // Question 2: Healthcare Issues
+                List<String> injuries = onboardingData.get(3); // Question 3: Injuries
+                List<String> dietaryRestrictions = onboardingData.get(4); // Question 4: Dietary Restrictions
+                String fitnessExperience = getSelectedOption(5); // Question 5: Fitness Experience
 
-                User user = new User(name, email, password);
+                // Create RegisterRequest with all data
+                RegisterRequest registerRequest = new RegisterRequest(
+                    name, email, password, gender, motivation, 
+                    healthcareIssues, injuries, dietaryRestrictions, fitnessExperience
+                );
+
+                // Log the data being sent
+                Log.d("RegisterActivity", "Sending registration data:");
+                Log.d("RegisterActivity", "Name: " + name);
+                Log.d("RegisterActivity", "Email: " + email);
+                Log.d("RegisterActivity", "Gender: " + gender);
+                Log.d("RegisterActivity", "Motivation: " + motivation);
+                Log.d("RegisterActivity", "Healthcare Issues: " + healthcareIssues);
+                Log.d("RegisterActivity", "Injuries: " + injuries);
+                Log.d("RegisterActivity", "Dietary Restrictions: " + dietaryRestrictions);
+                Log.d("RegisterActivity", "Fitness Experience: " + fitnessExperience);
 
                 ApiService apiService = ApiClient.getClient().create(ApiService.class);
-                apiService.registerUser(user).enqueue(new Callback<User>() {
+                apiService.registerUser(registerRequest).enqueue(new Callback<RegisterResponse>() {
                     @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.isSuccessful()) {
+                    public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            RegisterResponse registerResponse = response.body();
+                            User savedUser = registerResponse.getUser();
+                            PersonalData savedPersonalData = registerResponse.getPersonalData();
+                            
+                            Log.d("RegisterActivity", "User registered successfully: " + savedUser.getId());
+                            Log.d("RegisterActivity", "Personal data saved: " + savedPersonalData.getId());
+                            Log.d("RegisterActivity", "Personal data motivation: " + savedPersonalData.getMotivation());
+                            Log.d("RegisterActivity", "Personal data fitness experience: " + savedPersonalData.getFitnessExperience());
+                            
                             // Register successfully, move to MainActivity
                             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                             finish();
@@ -87,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) {
+                    public void onFailure(Call<RegisterResponse> call, Throwable t) {
                         runOnUiThread(() ->
                                 Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show()
                         );
@@ -101,6 +147,14 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
+    }
+
+    private String getSelectedOption(int questionPosition) {
+        List<String> options = onboardingData.get(questionPosition);
+        if (options != null && !options.isEmpty()) {
+            return options.get(0); // Return first selected option for single-select questions
+        }
+        return null;
     }
 
     private boolean validateInput(String name, String email, String password, String confirmPassword) {
