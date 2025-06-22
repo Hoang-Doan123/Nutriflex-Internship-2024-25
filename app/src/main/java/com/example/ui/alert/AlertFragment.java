@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.R;
+import com.example.ui.alert.meal.AlertMealFragment;
+import com.example.ui.alert.training.AlertTrainingFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
