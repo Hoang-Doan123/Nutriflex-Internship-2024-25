@@ -17,9 +17,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.R;
 import com.example.model.PersonalData;
-import com.example.model.RegisterRequest;
-import com.example.model.RegisterResponse;
-import com.example.model.User;
+import com.example.model.auth.RegisterRequest;
+import com.example.model.auth.RegisterResponse;
+import com.example.model.auth.User;
 import com.example.network.ApiClient;
 import com.example.network.ApiService;
 import com.example.ui.main.MainActivity;

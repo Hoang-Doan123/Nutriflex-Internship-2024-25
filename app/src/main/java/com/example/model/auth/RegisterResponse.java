@@ -1,5 +1,6 @@
-package com.example.model;
+package com.example.model.auth;
 
+import com.example.model.PersonalData;
 import com.google.gson.annotations.SerializedName;
 
 public class RegisterResponse {
