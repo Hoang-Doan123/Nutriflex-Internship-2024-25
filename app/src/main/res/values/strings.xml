@@ -28,7 +28,12 @@
     <string name="onboarding_lose_weight">Lose Weight</string>
     <string name="onboarding_gain_weight">Gain Weight</string>
     <string name="onboarding_maintain">Maintain Weight</string>
-    <string name="onboarding_motivation">What motivates you?</string>
+    <string name="onboarding_motivation">What motivates you to exercise and nutrition?</string>
+    <string name="onboarding_motivation_health">Improving Health</string>
+    <string name="onboarding_motivation_immune">Boosting Immune System</string>
+    <string name="onboarding_motivation_look">Look Better</string>
+    <string name="onboarding_motivation_strength">Building Strength and Endurance</string>
+    <string name="onboarding_motivation_libido">Boosting Libido</string>
     <string name="onboarding_age">What\'s your age?</string>
     <string name="onboarding_height">What\'s your height?</string>
     <string name="onboarding_weight">What\'s your current weight?</string>
@@ -40,13 +45,12 @@
 
     <!-- Healthcare -->
     <string name="healthcare_title">Healthcare Information</string>
-    <string name="healthcare_issues">Do you have any health issues?</string>
+    <string name="healthcare_issues">Do you have any of the following health issues?</string>
     <string name="healthcare_diabetes">Diabetes</string>
     <string name="healthcare_heart">Heart Disease</string>
     <string name="healthcare_blood_pressure">High Blood Pressure</string>
-    <string name="healthcare_other">Other</string>
     <string name="healthcare_sleep">Sleep Problems</string>
-    <string name="healthcare_none">No Issues</string>
+    <string name="healthcare_none">No Health Issues</string>
 
     <!-- Injuries -->
     <string name="injuries_title">Do you have any injuries?</string>

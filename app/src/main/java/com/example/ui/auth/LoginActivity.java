@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.R;
 import com.example.ui.main.MainActivity;
+import com.example.ui.onboarding.OnboardingActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnRegister.setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class))
+                startActivity(new Intent(this, OnboardingActivity.class))
         );
 
         btnForgotPassword.setOnClickListener(v ->

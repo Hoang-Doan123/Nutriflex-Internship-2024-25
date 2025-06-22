@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.R;
-import com.example.ui.onboarding.OnboardingActivity;
+import com.example.ui.auth.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
         });
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, 2000); // 2 seconds delay
     }
