@@ -19,6 +19,11 @@ public class ApiClient {
         return retrofit;
     }
     
+    // Method to get base URL for debugging
+    public static String getBaseUrl() {
+        return BASE_URL;
+    }
+    
     // Method to change base URL if necessary
     public static void setBaseUrl(String baseUrl) {
         retrofit = new Retrofit.Builder()

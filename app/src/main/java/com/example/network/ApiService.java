@@ -1,10 +1,12 @@
 package com.example.network;
 
-import com.example.model.OnboardingResponse;
+import com.example.model.Meal;
+import com.example.model.onboarding.OnboardingResponse;
 import com.example.model.PersonalData;
-import com.example.model.RegisterRequest;
-import com.example.model.RegisterResponse;
-import com.example.model.User;
+import com.example.model.auth.RegisterRequest;
+import com.example.model.auth.RegisterResponse;
+import com.example.model.auth.User;
+import com.example.model.Workout;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,10 @@ import retrofit2.http.Query;
 import retrofit2.http.Path;
 
 public interface ApiService {
+    
+    // Health check
+    @GET("api/users/health")
+    Call<Map<String, String>> healthCheck();
     
     // User APIs
     @POST("api/users/register")

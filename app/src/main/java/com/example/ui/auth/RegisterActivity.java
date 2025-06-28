@@ -107,37 +107,31 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("RegisterActivity", "Fitness Experience: " + fitnessExperience);
 
                 ApiService apiService = ApiClient.getClient().create(ApiService.class);
-                apiService.registerUser(registerRequest).enqueue(new Callback<RegisterResponse>() {
+                Log.d("RegisterActivity", "API Service created, making request to: " + ApiClient.getBaseUrl());
+                
+                // First, test backend connectivity
+                apiService.healthCheck().enqueue(new Callback<Map<String, String>>() {
                     @Override
-                    public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            RegisterResponse registerResponse = response.body();
-                            User savedUser = registerResponse.getUser();
-                            PersonalData savedPersonalData = registerResponse.getPersonalData();
-                            
-                            Log.d("RegisterActivity", "User registered successfully: " + savedUser.getId());
-                            Log.d("RegisterActivity", "Personal data saved: " + savedPersonalData.getId());
-                            Log.d("RegisterActivity", "Personal data motivation: " + savedPersonalData.getMotivation());
-                            Log.d("RegisterActivity", "Personal data fitness experience: " + savedPersonalData.getFitnessExperience());
-                            
-                            // Register successfully, move to MainActivity
-                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                            finish();
+                    public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                        Log.d("RegisterActivity", "Health check response - Code: " + response.code());
+                        if (response.isSuccessful()) {
+                            Log.d("RegisterActivity", "Backend is accessible, proceeding with registration");
+                            // Backend is accessible, proceed with registration
+                            performRegistration(apiService, registerRequest);
                         } else {
-                            // Process error (example: email exist)
+                            Log.e("RegisterActivity", "Backend health check failed: " + response.code());
                             runOnUiThread(() ->
-                                    Toast.makeText(RegisterActivity.this, "Registration failed: " + response.message(), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(RegisterActivity.this, "Backend is not accessible", Toast.LENGTH_LONG).show()
                             );
-                            Log.e("RegisterActivity", "Registration failed: " + response.message());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                    public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                        Log.e("RegisterActivity", "Health check failed: " + t.getMessage(), t);
                         runOnUiThread(() ->
-                                Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(RegisterActivity.this, "Cannot connect to backend: " + t.getMessage(), Toast.LENGTH_LONG).show()
                         );
-                        Log.e("RegisterActivity", "Error: " + t.getMessage(), t);
                     }
                 });
             }
@@ -179,5 +173,59 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void performRegistration(ApiService apiService, RegisterRequest registerRequest) {
+        apiService.registerUser(registerRequest).enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                Log.d("RegisterActivity", "Response received - Code: " + response.code());
+                Log.d("RegisterActivity", "Response headers: " + response.headers());
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RegisterResponse registerResponse = response.body();
+                    User savedUser = registerResponse.getUser();
+                    PersonalData savedPersonalData = registerResponse.getPersonalData();
+                    
+                    Log.d("RegisterActivity", "User registered successfully: " + savedUser.getId());
+                    Log.d("RegisterActivity", "Personal data saved: " + savedPersonalData.getId());
+                    Log.d("RegisterActivity", "Personal data motivation: " + savedPersonalData.getMotivation());
+                    Log.d("RegisterActivity", "Personal data fitness experience: " + savedPersonalData.getFitnessExperience());
+                    
+                    // Register successfully, move to MainActivity
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    // Process error (example: email exist)
+                    String errorBody = "";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBody = response.errorBody().string();
+                            Log.e("RegisterActivity", "Error body: " + errorBody);
+                        }
+                    } catch (Exception e) {
+                        errorBody = "Cannot parse error body";
+                        Log.e("RegisterActivity", "Error parsing error body: " + e.getMessage());
+                    }
+                    String errorMsg = "Registration failed: " + response.code() + " - " + errorBody;
+                    runOnUiThread(() ->
+                            Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show()
+                    );
+                    Log.e("RegisterActivity", errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Log.e("RegisterActivity", "Network failure: " + t.getMessage(), t);
+                Log.e("RegisterActivity", "Call URL: " + call.request().url());
+                Log.e("RegisterActivity", "Call method: " + call.request().method());
+                
+                runOnUiThread(() ->
+                        Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+                Log.e("RegisterActivity", "Error: " + t.getMessage(), t);
+            }
+        });
     }
 }
