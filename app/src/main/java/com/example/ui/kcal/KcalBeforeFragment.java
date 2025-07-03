@@ -60,6 +60,7 @@ public class KcalBeforeFragment extends Fragment {
     private int lastElapsedSeconds = 0;
     private FusedLocationProviderClient fusedLocationClient;
     private GeoPoint lastKnownGeoPoint = null;
+    private boolean pendingStart = false;
 
     private final LocationListener locationListener = new LocationListener() {
         @Override
@@ -142,20 +143,12 @@ public class KcalBeforeFragment extends Fragment {
 
         btnStart.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+                pendingStart = true;
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+                android.widget.Toast.makeText(requireContext(), "Please grant location permission to start measuring.", android.widget.Toast.LENGTH_SHORT).show();
                 return;
             }
-            isMeasuring = true;
-            startTime = System.currentTimeMillis();
-            routePoints.clear();
-            tvResult.setText("Measuring...");
-            locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1f, locationListener);
-            // Get the real location when start measuring
-            getCurrentLocation(geoPoint -> {
-                lastKnownGeoPoint = geoPoint;
-                mapView.getController().setCenter(geoPoint);
-            });
+            startMeasuring();
         });
 
         btnStop.setOnClickListener(v -> {
@@ -198,9 +191,9 @@ public class KcalBeforeFragment extends Fragment {
             String resultText = String.format(
                     "Distance: %.2f km\nKcal: %d\nPace: %s min/km\nElevation: %d m\nHeart beat: %s\nTime: %s",
                     distance,
-                    result != null ? result.getKcal() : 0,
+                    result != null ? (int) result.getKcal() : 0,
                     pace,
-                    elevation,
+                    (int) elevation,
                     heartBeat,
                     timeStr
             );
@@ -266,5 +259,36 @@ public class KcalBeforeFragment extends Fragment {
 
     interface LocationCallbackGeo {
         void onResult(GeoPoint geoPoint);
+    }
+
+    private void startMeasuring() {
+        isMeasuring = true;
+        startTime = System.currentTimeMillis();
+        routePoints.clear();
+        tvResult.setText("Measuring...");
+        locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1f, locationListener);
+        }
+        // Get the real location when start measuring
+        getCurrentLocation(geoPoint -> {
+            lastKnownGeoPoint = geoPoint;
+            mapView.getController().setCenter(geoPoint);
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (pendingStart) {
+                    pendingStart = false;
+                    startMeasuring();
+                }
+            } else {
+                android.widget.Toast.makeText(requireContext(), "Location permission denied. Cannot start measuring.", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
