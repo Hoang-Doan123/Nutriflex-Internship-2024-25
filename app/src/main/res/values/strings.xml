@@ -35,8 +35,11 @@
     <string name="onboarding_motivation_strength">Building Strength and Endurance</string>
     <string name="onboarding_motivation_libido">Boosting Libido</string>
     <string name="onboarding_age">What\'s your age?</string>
+    <string name="onboarding_age_hint">Enter your age</string>
     <string name="onboarding_height">What\'s your height?</string>
-    <string name="onboarding_current_weight">What\'s your current weight?</string>
+    <string name="onboarding_height_hint">Enter your height (cm)</string>
+    <string name="onboarding_weight">What\'s your current weight?</string>
+    <string name="onboarding_weight_hint">Enter your weight (kg)</string>
     <string name="onboarding_target_weight">What\'s your target weight?</string>
     <string name="onboarding_weight_loss_percentage">Weight loss percentage</string>
     <string name="onboarding_weight_gain_percentage">Weight gain percentage</string>

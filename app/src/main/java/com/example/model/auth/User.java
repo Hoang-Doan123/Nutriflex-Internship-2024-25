@@ -9,6 +9,9 @@ public class User {
     private String email;
     private String password;
     private String gender;
+    private Integer age;
+    private Double weight;
+    private Double height;
 
     public User() {
         this.id = "";
@@ -51,6 +54,18 @@ public class User {
         return gender;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -70,5 +85,17 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
     }
 }

@@ -10,11 +10,15 @@ public class OnboardingResponse {
     private List<String> healthIssues;
     private String fitnessExperience;
     private String createdAt;
+    private Integer age;
+    private Double weight;
+    private Double height;
 
     public OnboardingResponse() {}
 
     public OnboardingResponse(String id, String userId, String gender, List<String> motivation, 
-                            List<String> healthIssues, String fitnessExperience, String createdAt) {
+                            List<String> healthIssues, String fitnessExperience, String createdAt,
+                            Integer age, Double weight, Double height) {
         this.id = id;
         this.userId = userId;
         this.gender = gender;
@@ -22,6 +26,9 @@ public class OnboardingResponse {
         this.healthIssues = healthIssues;
         this.fitnessExperience = fitnessExperience;
         this.createdAt = createdAt;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
     }
 
     // Getters and Setters
@@ -45,4 +52,13 @@ public class OnboardingResponse {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+
+    public Double getWeight() { return weight; }
+    public void setWeight(Double weight) { this.weight = weight; }
+
+    public Double getHeight() { return height; }
+    public void setHeight(Double height) { this.height = height; }
 } 

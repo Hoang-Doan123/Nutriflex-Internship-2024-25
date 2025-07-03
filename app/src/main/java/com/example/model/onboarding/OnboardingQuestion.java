@@ -9,6 +9,7 @@ public class OnboardingQuestion {
     private final List<String> options;
     private final boolean isMultiSelect;
     private final QuestionType questionType;
+    private String inputValue;
 
     public enum QuestionType {
         GENDER,
@@ -16,7 +17,8 @@ public class OnboardingQuestion {
         HEALTHCARE,
         INJURIES,
         DIETARY_RESTRICTIONS,
-        FITNESS_EXPERIENCE
+        FITNESS_EXPERIENCE,
+        INPUT
     }
 
     public OnboardingQuestion(String title, String description, int imageResId, 
@@ -27,6 +29,17 @@ public class OnboardingQuestion {
         this.options = options;
         this.isMultiSelect = isMultiSelect;
         this.questionType = questionType;
+        this.inputValue = null;
+    }
+
+    public OnboardingQuestion(String title, String description, int imageResId, QuestionType questionType) {
+        this.title = title;
+        this.description = description;
+        this.imageResId = imageResId;
+        this.options = null;
+        this.isMultiSelect = false;
+        this.questionType = questionType;
+        this.inputValue = null;
     }
 
     public String getTitle() {
@@ -51,5 +64,13 @@ public class OnboardingQuestion {
 
     public QuestionType getQuestionType() {
         return questionType;
+    }
+
+    public String getInputValue() {
+        return inputValue;
+    }
+
+    public void setInputValue(String inputValue) {
+        this.inputValue = inputValue;
     }
 } 

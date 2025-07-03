@@ -82,6 +82,13 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingA
         Intent intent = new Intent(this, RegisterActivity.class);
         // Pass onboarding data to RegisterActivity if needed
         intent.putExtra("onboarding_data", new HashMap<>(selectedOptions));
+        // Lấy giá trị nhập liệu từ adapter
+        if (adapter != null) {
+            List<com.example.model.onboarding.OnboardingQuestion> questions = adapter.getQuestions();
+            intent.putExtra("age", questions.get(1).getInputValue());
+            intent.putExtra("weight", questions.get(2).getInputValue());
+            intent.putExtra("height", questions.get(3).getInputValue());
+        }
         startActivity(intent);
         finish();
     }

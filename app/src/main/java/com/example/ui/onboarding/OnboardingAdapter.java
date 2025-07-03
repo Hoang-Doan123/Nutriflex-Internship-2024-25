@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +48,27 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         ),
                         false,
                         OnboardingQuestion.QuestionType.GENDER
+                ),
+                // Question 1.1: Age (Input)
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_age),
+                        "",
+                        R.drawable.ic_age,
+                        OnboardingQuestion.QuestionType.INPUT
+                ),
+                // Question 1.2: Weight (Input)
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_weight),
+                        "",
+                        R.drawable.ic_weight,
+                        OnboardingQuestion.QuestionType.INPUT
+                ),
+                // Question 1.3: Height (Input)
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_height),
+                        "",
+                        R.drawable.ic_height,
+                        OnboardingQuestion.QuestionType.INPUT
                 ),
                 // Question 2: Motivation
                 new OnboardingQuestion(
@@ -166,6 +188,10 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         notifyItemChanged(questionPosition);
     }
 
+    public List<OnboardingQuestion> getQuestions() {
+        return questions;
+    }
+
     class OnboardingViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTitle;
         private final TextView tvDescription;
@@ -188,34 +214,61 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
             // Clear previous options
             llOptions.removeAllViews();
 
-            // Get selected options for this question
-            List<String> selectedForQuestion = selectedOptions.getOrDefault(questionPosition, new ArrayList<>());
-
-            // Add options
-            for (String option : question.getOptions()) {
-                View optionView = LayoutInflater.from(itemView.getContext())
-                        .inflate(R.layout.item_option, llOptions, false);
-                TextView tvOption = optionView.findViewById(R.id.tvOption);
-                MaterialCardView cardView = (MaterialCardView) optionView;
-                tvOption.setText(option);
-
-                // Check if this option is selected
-                boolean isSelected = selectedForQuestion.contains(option);
-                updateOptionAppearance(cardView, isSelected);
-
-                optionView.setOnClickListener(v -> {
-                    boolean newSelectionState = !isSelected;
-                    updateOptionAppearance(cardView, newSelectionState);
-                    
-                    if (optionSelectedListener != null) {
-                        optionSelectedListener.onOptionSelected(questionPosition, option, newSelectionState);
+            // Hiển thị EditText nếu là câu hỏi nhập liệu
+            EditText etInput = itemView.findViewById(R.id.etInput);
+            if (question.getQuestionType() == OnboardingQuestion.QuestionType.INPUT) {
+                llOptions.setVisibility(View.GONE);
+                etInput.setVisibility(View.VISIBLE);
+                // Đặt hint phù hợp
+                if (question.getTitle().toLowerCase().contains("tuổi") || question.getTitle().toLowerCase().contains("age")) {
+                    etInput.setHint(R.string.onboarding_age_hint);
+                    etInput.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+                } else if (question.getTitle().toLowerCase().contains("cân nặng") || question.getTitle().toLowerCase().contains("weight")) {
+                    etInput.setHint(R.string.onboarding_weight_hint);
+                    etInput.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else if (question.getTitle().toLowerCase().contains("chiều cao") || question.getTitle().toLowerCase().contains("height")) {
+                    etInput.setHint(R.string.onboarding_height_hint);
+                    etInput.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                }
+                // Gán giá trị nếu đã nhập trước đó
+                etInput.setText(question.getInputValue() != null ? question.getInputValue() : "");
+                // Lắng nghe thay đổi
+                etInput.addTextChangedListener(new android.text.TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        question.setInputValue(s.toString());
                     }
-                    
-                    // Update internal state
-                    updateSelection(questionPosition, option, newSelectionState);
+                    @Override
+                    public void afterTextChanged(android.text.Editable s) {}
                 });
-
-                llOptions.addView(optionView);
+            } else {
+                etInput.setVisibility(View.GONE);
+                llOptions.setVisibility(View.VISIBLE);
+                // Get selected options for this question
+                List<String> selectedForQuestion = selectedOptions.getOrDefault(questionPosition, new ArrayList<>());
+                // Add options
+                for (String option : question.getOptions()) {
+                    View optionView = LayoutInflater.from(itemView.getContext())
+                            .inflate(R.layout.item_option, llOptions, false);
+                    TextView tvOption = optionView.findViewById(R.id.tvOption);
+                    MaterialCardView cardView = (MaterialCardView) optionView;
+                    tvOption.setText(option);
+                    // Check if this option is selected
+                    boolean isSelected = selectedForQuestion.contains(option);
+                    updateOptionAppearance(cardView, isSelected);
+                    optionView.setOnClickListener(v -> {
+                        boolean newSelectionState = !isSelected;
+                        updateOptionAppearance(cardView, newSelectionState);
+                        if (optionSelectedListener != null) {
+                            optionSelectedListener.onOptionSelected(questionPosition, option, newSelectionState);
+                        }
+                        // Update internal state
+                        updateSelection(questionPosition, option, newSelectionState);
+                    });
+                    llOptions.addView(optionView);
+                }
             }
         }
 

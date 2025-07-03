@@ -69,11 +69,20 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             onboardingData = new HashMap<>();
         }
+        // Nhận thêm age, weight, height
+        String ageStr = intent.getStringExtra("age");
+        String weightStr = intent.getStringExtra("weight");
+        String heightStr = intent.getStringExtra("height");
+        Integer age = null;
+        Double weight = null, height = null;
+        try { if (ageStr != null && !ageStr.isEmpty()) age = Integer.parseInt(ageStr); } catch (Exception ignored) {}
+        try { if (weightStr != null && !weightStr.isEmpty()) weight = Double.parseDouble(weightStr); } catch (Exception ignored) {}
+        try { if (heightStr != null && !heightStr.isEmpty()) height = Double.parseDouble(heightStr); } catch (Exception ignored) {}
 
-        setupClickListeners();
+        setupClickListeners(age, weight, height);
     }
 
-    private void setupClickListeners() {
+    private void setupClickListeners(Integer age, Double weight, Double height) {
         btnRegister.setOnClickListener(v -> {
             String name = etName.getText().toString();
             String email = etEmail.getText().toString();
@@ -83,17 +92,20 @@ public class RegisterActivity extends AppCompatActivity {
             if (validateInput(name, email, password, confirmPassword)) {
                 // Extract onboarding data
                 String gender = getSelectedOption(0); // Question 0: Gender
-                String motivation = getSelectedOption(1); // Question 1: Motivation
-                List<String> healthcareIssues = onboardingData.get(2); // Question 2: Healthcare Issues
-                List<String> injuries = onboardingData.get(3); // Question 3: Injuries
-                List<String> dietaryRestrictions = onboardingData.get(4); // Question 4: Dietary Restrictions
-                String fitnessExperience = getSelectedOption(5); // Question 5: Fitness Experience
+                String motivation = getSelectedOption(4); // Question 4: Motivation (sau khi thêm 3 input)
+                List<String> healthcareIssues = onboardingData.get(5); // Question 5: Healthcare Issues
+                List<String> injuries = onboardingData.get(6); // Question 6: Injuries
+                List<String> dietaryRestrictions = onboardingData.get(7); // Question 7: Dietary Restrictions
+                String fitnessExperience = getSelectedOption(8); // Question 8: Fitness Experience
 
                 // Create RegisterRequest with all data
                 RegisterRequest registerRequest = new RegisterRequest(
-                    name, email, password, gender, motivation, 
+                    name, email, password, gender, motivation,
                     healthcareIssues, injuries, dietaryRestrictions, fitnessExperience
                 );
+                registerRequest.setAge(age);
+                registerRequest.setWeight(weight);
+                registerRequest.setHeight(height);
 
                 // Log the data being sent
                 Log.d("RegisterActivity", "Sending registration data:");
@@ -105,10 +117,12 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("RegisterActivity", "Injuries: " + injuries);
                 Log.d("RegisterActivity", "Dietary Restrictions: " + dietaryRestrictions);
                 Log.d("RegisterActivity", "Fitness Experience: " + fitnessExperience);
+                Log.d("RegisterActivity", "Age: " + age);
+                Log.d("RegisterActivity", "Weight: " + weight);
+                Log.d("RegisterActivity", "Height: " + height);
 
                 ApiService apiService = ApiClient.getClient().create(ApiService.class);
                 Log.d("RegisterActivity", "API Service created, making request to: " + ApiClient.getBaseUrl());
-                
                 // First, test backend connectivity
                 apiService.healthCheck().enqueue(new Callback<Map<String, String>>() {
                     @Override

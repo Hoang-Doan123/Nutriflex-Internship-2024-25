@@ -17,6 +17,9 @@ public class RegisterRequest {
     private List<String> dietaryRestrictions;
     @SerializedName("fitnessExperience")
     private String fitnessExperience;
+    private Integer age;
+    private Double weight;
+    private Double height;
 
     public RegisterRequest() {
     }
@@ -73,6 +76,18 @@ public class RegisterRequest {
         return fitnessExperience;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -108,5 +123,17 @@ public class RegisterRequest {
 
     public void setFitnessExperience(String fitnessExperience) {
         this.fitnessExperience = fitnessExperience;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
     }
 } 
