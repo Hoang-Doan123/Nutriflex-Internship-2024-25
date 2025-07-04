@@ -11,63 +11,72 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rest time: -- min"
-            android:textSize="18sp" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Rest time: &#45;&#45; min"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Heart recovery: &#45;&#45;"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Nutrition: &#45;&#45;"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Water intake: &#45;&#45; ml"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Calories intake: &#45;&#45; kcal"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Runner's meal suggestions:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="16dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="- Dish 1\n- Dish 2\n- Dish 3"-->
+<!--            android:layout_marginTop="4dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Foods to avoid:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="16dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="- Food 1\n- Food 2\n- Food 3"-->
+<!--            android:layout_marginTop="4dp" />-->
 
         <TextView
+            android:id="@+id/tvRecommendation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Heart recovery: --"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nutrition: --"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Water intake: -- ml"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Calories intake: -- kcal"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Runner's meal suggestions:"
+            android:text="Recommendation will appear here"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="- Dish 1\n- Dish 2\n- Dish 3"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Foods to avoid:"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="- Food 1\n- Food 2\n- Food 3"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
 

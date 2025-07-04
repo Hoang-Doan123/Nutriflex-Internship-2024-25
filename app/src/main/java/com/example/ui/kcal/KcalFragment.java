@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import androidx.lifecycle.ViewModelProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +32,8 @@ public class KcalFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private KcalSharedViewModel sharedViewModel;
 
     public KcalFragment() {
         // Required empty public constructor
@@ -77,6 +80,13 @@ public class KcalFragment extends Fragment {
 
         ViewPager2 viewPager = view.findViewById(R.id.viewPagerKcal);
         TabLayout tabLayout = view.findViewById(R.id.tabLayoutKcal);
+
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(KcalSharedViewModel.class);
+        sharedViewModel.getSwitchToAfterTab().observe(getViewLifecycleOwner(), switchTab -> {
+            if (Boolean.TRUE.equals(switchTab)) {
+                viewPager.setCurrentItem(1, true); // chuyển sang tab After Cardio
+            }
+        });
 
         viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull

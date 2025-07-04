@@ -11,4 +11,7 @@ public interface KcalApi {
 
     @GET("api/kcal/history/{userId}")
     Call<List<KcalRecord>> getHistory(@Path("userId") long userId);
+
+    @POST("api/nutrition/recommendation")
+    Call<CalorieRecommendationResponse> getCalorieRecommendation(@Body CalorieRecommendationRequest req);
 }

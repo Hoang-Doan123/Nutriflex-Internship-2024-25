@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.NavController;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +43,7 @@ import java.util.List;
 
 import com.example.R;
 import com.example.network.KcalRequest;
+import android.util.Log;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +65,7 @@ public class KcalBeforeFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private GeoPoint lastKnownGeoPoint = null;
     private boolean pendingStart = false;
+    private KcalSharedViewModel sharedViewModel;
 
     private final LocationListener locationListener = new LocationListener() {
         @Override
@@ -134,6 +139,7 @@ public class KcalBeforeFragment extends Fragment {
         mapView.getController().setZoom(18.0);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         viewModel = new ViewModelProvider(this).get(KcalViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(KcalSharedViewModel.class);
 
         // Take real location when open fragment
         getCurrentLocation(geoPoint -> {
@@ -178,6 +184,17 @@ public class KcalBeforeFragment extends Fragment {
                 // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
+
+                // Sau khi đo xong, chuyển tab sang After Cardio
+                viewModel.getMeasureResult().observe(getViewLifecycleOwner(), result -> {
+                    if (result != null) {
+                        int caloriesBurned = (int) result.getKcal();
+                        long userId = result.getUserId();
+                        Log.d("KcalDebug", "Set workout: userId=" + userId + ", caloriesBurned=" + caloriesBurned);
+                        sharedViewModel.setWorkoutResult(userId, caloriesBurned);
+                        sharedViewModel.requestSwitchToAfterTab();
+                    }
+                });
             }
         });
 

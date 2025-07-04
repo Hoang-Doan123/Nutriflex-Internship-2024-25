@@ -29,4 +29,17 @@
         android:name="com.example.ui.me.MeFragment"
         android:label="Me" />
 
+    <fragment
+        android:id="@+id/kcalBeforeFragment"
+        android:name="com.example.ui.kcal.KcalBeforeFragment"
+        android:label="Kcal Before" >
+        <action
+            android:id="@+id/action_kcalBeforeFragment_to_kcalAfterFragment"
+            app:destination="@id/kcalAfterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kcalAfterFragment"
+        android:name="com.example.ui.kcal.KcalAfterFragment"
+        android:label="Kcal After" />
+
 </navigation> 
