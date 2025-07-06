@@ -23,6 +23,7 @@ import com.example.model.auth.User;
 import com.example.network.ApiClient;
 import com.example.network.ApiService;
 import com.example.ui.main.MainActivity;
+import com.example.utils.SessionManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -205,6 +206,19 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d("RegisterActivity", "Personal data saved: " + savedPersonalData.getId());
                     Log.d("RegisterActivity", "Personal data motivation: " + savedPersonalData.getMotivation());
                     Log.d("RegisterActivity", "Personal data fitness experience: " + savedPersonalData.getFitnessExperience());
+                    
+                    // Save user profile to session
+                    SessionManager sessionManager = new SessionManager(RegisterActivity.this);
+                    sessionManager.setUserProfile(
+                        savedUser.getId(),
+                        savedUser.getEmail(),
+                        savedUser.getWeight(),
+                        savedUser.getHeight(),
+                        savedUser.getAge(),
+                        savedUser.getGender()
+                    );
+                    
+                    Log.d("RegisterActivity", "User profile saved to session - Weight: " + savedUser.getWeight() + "kg");
                     
                     // Register successfully, move to MainActivity
                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));

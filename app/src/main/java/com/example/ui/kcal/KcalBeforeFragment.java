@@ -19,7 +19,10 @@ import android.view.*;
 import android.widget.*;
 
 import com.example.R;
+import com.example.model.auth.User;
 import com.example.network.*;
+import com.example.service.UserService;
+import com.example.utils.SessionManager;
 import com.google.android.gms.location.*;
 
 import org.osmdroid.config.Configuration;
@@ -52,6 +55,8 @@ public class KcalBeforeFragment extends Fragment {
     private GeoPoint lastKnownGeoPoint = null;
     private boolean pendingStart = false;
     private KcalSharedViewModel sharedViewModel;
+    private SessionManager sessionManager;
+    private UserService userService;
     
     // GPS accuracy filtering constants
     private static final float MIN_ACCURACY = 10.0f; // meters
@@ -147,6 +152,8 @@ public class KcalBeforeFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         viewModel = new ViewModelProvider(this).get(KcalViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(KcalSharedViewModel.class);
+        sessionManager = new SessionManager(requireContext());
+        userService = new UserService(requireContext());
 
         // Take real location when open fragment
         getCurrentLocation(geoPoint -> {
@@ -198,23 +205,60 @@ public class KcalBeforeFragment extends Fragment {
                     routePoints.size(), distance, minutes, seconds);
                 Log.d("KcalDebug", debugInfo);
                 
-                // Calculate calories locally
-                int caloriesBurned = calculateCaloriesLocally(distance, duration, 70.0);
+                // Get user's actual weight from database
+                String userId = sessionManager.getUserId();
+                Log.d("KcalDebug", "Fetching weight for userId: " + userId);
+                
+                userService.getUserById(userId, new UserService.UserCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        double userWeight = user.getWeight() != null ? user.getWeight() : 70.0;
+                        Log.d("KcalDebug", "Using user weight from database: " + userWeight + "kg");
+                        
+                        // Calculate calories locally using user's actual weight from database
+                        int caloriesBurned = calculateCaloriesLocally(distance, duration, userWeight);
+                        
+                        // Show results on main thread
+                        requireActivity().runOnUiThread(() -> {
+                            showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                            
+                            // Update shared view model with local calories
+                            sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                            sharedViewModel.requestSwitchToAfterTab();
+                            
+                            // Still send to backend for history (optional) with user's actual weight
+                            KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                            viewModel.measureAndSave(request);
+                        });
+                    }
+                    
+                    @Override
+                    public void onError(String error) {
+                        Log.e("KcalDebug", "Failed to get user weight from database: " + error);
+                        // Fallback to session weight
+                        double userWeight = sessionManager.getUserWeight();
+                        Log.d("KcalDebug", "Using fallback weight from session: " + userWeight + "kg");
+                        
+                        int caloriesBurned = calculateCaloriesLocally(distance, duration, userWeight);
+                        
+                        // Show results on main thread
+                        requireActivity().runOnUiThread(() -> {
+                            showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                            
+                            // Update shared view model with local calories
+                            sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                            sharedViewModel.requestSwitchToAfterTab();
+                            
+                            // Still send to backend for history (optional) with user's actual weight
+                            KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                            viewModel.measureAndSave(request);
+                        });
+                    }
+                });
                 
                 // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
-                
-                // Show immediate results with calculated calories
-                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
-                
-                // Update shared view model with local calories
-                sharedViewModel.setWorkoutResult(1, caloriesBurned);
-                sharedViewModel.requestSwitchToAfterTab();
-                
-                // Still send to backend for history (optional)
-                KcalRequest request = new KcalRequest(1, distance, duration, 70.0, routeStr.toString());
-                viewModel.measureAndSave(request);
             }
         });
 
@@ -424,14 +468,26 @@ public class KcalBeforeFragment extends Fragment {
      */
     private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned) {
         String timeStr = String.format("%d min %02d sec", minutes, seconds);
-        String pace = (distance > 0 && (minutes > 0 || seconds > 0)) ? 
-            String.format("%.2f", (minutes + seconds/60.0) / distance) : "--";
+        
+        // Calculate speed in km/h and m/s
+        String speedKmh = "--";
+        String speedMs = "--";
+        
+        if (distance > 0 && (minutes > 0 || seconds > 0)) {
+            double totalTimeHours = (minutes + seconds/60.0) / 60.0; // Convert to hours
+            double speedKmPerHour = distance / totalTimeHours;
+            double speedMetersPerSecond = (distance * 1000) / (minutes * 60 + seconds); // Convert km to m, min+sec to seconds
+            
+            speedKmh = String.format("%.2f", speedKmPerHour);
+            speedMs = String.format("%.2f", speedMetersPerSecond);
+        }
         
         String resultText = String.format(
-                "Distance: %.3f km\nTime: %s\nPace: %s min/km\nPoints: %d\nKcal: %d",
+                "Distance: %.3f km\nTime: %s\nSpeed: %s km/h\nSpeed: %s m/s\nPoints: %d\nKcal: %d",
                 distance,
                 timeStr,
-                pace,
+                speedKmh,
+                speedMs,
                 totalPoints,
                 caloriesBurned
         );
