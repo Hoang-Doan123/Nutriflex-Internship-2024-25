@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Network Debug Tool"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvCurrentUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current URL: Loading..."
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="#F0F0F0"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/btnTestConnection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test Connection"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_button"
+        android:textColor="@color/white"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/btnChangeUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change URL"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_button"
+        android:textColor="@color/white"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/btnResetAuto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset to Auto-Detect"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_button"
+        android:textColor="@color/white"
+        android:padding="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connection Status:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready to test connection"
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#F8F8F8"
+            android:textColor="@color/black"
+            android:fontFamily="monospace" />
+
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Instructions:&#10;1. Test connection to check if backend is reachable&#10;2. Change URL if connection fails&#10;3. Use Reset to return to auto-detect mode"
+        android:textSize="12sp"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:background="#E8F4FD"
+        android:textColor="#1976D2" />
+
+</LinearLayout> 
