@@ -66,16 +66,37 @@ public class KcalBeforeFragment extends Fragment {
     private GeoPoint lastKnownGeoPoint = null;
     private boolean pendingStart = false;
     private KcalSharedViewModel sharedViewModel;
+    
+    // GPS accuracy filtering constants
+    private static final float MIN_ACCURACY = 10.0f; // meters
+    private static final float MIN_DISTANCE_BETWEEN_POINTS = 5.0f; // meters
+    private static final long LOCATION_UPDATE_INTERVAL = 1000; // 1 second
+    private static final long LOCATION_FASTEST_INTERVAL = 500; // 500ms
 
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            if (isMeasuring) {
-                GeoPoint point = new GeoPoint(location.getLatitude(), location.getLongitude());
-                routePoints.add(point);
-                drawRouteOrMarker();
+            if (isMeasuring && isLocationAccurate(location)) {
+                GeoPoint newPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                
+                // Only add point if it's far enough from the last point
+                if (routePoints.isEmpty() || isPointFarEnough(routePoints.get(routePoints.size() - 1), newPoint)) {
+                    routePoints.add(newPoint);
+                    drawRouteOrMarker();
+                    Log.d("KcalDebug", "Added point: " + newPoint.getLatitude() + ", " + newPoint.getLongitude() + 
+                          " Accuracy: " + location.getAccuracy() + "m");
+                }
             }
         }
+        
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+        
+        @Override
+        public void onProviderEnabled(@NonNull String provider) {}
+        
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {}
     };
 
     // TODO: Rename parameter arguments, choose names that match
@@ -165,25 +186,41 @@ public class KcalBeforeFragment extends Fragment {
                 int minutes = (int) (elapsedMillis / 60000);
                 int seconds = (int) ((elapsedMillis % 60000) / 1000);
                 int duration = (minutes == 0 && seconds > 0) ? 1 : minutes;
+                
+                Log.d("KcalDebug", "Stopped measuring. Total points: " + routePoints.size());
+                
                 double distance = calculateDistance(routePoints);
                 StringBuilder routeStr = new StringBuilder();
                 for (GeoPoint p : routePoints) {
                     routeStr.append(p.getLongitude()).append(" ").append(p.getLatitude()).append(",");
                 }
+                
                 // If user doesn't move, add current location if not exist
                 if (routePoints.isEmpty() && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Location lastLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (lastLoc != null) {
                         GeoPoint point = new GeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
                         routePoints.add(point);
+                        Log.d("KcalDebug", "Added stationary point: " + point.getLatitude() + ", " + point.getLongitude());
                     }
                 }
+                
                 drawRouteOrMarker();
-                KcalRequest request = new KcalRequest(1, distance, duration, 70.0, routeStr.toString());
-                viewModel.measureAndSave(request);
+                
+                // Show debug info
+                String debugInfo = String.format("Points: %d, Distance: %.3f km, Duration: %d min %d sec", 
+                    routePoints.size(), distance, minutes, seconds);
+                Log.d("KcalDebug", debugInfo);
+                
                 // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
+                
+                // Show immediate results
+                showMeasurementResults(distance, minutes, seconds, routePoints.size());
+                
+                KcalRequest request = new KcalRequest(1, distance, duration, 70.0, routeStr.toString());
+                viewModel.measureAndSave(request);
 
                 // Sau khi đo xong, chuyển tab sang After Cardio
                 viewModel.getMeasureResult().observe(getViewLifecycleOwner(), result -> {
@@ -199,25 +236,32 @@ public class KcalBeforeFragment extends Fragment {
         });
 
         viewModel.getMeasureResult().observe(getViewLifecycleOwner(), result -> {
-            double distance = result != null ? result.getDistance() : 0.0;
-            int duration = result != null ? result.getDuration() : 0;
-            String pace = (distance > 0 && duration > 0) ? String.format("%.2f", duration / distance) : "--";
-            int elevation = 0; // Not yet measured the real elevation
-            String heartBeat = "--"; // Not yet connect to watch
-            String timeStr = String.format("%d min %02d sec", lastElapsedMinutes, lastElapsedSeconds);
-            String resultText = String.format(
-                    "Distance: %.2f km\nKcal: %d\nPace: %s min/km\nElevation: %d m\nHeart beat: %s\nTime: %s",
-                    distance,
-                    result != null ? (int) result.getKcal() : 0,
-                    pace,
-                    (int) elevation,
-                    heartBeat,
-                    timeStr
-            );
-            if (lastElapsedMinutes < 10) {
-                resultText += "\nGreat start! Try to do at least 10 minutes of cardio for better health.";
+            if (result != null) {
+                // Update the display with calories from server
+                String currentText = tvResult.getText().toString();
+                String[] lines = currentText.split("\n");
+                
+                // Find the line with "Calculating calories..." and replace it
+                StringBuilder updatedText = new StringBuilder();
+                boolean caloriesAdded = false;
+                
+                for (String line : lines) {
+                    if (line.contains("Calculating calories...")) {
+                        updatedText.append("Kcal: ").append((int) result.getKcal()).append("\n");
+                        caloriesAdded = true;
+                    } else if (!line.trim().isEmpty()) {
+                        updatedText.append(line).append("\n");
+                    }
+                }
+                
+                // If we didn't find the "Calculating calories..." line, add calories at the end
+                if (!caloriesAdded) {
+                    updatedText.append("Kcal: ").append((int) result.getKcal());
+                }
+                
+                tvResult.setText(updatedText.toString());
+                Log.d("KcalDebug", "Updated with calories from server: " + (int) result.getKcal());
             }
-            tvResult.setText(resultText);
         });
     }
 
@@ -230,6 +274,18 @@ public class KcalBeforeFragment extends Fragment {
             polyline.getOutlinePaint().setStrokeWidth(8f);
             mapView.getOverlays().add(polyline);
             mapView.getController().setCenter(routePoints.get(routePoints.size() - 1));
+            
+            // Show real-time distance while measuring
+            if (isMeasuring) {
+                double currentDistance = calculateDistance(routePoints);
+                long elapsedMillis = System.currentTimeMillis() - startTime;
+                int minutes = (int) (elapsedMillis / 60000);
+                int seconds = (int) ((elapsedMillis % 60000) / 1000);
+                
+                String realTimeInfo = String.format("Distance: %.2f km | Time: %02d:%02d | Points: %d", 
+                    currentDistance, minutes, seconds, routePoints.size());
+                tvResult.setText("Measuring...\n" + realTimeInfo);
+            }
         } else if (routePoints.size() == 1) {
             Marker marker = new Marker(mapView);
             marker.setPosition(routePoints.get(0));
@@ -242,11 +298,42 @@ public class KcalBeforeFragment extends Fragment {
     }
 
     private double calculateDistance(List<GeoPoint> points) {
-        double dist = 0.0;
-        for (int i = 1; i < points.size(); i++) {
-            dist += points.get(i - 1).distanceToAsDouble(points.get(i));
+        if (points.size() < 2) {
+            return 0.0;
         }
-        return dist / 1000.0;
+        
+        double totalDistance = 0.0;
+        for (int i = 1; i < points.size(); i++) {
+            double segmentDistance = calculateHaversineDistance(
+                points.get(i - 1).getLatitude(), points.get(i - 1).getLongitude(),
+                points.get(i).getLatitude(), points.get(i).getLongitude()
+            );
+            totalDistance += segmentDistance;
+            Log.d("KcalDebug", "Segment " + i + ": " + String.format("%.2f", segmentDistance) + "m");
+        }
+        
+        Log.d("KcalDebug", "Total distance: " + String.format("%.2f", totalDistance) + "m (" + 
+              String.format("%.3f", totalDistance / 1000.0) + "km)");
+        return totalDistance / 1000.0; // Convert to kilometers
+    }
+    
+    /**
+     * Calculate distance between two points using Haversine formula
+     * More accurate than simple Euclidean distance for GPS coordinates
+     */
+    private double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
+        final double R = 6371000; // Earth's radius in meters
+        
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        
+        return R * c;
     }
 
     private void getCurrentLocation(LocationCallbackGeo callback) {
@@ -284,9 +371,30 @@ public class KcalBeforeFragment extends Fragment {
         routePoints.clear();
         tvResult.setText("Measuring...");
         locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1f, locationListener);
+            // Use both GPS and Network providers for better accuracy
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 
+                    LOCATION_UPDATE_INTERVAL, 
+                    MIN_DISTANCE_BETWEEN_POINTS, 
+                    locationListener
+                );
+            }
+            
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 
+                    LOCATION_UPDATE_INTERVAL, 
+                    MIN_DISTANCE_BETWEEN_POINTS, 
+                    locationListener
+                );
+            }
+            
+            Log.d("KcalDebug", "Started measuring with GPS accuracy: " + MIN_ACCURACY + "m, min distance: " + MIN_DISTANCE_BETWEEN_POINTS + "m");
         }
+        
         // Get the real location when start measuring
         getCurrentLocation(geoPoint -> {
             lastKnownGeoPoint = geoPoint;
@@ -306,6 +414,49 @@ public class KcalBeforeFragment extends Fragment {
             } else {
                 android.widget.Toast.makeText(requireContext(), "Location permission denied. Cannot start measuring.", android.widget.Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+    
+    private boolean isLocationAccurate(Location location) {
+        return location.getAccuracy() <= MIN_ACCURACY;
+    }
+
+    private boolean isPointFarEnough(GeoPoint point1, GeoPoint point2) {
+        return point1.distanceToAsDouble(point2) >= MIN_DISTANCE_BETWEEN_POINTS;
+    }
+    
+    /**
+     * Show measurement results immediately after stopping
+     */
+    private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints) {
+        String timeStr = String.format("%d min %02d sec", minutes, seconds);
+        String pace = (distance > 0 && (minutes > 0 || seconds > 0)) ? 
+            String.format("%.2f", (minutes + seconds/60.0) / distance) : "--";
+        
+        String resultText = String.format(
+                "Distance: %.3f km\nTime: %s\nPace: %s min/km\nPoints: %d\n\nCalculating calories...",
+                distance,
+                timeStr,
+                pace,
+                totalPoints
+        );
+        
+        if (minutes < 10) {
+            resultText += "\nGreat start! Try to do at least 10 minutes of cardio for better health.";
+        }
+        
+        tvResult.setText(resultText);
+        Log.d("KcalDebug", "Showing immediate results: " + resultText);
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (locationManager != null && locationListener != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+        if (mapView != null) {
+            mapView.onDetach();
         }
     }
 }
