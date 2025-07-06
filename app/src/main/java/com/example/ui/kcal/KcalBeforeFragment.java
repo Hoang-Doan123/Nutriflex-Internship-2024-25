@@ -6,43 +6,29 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Looper;
+import android.os.*;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.*;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.NavController;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
 import com.example.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+import com.example.network.*;
+import com.google.android.gms.location.*;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import com.example.R;
-import com.example.network.KcalRequest;
 import android.util.Log;
 
 /**
@@ -212,57 +198,27 @@ public class KcalBeforeFragment extends Fragment {
                     routePoints.size(), distance, minutes, seconds);
                 Log.d("KcalDebug", debugInfo);
                 
+                // Calculate calories locally
+                int caloriesBurned = calculateCaloriesLocally(distance, duration, 70.0);
+                
                 // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
                 
-                // Show immediate results
-                showMeasurementResults(distance, minutes, seconds, routePoints.size());
+                // Show immediate results with calculated calories
+                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
                 
+                // Update shared view model with local calories
+                sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                sharedViewModel.requestSwitchToAfterTab();
+                
+                // Still send to backend for history (optional)
                 KcalRequest request = new KcalRequest(1, distance, duration, 70.0, routeStr.toString());
                 viewModel.measureAndSave(request);
-
-                // Sau khi đo xong, chuyển tab sang After Cardio
-                viewModel.getMeasureResult().observe(getViewLifecycleOwner(), result -> {
-                    if (result != null) {
-                        int caloriesBurned = (int) result.getKcal();
-                        long userId = result.getUserId();
-                        Log.d("KcalDebug", "Set workout: userId=" + userId + ", caloriesBurned=" + caloriesBurned);
-                        sharedViewModel.setWorkoutResult(userId, caloriesBurned);
-                        sharedViewModel.requestSwitchToAfterTab();
-                    }
-                });
             }
         });
 
-        viewModel.getMeasureResult().observe(getViewLifecycleOwner(), result -> {
-            if (result != null) {
-                // Update the display with calories from server
-                String currentText = tvResult.getText().toString();
-                String[] lines = currentText.split("\n");
-                
-                // Find the line with "Calculating calories..." and replace it
-                StringBuilder updatedText = new StringBuilder();
-                boolean caloriesAdded = false;
-                
-                for (String line : lines) {
-                    if (line.contains("Calculating calories...")) {
-                        updatedText.append("Kcal: ").append((int) result.getKcal()).append("\n");
-                        caloriesAdded = true;
-                    } else if (!line.trim().isEmpty()) {
-                        updatedText.append(line).append("\n");
-                    }
-                }
-                
-                // If we didn't find the "Calculating calories..." line, add calories at the end
-                if (!caloriesAdded) {
-                    updatedText.append("Kcal: ").append((int) result.getKcal());
-                }
-                
-                tvResult.setText(updatedText.toString());
-                Log.d("KcalDebug", "Updated with calories from server: " + (int) result.getKcal());
-            }
-        });
+
     }
 
     private void drawRouteOrMarker() {
@@ -426,19 +382,58 @@ public class KcalBeforeFragment extends Fragment {
     }
     
     /**
+     * Calculate calories burned locally using MET formula
+     * MET (Metabolic Equivalent of Task) for running/walking
+     */
+    private int calculateCaloriesLocally(double distanceKm, int durationMinutes, double weightKg) {
+        if (distanceKm <= 0 || durationMinutes <= 0) {
+            return 0;
+        }
+        
+        // Calculate average speed in km/h
+        double speedKmh = (distanceKm / durationMinutes) * 60.0;
+        
+        // Determine MET value based on speed
+        double met;
+        if (speedKmh < 4.0) {
+            met = 2.5; // Walking slowly
+        } else if (speedKmh < 6.0) {
+            met = 4.0; // Walking briskly
+        } else if (speedKmh < 8.0) {
+            met = 6.0; // Jogging
+        } else if (speedKmh < 10.0) {
+            met = 8.0; // Running
+        } else if (speedKmh < 12.0) {
+            met = 10.0; // Fast running
+        } else {
+            met = 12.0; // Very fast running
+        }
+        
+        // Calculate calories: Calories = MET × Weight (kg) × Duration (hours)
+        double durationHours = durationMinutes / 60.0;
+        int calories = (int) (met * weightKg * durationHours);
+        
+        Log.d("KcalDebug", "Local calculation: distance=" + distanceKm + "km, duration=" + durationMinutes + 
+              "min, speed=" + String.format("%.1f", speedKmh) + "km/h, MET=" + met + ", calories=" + calories);
+        
+        return calories;
+    }
+    
+    /**
      * Show measurement results immediately after stopping
      */
-    private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints) {
+    private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned) {
         String timeStr = String.format("%d min %02d sec", minutes, seconds);
         String pace = (distance > 0 && (minutes > 0 || seconds > 0)) ? 
             String.format("%.2f", (minutes + seconds/60.0) / distance) : "--";
         
         String resultText = String.format(
-                "Distance: %.3f km\nTime: %s\nPace: %s min/km\nPoints: %d\n\nCalculating calories...",
+                "Distance: %.3f km\nTime: %s\nPace: %s min/km\nPoints: %d\nKcal: %d",
                 distance,
                 timeStr,
                 pace,
-                totalPoints
+                totalPoints,
+                caloriesBurned
         );
         
         if (minutes < 10) {
@@ -446,7 +441,7 @@ public class KcalBeforeFragment extends Fragment {
         }
         
         tvResult.setText(resultText);
-        Log.d("KcalDebug", "Showing immediate results: " + resultText);
+        Log.d("KcalDebug", "Showing results with local calories: " + caloriesBurned);
     }
     
     @Override

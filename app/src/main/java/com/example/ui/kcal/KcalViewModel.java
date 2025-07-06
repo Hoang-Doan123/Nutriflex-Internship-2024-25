@@ -1,21 +1,13 @@
 package com.example.ui.kcal;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import android.util.Log;
+import androidx.lifecycle.*;
 
-import com.example.network.KcalRecord;
-import com.example.network.KcalRequest;
-import com.example.network.RetrofitInstance;
-import com.example.network.CalorieRecommendationRequest;
-import com.example.network.CalorieRecommendationResponse;
+import com.example.network.*;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import retrofit2.*;
 
 public class KcalViewModel extends ViewModel {
 
@@ -35,37 +27,70 @@ public class KcalViewModel extends ViewModel {
     }
 
     public void fetchHistory(long userId) {
+        Log.d("KcalDebug", "Fetching history for userId: " + userId);
         RetrofitInstance.getApi().getHistory(userId).enqueue(new Callback<List<KcalRecord>>() {
             @Override
             public void onResponse(Call<List<KcalRecord>> call, Response<List<KcalRecord>> response) {
+                Log.d("KcalDebug", "History response code: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("KcalDebug", "History fetched successfully, count: " + response.body().size());
                     history.setValue(response.body());
                 } else {
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.e("KcalDebug", "History error: " + response.code() + " - " + errorBody);
+                    } catch (Exception e) {
+                        Log.e("KcalDebug", "Error reading history error body", e);
+                    }
                     history.setValue(Collections.emptyList());
                 }
             }
 
             @Override
             public void onFailure(Call<List<KcalRecord>> call, Throwable t) {
+                Log.e("KcalDebug", "History network failure", t);
                 history.setValue(Collections.emptyList());
             }
         });
     }
 
     public void measureAndSave(final KcalRequest request) {
+        String debugMsg = "Sending request: userId=" + request.getUserId() + 
+              ", distance=" + request.getDistance() + ", duration=" + request.getDuration() + 
+              ", weight=" + request.getWeight();
+        Log.d("KcalDebug", debugMsg);
+        
         RetrofitInstance.getApi().measureAndSave(request).enqueue(new Callback<KcalRecord>() {
             @Override
             public void onResponse(Call<KcalRecord> call, Response<KcalRecord> response) {
+                String responseMsg = "Server response code: " + response.code();
+                Log.d("KcalDebug", responseMsg);
+                
                 if (response.isSuccessful() && response.body() != null) {
-                    measureResult.setValue(response.body());
+                    KcalRecord result = response.body();
+                    String successMsg = "Server success: userId=" + result.getUserId() + 
+                          ", kcal=" + result.getKcal() + ", distance=" + result.getDistance();
+                    Log.d("KcalDebug", successMsg);
+                    measureResult.setValue(result);
                     fetchHistory(request.getUserId());
                 } else {
+                    String errorMsg = "Server error: " + response.code();
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        errorMsg += " - " + errorBody;
+                        Log.e("KcalDebug", errorMsg);
+                    } catch (Exception e) {
+                        Log.e("KcalDebug", "Error reading error body", e);
+                    }
+                    // Set error message in result for UI display
                     measureResult.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<KcalRecord> call, Throwable t) {
+                String failureMsg = "Network failure: " + t.getMessage();
+                Log.e("KcalDebug", failureMsg, t);
                 measureResult.setValue(null);
             }
         });
@@ -88,5 +113,11 @@ public class KcalViewModel extends ViewModel {
                 recommendationResult.setValue(null);
             }
         });
+    }
+    
+    public void testConnection() {
+        Log.d("KcalDebug", "Testing connection to backend...");
+        // Try to get history for user 1 as a test
+        fetchHistory(1);
     }
 }
