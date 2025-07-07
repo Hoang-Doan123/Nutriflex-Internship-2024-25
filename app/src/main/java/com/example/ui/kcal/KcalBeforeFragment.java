@@ -57,6 +57,7 @@ public class KcalBeforeFragment extends Fragment {
     private KcalSharedViewModel sharedViewModel;
     private SessionManager sessionManager;
     private UserService userService;
+    private Polyline polyline; // Add field for polyline
     
     // GPS accuracy filtering constants
     private static final float MIN_ACCURACY = 10.0f; // meters
@@ -179,15 +180,12 @@ public class KcalBeforeFragment extends Fragment {
                 int minutes = (int) (elapsedMillis / 60000);
                 int seconds = (int) ((elapsedMillis % 60000) / 1000);
                 int duration = (minutes == 0 && seconds > 0) ? 1 : minutes;
-                
                 Log.d("KcalDebug", "Stopped measuring. Total points: " + routePoints.size());
-                
                 double distance = calculateDistance(routePoints);
                 StringBuilder routeStr = new StringBuilder();
                 for (GeoPoint p : routePoints) {
                     routeStr.append(p.getLongitude()).append(" ").append(p.getLatitude()).append(",");
                 }
-                
                 // If user doesn't move, add current location if not exist
                 if (routePoints.isEmpty() && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Location lastLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -197,7 +195,7 @@ public class KcalBeforeFragment extends Fragment {
                         Log.d("KcalDebug", "Added stationary point: " + point.getLatitude() + ", " + point.getLongitude());
                     }
                 }
-                
+                // Đảm bảo luôn vẽ lại route/marker cuối cùng
                 drawRouteOrMarker();
                 
                 // Show debug info
@@ -266,33 +264,50 @@ public class KcalBeforeFragment extends Fragment {
     }
 
     private void drawRouteOrMarker() {
-        mapView.getOverlays().clear();
+        if (mapView == null) return; // An toàn khi mapView bị destroy
         if (routePoints.size() > 1) {
-            Polyline polyline = new Polyline();
+            if (polyline == null) {
+                polyline = new Polyline();
+                polyline.getOutlinePaint().setColor(getResources().getColor(android.R.color.holo_blue_dark, null));
+                polyline.getOutlinePaint().setStrokeWidth(8f);
+                mapView.getOverlays().add(polyline);
+            }
             polyline.setPoints(routePoints);
-            polyline.getOutlinePaint().setColor(getResources().getColor(android.R.color.holo_blue_dark, null));
-            polyline.getOutlinePaint().setStrokeWidth(8f);
-            mapView.getOverlays().add(polyline);
+            if (!mapView.getOverlays().contains(polyline)) {
+                mapView.getOverlays().add(polyline);
+            }
             mapView.getController().setCenter(routePoints.get(routePoints.size() - 1));
-            
             // Show real-time distance while measuring
             if (isMeasuring) {
                 double currentDistance = calculateDistance(routePoints);
                 long elapsedMillis = System.currentTimeMillis() - startTime;
                 int minutes = (int) (elapsedMillis / 60000);
                 int seconds = (int) ((elapsedMillis % 60000) / 1000);
-                
                 String realTimeInfo = String.format("Distance: %.2f km | Time: %02d:%02d | Points: %d", 
                     currentDistance, minutes, seconds, routePoints.size());
                 tvResult.setText("Measuring...\n" + realTimeInfo);
             }
         } else if (routePoints.size() == 1) {
-            Marker marker = new Marker(mapView);
-            marker.setPosition(routePoints.get(0));
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("Current Location");
-            mapView.getOverlays().add(marker);
-            mapView.getController().setCenter(routePoints.get(0));
+            if (polyline != null) {
+                mapView.getOverlays().remove(polyline);
+                polyline = null;
+            }
+            // KHÔNG clear overlays toàn bộ, chỉ add marker nếu chưa có
+            boolean hasMarker = false;
+            for (Overlay overlay : mapView.getOverlays()) {
+                if (overlay instanceof Marker) {
+                    hasMarker = true;
+                    break;
+                }
+            }
+            if (!hasMarker) {
+                Marker marker = new Marker(mapView);
+                marker.setPosition(routePoints.get(0));
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                marker.setTitle("Current Location");
+                mapView.getOverlays().add(marker);
+                mapView.getController().setCenter(routePoints.get(0));
+            }
         }
         mapView.invalidate();
     }
@@ -371,9 +386,21 @@ public class KcalBeforeFragment extends Fragment {
         routePoints.clear();
         tvResult.setText("Measuring...");
         locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        
+
+        // Luôn tạo polyline mới gắn với mapView hiện tại
+        if (polyline != null) {
+            if (mapView != null) mapView.getOverlays().remove(polyline);
+            polyline = null;
+        }
+        if (mapView != null) {
+            polyline = new Polyline();
+            polyline.setPoints(routePoints);
+            polyline.getOutlinePaint().setColor(getResources().getColor(android.R.color.holo_blue_dark, null));
+            polyline.getOutlinePaint().setStrokeWidth(8f);
+            mapView.getOverlays().add(polyline);
+        }
+
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // Use both GPS and Network providers for better accuracy
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 
@@ -382,7 +409,6 @@ public class KcalBeforeFragment extends Fragment {
                     locationListener
                 );
             }
-            
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, 
@@ -391,14 +417,11 @@ public class KcalBeforeFragment extends Fragment {
                     locationListener
                 );
             }
-            
             Log.d("KcalDebug", "Started measuring with GPS accuracy: " + MIN_ACCURACY + "m, min distance: " + MIN_DISTANCE_BETWEEN_POINTS + "m");
         }
-        
-        // Get the real location when start measuring
         getCurrentLocation(geoPoint -> {
             lastKnownGeoPoint = geoPoint;
-            mapView.getController().setCenter(geoPoint);
+            if (mapView != null) mapView.getController().setCenter(geoPoint);
         });
     }
 
@@ -505,9 +528,6 @@ public class KcalBeforeFragment extends Fragment {
         super.onDestroyView();
         if (locationManager != null && locationListener != null) {
             locationManager.removeUpdates(locationListener);
-        }
-        if (mapView != null) {
-            mapView.onDetach();
         }
     }
 }

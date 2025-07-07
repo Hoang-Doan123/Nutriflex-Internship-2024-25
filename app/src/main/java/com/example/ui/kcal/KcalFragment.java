@@ -88,6 +88,7 @@ public class KcalFragment extends Fragment {
             }
         });
 
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
