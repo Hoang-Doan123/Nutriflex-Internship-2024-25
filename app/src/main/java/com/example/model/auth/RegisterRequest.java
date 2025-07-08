@@ -20,6 +20,7 @@ public class RegisterRequest {
     private Integer age;
     private Double weight;
     private Double height;
+    private String goal;
 
     public RegisterRequest() {
     }
@@ -27,7 +28,7 @@ public class RegisterRequest {
     public RegisterRequest(String name, String email, String password, String gender, 
                           String motivation, List<String> healthcareIssues, 
                           List<String> injuries, List<String> dietaryRestrictions, 
-                          String fitnessExperience) {
+                          String fitnessExperience, String goal) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -37,6 +38,7 @@ public class RegisterRequest {
         this.injuries = injuries;
         this.dietaryRestrictions = dietaryRestrictions;
         this.fitnessExperience = fitnessExperience;
+        this.goal = goal;
     }
 
     // Getters
@@ -88,6 +90,10 @@ public class RegisterRequest {
         return height;
     }
 
+    public String getGoal() {
+        return goal;
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -135,5 +141,9 @@ public class RegisterRequest {
 
     public void setHeight(Double height) {
         this.height = height;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 } 

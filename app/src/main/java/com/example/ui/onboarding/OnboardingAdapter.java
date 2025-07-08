@@ -70,6 +70,19 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         R.drawable.ic_height,
                         OnboardingQuestion.QuestionType.INPUT
                 ),
+                // Question 1.4: Body Goal (Single Choice)
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_body_goal),
+                        "",
+                        R.drawable.ic_goal,
+                        Arrays.asList(
+                                context.getString(R.string.onboarding_lose_weight),
+                                context.getString(R.string.onboarding_gain_weight),
+                                context.getString(R.string.onboarding_maintain)
+                        ),
+                        false,
+                        OnboardingQuestion.QuestionType.BODY_GOAL
+                ),
                 // Question 2: Motivation
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_motivation),
@@ -173,7 +186,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         List<String> options = selectedOptions.get(questionPosition);
         
         // For single select questions, clear previous selection
-        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 5) { // Gender, Motivation, Fitness Experience
+        if (questionPosition == 0 || questionPosition == 1 || questionPosition == 5 || questionPosition == 4) { // Gender, Motivation, Fitness Experience, Body Goal
             options.clear();
         }
         

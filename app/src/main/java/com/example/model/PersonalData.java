@@ -17,18 +17,20 @@ public class PersonalData {
     private List<String> dietaryRestrictions;
     @SerializedName("fitnessExperience")
     private String fitnessExperience;
+    private String goal;
 
     public PersonalData() {
     }
 
     public PersonalData(String userId, String motivation, List<String> healthcareIssues, 
-                       List<String> injuries, List<String> dietaryRestrictions, String fitnessExperience) {
+                       List<String> injuries, List<String> dietaryRestrictions, String fitnessExperience, String goal) {
         this.userId = userId;
         this.motivation = motivation;
         this.healthcareIssues = healthcareIssues;
         this.injuries = injuries;
         this.dietaryRestrictions = dietaryRestrictions;
         this.fitnessExperience = fitnessExperience;
+        this.goal = goal;
     }
 
     // Getters
@@ -60,6 +62,10 @@ public class PersonalData {
         return fitnessExperience;
     }
 
+    public String getGoal() {
+        return goal;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -87,5 +93,9 @@ public class PersonalData {
 
     public void setFitnessExperience(String fitnessExperience) {
         this.fitnessExperience = fitnessExperience;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 } 

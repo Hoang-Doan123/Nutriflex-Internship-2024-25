@@ -93,16 +93,17 @@ public class RegisterActivity extends AppCompatActivity {
             if (validateInput(name, email, password, confirmPassword)) {
                 // Extract onboarding data
                 String gender = getSelectedOption(0); // Question 0: Gender
-                String motivation = getSelectedOption(4); // Question 4: Motivation (sau khi thêm 3 input)
-                List<String> healthcareIssues = onboardingData.get(5); // Question 5: Healthcare Issues
-                List<String> injuries = onboardingData.get(6); // Question 6: Injuries
-                List<String> dietaryRestrictions = onboardingData.get(7); // Question 7: Dietary Restrictions
-                String fitnessExperience = getSelectedOption(8); // Question 8: Fitness Experience
+                String goal = getSelectedOption(4); // Question 4: Body Goal (sau khi thêm câu hỏi mới)
+                String motivation = getSelectedOption(5); // Question 5: Motivation
+                List<String> healthcareIssues = onboardingData.get(6); // Question 6: Healthcare Issues
+                List<String> injuries = onboardingData.get(7); // Question 7: Injuries
+                List<String> dietaryRestrictions = onboardingData.get(8); // Question 8: Dietary Restrictions
+                String fitnessExperience = getSelectedOption(9); // Question 9: Fitness Experience
 
                 // Create RegisterRequest with all data
                 RegisterRequest registerRequest = new RegisterRequest(
                     name, email, password, gender, motivation,
-                    healthcareIssues, injuries, dietaryRestrictions, fitnessExperience
+                    healthcareIssues, injuries, dietaryRestrictions, fitnessExperience, goal
                 );
                 registerRequest.setAge(age);
                 registerRequest.setWeight(weight);
