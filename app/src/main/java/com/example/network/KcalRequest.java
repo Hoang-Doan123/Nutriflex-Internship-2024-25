@@ -1,10 +1,17 @@
 package com.example.network;
 
+import com.google.gson.annotations.SerializedName;
+
 public class KcalRequest {
+    @SerializedName("userId")
     private long userId;
+    @SerializedName("distance")
     private double distance;
+    @SerializedName("duration")
     private int duration;
+    @SerializedName("weight")
     private double weight;
+    @SerializedName("route")
     private String route;
 
     public KcalRequest(long userId, double distance, int duration, double weight, String route) {

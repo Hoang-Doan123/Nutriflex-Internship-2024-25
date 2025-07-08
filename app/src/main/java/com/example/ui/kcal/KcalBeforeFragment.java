@@ -34,6 +34,10 @@ import java.util.*;
 
 import android.util.Log;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link KcalBeforeFragment#newInstance} factory method to
@@ -513,9 +517,9 @@ public class KcalBeforeFragment extends Fragment {
         Log.d("KcalDebug", "userId uploaded to backend: " + userId + ", heartRateAvg uploaded: " + heartRateAvg);
         // Lưu ý: cần lưu lại startTime và endTime thực tế
         String type = "Running"; // hoặc lấy từ UI nếu có nhiều loại
-        java.time.LocalDateTime now = java.time.LocalDateTime.now();
-        String endTime = now.toString();
-        String startTime = now.minusMinutes(minutes).minusSeconds(seconds).toString();
+        ZonedDateTime nowVN = ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        String endTime = nowVN.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String startTime = nowVN.minusMinutes(minutes).minusSeconds(seconds).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         float calories = (float) caloriesBurned;
         float dist = (float) distance;
         int steps = totalPoints; // hoặc tính toán lại nếu có cảm biến bước chân
