@@ -217,27 +217,28 @@ public class RegisterActivity extends AppCompatActivity {
                     User savedUser = registerResponse.getUser();
                     PersonalData savedPersonalData = registerResponse.getPersonalData();
                     
-                    Log.d("RegisterActivity", "User registered successfully: " + savedUser.getId());
-                    Log.d("RegisterActivity", "Personal data saved: " + savedPersonalData.getId());
-                    Log.d("RegisterActivity", "Personal data motivation: " + savedPersonalData.getMotivation());
-                    Log.d("RegisterActivity", "Personal data fitness experience: " + savedPersonalData.getFitnessExperience());
+                    Log.d("RegisterActivity", "User registered successfully: " + (savedUser != null ? savedUser.getId() : "null"));
+                    Log.d("RegisterActivity", "Personal data saved: " + (savedPersonalData != null ? savedPersonalData.getId() : "null"));
+                    Log.d("RegisterActivity", "Personal data motivation: " + (savedPersonalData != null ? savedPersonalData.getMotivation() : "null"));
+                    Log.d("RegisterActivity", "Personal data fitness experience: " + (savedPersonalData != null ? savedPersonalData.getFitnessExperience() : "null"));
                     
-                    // Save user profile to session
-                    SessionManager sessionManager = new SessionManager(RegisterActivity.this);
-                    sessionManager.setUserProfile(
-                        savedUser.getId(),
-                        savedUser.getEmail(),
-                        savedUser.getWeight(),
-                        savedUser.getHeight(),
-                        savedUser.getAge(),
-                        savedUser.getGender()
-                    );
-                    
-                    Log.d("RegisterActivity", "User profile saved to session - Weight: " + savedUser.getWeight() + "kg");
-                    
-                    // Register successfully, move to MainActivity
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    finish();
+                    if (savedUser == null || savedUser.getId() == null || savedUser.getId().isEmpty()) {
+                        Log.e("SessionDebug", "userId from backend is null!");
+                    } else {
+                        SessionManager sessionManager = new SessionManager(RegisterActivity.this);
+                        sessionManager.setUserProfile(
+                            savedUser.getId(),
+                            savedUser.getEmail(),
+                            savedUser.getWeight(),
+                            savedUser.getHeight(),
+                            savedUser.getAge(),
+                            savedUser.getGender()
+                        );
+                        Log.d("SessionDebug", "Saved userId to session: " + savedUser.getId());
+                        // Register successfully, move to MainActivity
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        finish();
+                    }
                 } else {
                     // Process error (example: email exist)
                     String errorBody = "";

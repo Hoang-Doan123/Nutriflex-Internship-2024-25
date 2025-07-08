@@ -3,20 +3,24 @@ package com.example.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.util.Log;
+import android.widget.*;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.*;
 
 import com.example.R;
+import com.example.model.auth.User;
+import com.example.network.*;
 import com.example.ui.main.MainActivity;
 import com.example.ui.onboarding.OnboardingActivity;
+import com.example.utils.SessionManager;
+
+import java.util.*;
+
+import retrofit2.*;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApiClient.init(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -52,9 +57,46 @@ public class LoginActivity extends AppCompatActivity {
             String password = etPassword.getText().toString();
 
             if (validateInput(email, password)) {
-                // TODO: Implement actual login logic
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                ApiService apiService = ApiClient.getClient().create(ApiService.class);
+                Map<String, String> loginRequest = new HashMap<>();
+                loginRequest.put("email", email);
+                loginRequest.put("password", password);
+
+                apiService.loginUser(loginRequest).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            User user = response.body();
+                            if (user.getId() == null || user.getId().isEmpty()) {
+                                Log.e("SessionDebug", "userId from backend is null!");
+                            } else {
+                                SessionManager sessionManager = new SessionManager(LoginActivity.this);
+                                sessionManager.setUserProfile(
+                                    user.getId(),
+                                    user.getEmail(),
+                                    user.getWeight(),
+                                    user.getHeight(),
+                                    user.getAge(),
+                                    user.getGender()
+                                );
+                                Log.d("SessionDebug", "Saved userId to session: " + user.getId());
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        } else {
+                            runOnUiThread(() ->
+                                    Toast.makeText(LoginActivity.this, "Login failed: " + response.code(), Toast.LENGTH_LONG).show()
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        runOnUiThread(() ->
+                                Toast.makeText(LoginActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show()
+                        );
+                    }
+                });
             }
         });
 

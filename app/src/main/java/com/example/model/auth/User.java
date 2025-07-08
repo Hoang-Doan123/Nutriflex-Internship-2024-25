@@ -3,7 +3,7 @@ package com.example.model.auth;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
-    @SerializedName("_id")
+    @SerializedName(value = "id", alternate = {"_id"})
     private String id;
     private String name;
     private String email;

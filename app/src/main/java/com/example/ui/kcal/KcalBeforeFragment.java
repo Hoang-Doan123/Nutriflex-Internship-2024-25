@@ -210,8 +210,9 @@ public class KcalBeforeFragment extends Fragment {
                         Log.d("KcalDebug", "User from DB: weight=" + userWeight + ", age=" + userAge + ", height=" + userHeight);
                         showHeartRateInputDialog((heartRate) -> {
                             int caloriesBurned = calculateCaloriesWithHeartRate(distance, duration, userWeight, heartRate, userAge);
+                            float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
-                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
                                 sharedViewModel.setWorkoutResult(1, caloriesBurned);
                                 sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
@@ -226,8 +227,9 @@ public class KcalBeforeFragment extends Fragment {
                         Log.d("KcalDebug", "Using fallback weight from session: " + userWeight + "kg");
                         showHeartRateInputDialog((heartRate) -> {
                             int caloriesBurned = calculateCaloriesWithHeartRate(distance, duration, userWeight, heartRate, sessionManager.getUserAge());
+                            float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
-                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
                                 sharedViewModel.setWorkoutResult(1, caloriesBurned);
                                 sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
@@ -470,7 +472,7 @@ public class KcalBeforeFragment extends Fragment {
     /**
      * Show measurement results immediately after stopping
      */
-    private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned) {
+    private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned, String userId, float heartRateAvg) {
         String timeStr = String.format("%d min %02d sec", minutes, seconds);
         
         // Calculate speed in km/h and m/s
@@ -504,12 +506,12 @@ public class KcalBeforeFragment extends Fragment {
         Log.d("KcalDebug", "Showing results with local calories: " + caloriesBurned);
 
         // Gửi WorkoutSession lên backend
-        sendWorkoutSessionToBackend(distance, minutes, seconds, totalPoints, caloriesBurned);
+        sendWorkoutSessionToBackend(distance, minutes, seconds, totalPoints, caloriesBurned, userId, heartRateAvg);
     }
 
-    private void sendWorkoutSessionToBackend(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned) {
+    private void sendWorkoutSessionToBackend(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned, String userId, float heartRateAvg) {
+        Log.d("KcalDebug", "userId uploaded to backend: " + userId + ", heartRateAvg uploaded: " + heartRateAvg);
         // Lưu ý: cần lưu lại startTime và endTime thực tế
-        String userId = sessionManager.getUserId();
         String type = "Running"; // hoặc lấy từ UI nếu có nhiều loại
         java.time.LocalDateTime now = java.time.LocalDateTime.now();
         String endTime = now.toString();
@@ -517,7 +519,6 @@ public class KcalBeforeFragment extends Fragment {
         float calories = (float) caloriesBurned;
         float dist = (float) distance;
         int steps = totalPoints; // hoặc tính toán lại nếu có cảm biến bước chân
-        float heartRateAvg = lastHeartRateAvg; // cần lưu lại khi nhập nhịp tim
 
         com.example.model.WorkoutSession session = new com.example.model.WorkoutSession(
             userId, type, startTime, endTime, calories, dist, steps, heartRateAvg
