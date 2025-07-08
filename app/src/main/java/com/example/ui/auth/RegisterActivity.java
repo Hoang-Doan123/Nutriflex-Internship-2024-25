@@ -24,6 +24,7 @@ import com.example.network.ApiClient;
 import com.example.network.ApiService;
 import com.example.ui.main.MainActivity;
 import com.example.utils.SessionManager;
+import com.example.network.RetrofitInstance;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        
+        // Initialize network clients first
+        ApiClient.init(this);
+        RetrofitInstance.init(this);
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -92,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (validateInput(name, email, password, confirmPassword)) {
                 // Extract onboarding data
+                Log.d("RegisterActivity", "Onboarding data: " + onboardingData);
                 String gender = getSelectedOption(0); // Question 0: Gender
                 String goal = getSelectedOption(4); // Question 4: Body Goal (sau khi thêm câu hỏi mới)
                 String motivation = getSelectedOption(5); // Question 5: Motivation
@@ -99,6 +106,12 @@ public class RegisterActivity extends AppCompatActivity {
                 List<String> injuries = onboardingData.get(7); // Question 7: Injuries
                 List<String> dietaryRestrictions = onboardingData.get(8); // Question 8: Dietary Restrictions
                 String fitnessExperience = getSelectedOption(9); // Question 9: Fitness Experience
+
+                // Debug: Check all onboarding data positions
+                for (int i = 0; i <= 9; i++) {
+                    List<String> data = onboardingData.get(i);
+                    Log.d("RegisterActivity", "Question " + i + ": " + data);
+                }
 
                 // Create RegisterRequest with all data
                 RegisterRequest registerRequest = new RegisterRequest(
@@ -114,6 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("RegisterActivity", "Name: " + name);
                 Log.d("RegisterActivity", "Email: " + email);
                 Log.d("RegisterActivity", "Gender: " + gender);
+                Log.d("RegisterActivity", "Goal: " + goal);
                 Log.d("RegisterActivity", "Motivation: " + motivation);
                 Log.d("RegisterActivity", "Healthcare Issues: " + healthcareIssues);
                 Log.d("RegisterActivity", "Injuries: " + injuries);

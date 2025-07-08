@@ -3,95 +3,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:padding="16dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Network Debug Tool"
+        android:text="Network Debug"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:textColor="@color/black" />
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/tvCurrentUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current URL: Loading..."
+        android:text="Current Base URL: Loading..."
         android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:padding="12dp"
         android:background="#F0F0F0"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/btnTestConnection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test Connection"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_button"
-        android:textColor="@color/white"
-        android:padding="16dp" />
-
-    <Button
-        android:id="@+id/btnChangeUrl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change URL"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_button"
-        android:textColor="@color/white"
-        android:padding="16dp" />
-
-    <Button
-        android:id="@+id/btnResetAuto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reset to Auto-Detect"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_button"
-        android:textColor="@color/white"
-        android:padding="16dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Connection Status:"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/black" />
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginBottom="16dp">
 
         <TextView
-            android:id="@+id/tvStatus"
+            android:id="@+id/tvDeviceInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ready to test connection"
-            android:textSize="14sp"
-            android:padding="12dp"
+            android:text="Device Information: Loading..."
+            android:textSize="12sp"
             android:background="#F8F8F8"
-            android:textColor="@color/black"
+            android:padding="8dp"
             android:fontFamily="monospace" />
 
     </ScrollView>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Instructions:&#10;1. Test connection to check if backend is reachable&#10;2. Change URL if connection fails&#10;3. Use Reset to return to auto-detect mode"
-        android:textSize="12sp"
-        android:layout_marginTop="16dp"
-        android:padding="8dp"
-        android:background="#E8F4FD"
-        android:textColor="#1976D2" />
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnTestConnection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Connection"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnResetToAuto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset to Auto-Detect"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSetEmulator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Set Emulator"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnSetRealDevice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Set Real Device"
+                android:layout_marginStart="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout> 
