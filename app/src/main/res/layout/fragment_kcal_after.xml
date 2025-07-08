@@ -1,83 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.kcal.KcalAfterFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Card hiển thị lượng calo cần nạp -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardCalorieRecommendation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Rest time: &#45;&#45; min"-->
-<!--            android:textSize="18sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Heart recovery: &#45;&#45;"-->
-<!--            android:textSize="18sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Nutrition: &#45;&#45;"-->
-<!--            android:textSize="18sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Water intake: &#45;&#45; ml"-->
-<!--            android:textSize="18sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Calories intake: &#45;&#45; kcal"-->
-<!--            android:textSize="18sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Runner's meal suggestions:"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="16sp"-->
-<!--            android:layout_marginTop="16dp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="- Dish 1\n- Dish 2\n- Dish 3"-->
-<!--            android:layout_marginTop="4dp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Foods to avoid:"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="16sp"-->
-<!--            android:layout_marginTop="16dp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="- Food 1\n- Food 2\n- Food 3"-->
-<!--            android:layout_marginTop="4dp" />-->
-
-        <TextView
-            android:id="@+id/tvRecommendation"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recommendation will appear here"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp" />
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imgNutrition"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_nutrition"
+                android:contentDescription="Nutrition Icon"
+                android:layout_gravity="center_horizontal" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/tvGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Goal: --"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:id="@+id/tvCalorieRecommendation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommended Intake: -- kcal"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="28sp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tvCalorieBurned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calories Burned: -- kcal"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvNutritionAdvice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Advice: --"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Section gợi ý bữa ăn (placeholder) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMealSuggestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/cardCalorieRecommendation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvMealSuggestionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meal Suggestions"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvMealSuggestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Example: Grilled chicken, brown rice, salad, ..."
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

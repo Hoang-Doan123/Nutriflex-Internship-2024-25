@@ -2,7 +2,7 @@ package com.example.network;
 
 public class KcalRecord {
     private long id;
-    private long userId;
+    private String userId;
     private double distance;
     private int duration;
     private double weight;
@@ -11,7 +11,7 @@ public class KcalRecord {
     private String createdAt;
 
     public long getId() { return id; }
-    public long getUserId() { return userId; }
+    public String getUserId() { return userId; }
     public double getDistance() { return distance; }
     public int getDuration() { return duration; }
     public double getWeight() { return weight; }

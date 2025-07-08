@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class KcalRequest {
     @SerializedName("userId")
-    private long userId;
+    private String userId;
     @SerializedName("distance")
     private double distance;
     @SerializedName("duration")
@@ -14,7 +14,7 @@ public class KcalRequest {
     @SerializedName("route")
     private String route;
 
-    public KcalRequest(long userId, double distance, int duration, double weight, String route) {
+    public KcalRequest(String userId, double distance, int duration, double weight, String route) {
         this.userId = userId;
         this.distance = distance;
         this.duration = duration;
@@ -22,7 +22,7 @@ public class KcalRequest {
         this.route = route;
     }
 
-    public long getUserId() { return userId; }
+    public String getUserId() { return userId; }
     public double getDistance() { return distance; }
     public int getDuration() { return duration; }
     public double getWeight() { return weight; }

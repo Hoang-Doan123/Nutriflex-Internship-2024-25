@@ -217,9 +217,9 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                                sharedViewModel.setWorkoutResult(userId, caloriesBurned);
                                 sharedViewModel.requestSwitchToAfterTab();
-                                KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                                KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
                             });
                         });
@@ -234,9 +234,9 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                                sharedViewModel.setWorkoutResult(userId, caloriesBurned);
                                 sharedViewModel.requestSwitchToAfterTab();
-                                KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                                KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
                             });
                         });

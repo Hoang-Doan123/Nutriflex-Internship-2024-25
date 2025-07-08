@@ -16,7 +16,7 @@ public class KcalSharedViewModel extends ViewModel {
         return switchToAfterTab;
     }
 
-    public void setWorkoutResult(long userId, int caloriesBurned) {
+    public void setWorkoutResult(String userId, int caloriesBurned) {
         workoutResult.setValue(new WorkoutResult(userId, caloriesBurned));
     }
 
@@ -25,9 +25,9 @@ public class KcalSharedViewModel extends ViewModel {
     }
 
     public static class WorkoutResult {
-        public final long userId;
+        public final String userId;
         public final int caloriesBurned;
-        public WorkoutResult(long userId, int caloriesBurned) {
+        public WorkoutResult(String userId, int caloriesBurned) {
             this.userId = userId;
             this.caloriesBurned = caloriesBurned;
         }
