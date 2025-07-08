@@ -1,9 +1,15 @@
 package com.example.network;
 
+import com.example.model.Meal;
+import com.example.model.MealPlan;
+import com.example.model.NutritionGoals;
+import com.example.model.onboarding.OnboardingResponse;
 import com.example.model.PersonalData;
 import com.example.model.auth.RegisterRequest;
 import com.example.model.auth.RegisterResponse;
 import com.example.model.auth.User;
+import com.example.model.Workout;
+import com.example.model.WorkoutSession;
 
 import java.util.List;
 import java.util.Map;
@@ -35,4 +41,7 @@ public interface ApiService {
     
     @GET("api/users/{userId}")
     Call<User> getUserById(@Path("userId") String userId);
+
+    @POST("api/workout-sessions")
+    Call<WorkoutSession> saveWorkoutSession(@Body WorkoutSession session);
 }

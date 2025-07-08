@@ -195,66 +195,47 @@ public class KcalBeforeFragment extends Fragment {
                         Log.d("KcalDebug", "Added stationary point: " + point.getLatitude() + ", " + point.getLongitude());
                     }
                 }
-                // Đảm bảo luôn vẽ lại route/marker cuối cùng
                 drawRouteOrMarker();
-                
-                // Show debug info
                 String debugInfo = String.format("Points: %d, Distance: %.3f km, Duration: %d min %d sec", 
                     routePoints.size(), distance, minutes, seconds);
                 Log.d("KcalDebug", debugInfo);
-                
-                // Get user's actual weight from database
                 String userId = sessionManager.getUserId();
                 Log.d("KcalDebug", "Fetching weight for userId: " + userId);
-                
                 userService.getUserById(userId, new UserService.UserCallback() {
                     @Override
                     public void onSuccess(User user) {
                         double userWeight = user.getWeight() != null ? user.getWeight() : 70.0;
-                        Log.d("KcalDebug", "Using user weight from database: " + userWeight + "kg");
-                        
-                        // Calculate calories locally using user's actual weight from database
-                        int caloriesBurned = calculateCaloriesLocally(distance, duration, userWeight);
-                        
-                        // Show results on main thread
-                        requireActivity().runOnUiThread(() -> {
-                            showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
-                            
-                            // Update shared view model with local calories
-                            sharedViewModel.setWorkoutResult(1, caloriesBurned);
-                            sharedViewModel.requestSwitchToAfterTab();
-                            
-                            // Still send to backend for history (optional) with user's actual weight
-                            KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
-                            viewModel.measureAndSave(request);
+                        int userAge = user.getAge() != null ? user.getAge() : 25;
+                        double userHeight = user.getHeight() != null ? user.getHeight() : 170.0;
+                        Log.d("KcalDebug", "User from DB: weight=" + userWeight + ", age=" + userAge + ", height=" + userHeight);
+                        showHeartRateInputDialog((heartRate) -> {
+                            int caloriesBurned = calculateCaloriesWithHeartRate(distance, duration, userWeight, heartRate, userAge);
+                            requireActivity().runOnUiThread(() -> {
+                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                                sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                                sharedViewModel.requestSwitchToAfterTab();
+                                KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                                viewModel.measureAndSave(request);
+                            });
                         });
                     }
-                    
                     @Override
                     public void onError(String error) {
                         Log.e("KcalDebug", "Failed to get user weight from database: " + error);
-                        // Fallback to session weight
                         double userWeight = sessionManager.getUserWeight();
                         Log.d("KcalDebug", "Using fallback weight from session: " + userWeight + "kg");
-                        
-                        int caloriesBurned = calculateCaloriesLocally(distance, duration, userWeight);
-                        
-                        // Show results on main thread
-                        requireActivity().runOnUiThread(() -> {
-                            showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
-                            
-                            // Update shared view model with local calories
-                            sharedViewModel.setWorkoutResult(1, caloriesBurned);
-                            sharedViewModel.requestSwitchToAfterTab();
-                            
-                            // Still send to backend for history (optional) with user's actual weight
-                            KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
-                            viewModel.measureAndSave(request);
+                        showHeartRateInputDialog((heartRate) -> {
+                            int caloriesBurned = calculateCaloriesWithHeartRate(distance, duration, userWeight, heartRate, sessionManager.getUserAge());
+                            requireActivity().runOnUiThread(() -> {
+                                showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned);
+                                sharedViewModel.setWorkoutResult(1, caloriesBurned);
+                                sharedViewModel.requestSwitchToAfterTab();
+                                KcalRequest request = new KcalRequest(1, distance, duration, userWeight, routeStr.toString());
+                                viewModel.measureAndSave(request);
+                            });
                         });
                     }
                 });
-                
-                // Save real time to display m/s
                 lastElapsedMinutes = minutes;
                 lastElapsedSeconds = seconds;
             }
@@ -521,8 +502,113 @@ public class KcalBeforeFragment extends Fragment {
         
         tvResult.setText(resultText);
         Log.d("KcalDebug", "Showing results with local calories: " + caloriesBurned);
+
+        // Gửi WorkoutSession lên backend
+        sendWorkoutSessionToBackend(distance, minutes, seconds, totalPoints, caloriesBurned);
     }
-    
+
+    private void sendWorkoutSessionToBackend(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned) {
+        // Lưu ý: cần lưu lại startTime và endTime thực tế
+        String userId = sessionManager.getUserId();
+        String type = "Running"; // hoặc lấy từ UI nếu có nhiều loại
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        String endTime = now.toString();
+        String startTime = now.minusMinutes(minutes).minusSeconds(seconds).toString();
+        float calories = (float) caloriesBurned;
+        float dist = (float) distance;
+        int steps = totalPoints; // hoặc tính toán lại nếu có cảm biến bước chân
+        float heartRateAvg = lastHeartRateAvg; // cần lưu lại khi nhập nhịp tim
+
+        com.example.model.WorkoutSession session = new com.example.model.WorkoutSession(
+            userId, type, startTime, endTime, calories, dist, steps, heartRateAvg
+        );
+        com.example.network.ApiService apiService = com.example.network.ApiClient.getClient().create(com.example.network.ApiService.class);
+        apiService.saveWorkoutSession(session).enqueue(new retrofit2.Callback<com.example.model.WorkoutSession>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.model.WorkoutSession> call, retrofit2.Response<com.example.model.WorkoutSession> response) {
+                if (response.isSuccessful()) {
+                    Log.d("KcalDebug", "WorkoutSession saved to backend: " + response.body());
+                } else {
+                    Log.e("KcalDebug", "Failed to save WorkoutSession: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<com.example.model.WorkoutSession> call, Throwable t) {
+                Log.e("KcalDebug", "Error saving WorkoutSession: " + t.getMessage());
+            }
+        });
+    }
+
+    // Lưu lại nhịp tim vừa nhập để gửi lên backend
+    private float lastHeartRateAvg = -1;
+
+    // Hàm hiển thị dialog nhập nhịp tim
+    private void showHeartRateInputDialog(HeartRateCallback callback) {
+        requireActivity().runOnUiThread(() -> {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext());
+            builder.setTitle("Insert average heart rate");
+            builder.setMessage("Insert average heart rate on your sensor device (bpm):");
+            final android.widget.EditText input = new android.widget.EditText(requireContext());
+            input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+            input.setHint("Example: 135");
+            builder.setView(input);
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String value = input.getText().toString();
+                int heartRate = value.isEmpty() ? -1 : Integer.parseInt(value);
+                lastHeartRateAvg = heartRate > 0 ? heartRate : -1;
+                callback.onHeartRateEntered(heartRate);
+            });
+            builder.setNegativeButton("Skip", (dialog, which) -> {
+                lastHeartRateAvg = -1;
+                callback.onHeartRateEntered(-1);
+            });
+            builder.setCancelable(false);
+            builder.show();
+        });
+    }
+
+    // Callback interface cho dialog nhập nhịp tim
+    private interface HeartRateCallback {
+        void onHeartRateEntered(int heartRate);
+    }
+
+    // Hàm tính calo có xét nhịp tim
+    private int calculateCaloriesWithHeartRate(double distanceKm, int durationMinutes, double weightKg, int heartRate, int age) {
+        if (distanceKm <= 0 || durationMinutes <= 0) {
+            return 0;
+        }
+        double durationHours = durationMinutes / 60.0;
+        double calories = 0;
+        boolean usedHeartRateFormula = false;
+        Log.d("KcalDebug", "Input for calorie calc: distance=" + distanceKm + ", duration=" + durationMinutes + ", weight=" + weightKg + ", heartRate=" + heartRate + ", age=" + age);
+        if (heartRate > 0 && age > 0) {
+            calories = ((age * 0.2017) - (weightKg * 0.09036) + (heartRate * 0.6309) - 55.0969) * durationMinutes / 4.184;
+            usedHeartRateFormula = true;
+        }
+        // Nếu calories < 1 hoặc âm, fallback sang MET
+        if (calories < 1) {
+            double speedKmh = (distanceKm / durationMinutes) * 60.0;
+            double met;
+            if (speedKmh < 4.0) {
+                met = 2.5;
+            } else if (speedKmh < 6.0) {
+                met = 4.0;
+            } else if (speedKmh < 8.0) {
+                met = 6.0;
+            } else if (speedKmh < 10.0) {
+                met = 8.0;
+            } else if (speedKmh < 12.0) {
+                met = 10.0;
+            } else {
+                met = 12.0;
+            }
+            calories = met * weightKg * durationHours;
+            usedHeartRateFormula = false;
+        }
+        Log.d("KcalDebug", "Calories: " + calories + (usedHeartRateFormula ? " (heart rate formula)" : " (MET fallback)"));
+        return (int) Math.max(calories, 0);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
