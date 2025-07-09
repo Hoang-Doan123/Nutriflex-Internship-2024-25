@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.R;
 
@@ -70,7 +73,34 @@ public class DailyWorkoutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupUI(view);
+
+        TextView tvWorkoutName = view.findViewById(R.id.tvWorkoutName);
+        TextView tvWorkoutDuration = view.findViewById(R.id.tvWorkoutDuration);
+        TextView tvWorkoutDesc = view.findViewById(R.id.tvWorkoutDesc);
+        ImageView ivWorkoutImage = view.findViewById(R.id.ivWorkoutImage);
+        Button btnStartWorkout = view.findViewById(R.id.btnStartWorkout);
+        TextView tvStreak = view.findViewById(R.id.tvStreak);
+        TextView tvTotalWorkouts = view.findViewById(R.id.tvTotalWorkouts);
+        TextView tvMotivation = view.findViewById(R.id.tvMotivation);
+        View progressWeekly = view.findViewById(R.id.progressWeekly);
+
+        // Set data (có thể lấy từ ViewModel hoặc API)
+        tvWorkoutName.setText("Back and Chest");
+        tvWorkoutDuration.setText("45 minutes");
+        tvWorkoutDesc.setText("A balanced workout for upper body strength.");
+        ivWorkoutImage.setImageResource(R.drawable.ic_workout);
+
+        tvStreak.setText("Current Streak: 5 days");
+        tvTotalWorkouts.setText("Total Workouts: 12");
+        if (progressWeekly instanceof com.google.android.material.progressindicator.LinearProgressIndicator) {
+            ((com.google.android.material.progressindicator.LinearProgressIndicator) progressWeekly).setProgress(70);
+        }
+
+        tvMotivation.setText("\u201CPush yourself, because no one else is going to do it for you.\u201D");
+
+        btnStartWorkout.setOnClickListener(v -> {
+            // TODO: Chuyển sang màn hình workout detail hoặc bắt đầu workout
+        });
     }
 
     private void setupUI(View view) {
