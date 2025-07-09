@@ -47,4 +47,53 @@ public interface ApiService {
 
     @GET("api/questionnaires/{userId}")
     Call<List<Questionnaire>> getQuestionnairesByUserId(@Path("userId") String userId);
+
+    // Onboarding APIs
+    @POST("api/onboarding/save")
+    Call<OnboardingResponse> saveOnboardingData(@Query("userId") String userId, @Body Map<String, Object> onboardingData);
+
+    @GET("api/onboarding/data")
+    Call<OnboardingResponse> getOnboardingData(@Query("userId") String userId);
+
+    // Meal Plan APIs
+    @POST("api/meal-plans/generate")
+    Call<MealPlan> generateMealPlan(@Query("userId") String userId, @Body NutritionGoals nutritionGoals);
+
+    @GET("api/meal-plans/{userId}/{date}")
+    Call<MealPlan> getMealPlan(@Path("userId") String userId, @Path("date") String date);
+
+    @POST("api/meal-plans")
+    Call<MealPlan> saveMealPlan(@Body MealPlan mealPlan);
+
+    @PUT("api/meal-plans/{id}")
+    Call<MealPlan> updateMealPlan(@Path("id") String id, @Body MealPlan mealPlan);
+
+    @DELETE("api/meal-plans/{id}")
+    Call<Void> deleteMealPlan(@Path("id") String id);
+
+    // Nutrition Goals APIs
+    @POST("api/nutrition-goals")
+    Call<NutritionGoals> saveNutritionGoals(@Body NutritionGoals nutritionGoals);
+
+    @GET("api/nutrition-goals/{userId}")
+    Call<NutritionGoals> getNutritionGoals(@Path("userId") String userId);
+
+    @PUT("api/nutrition-goals/{userId}")
+    Call<NutritionGoals> updateNutritionGoals(@Path("userId") String userId, @Body NutritionGoals nutritionGoals);
+
+    // Meal APIs
+    @GET("api/meals")
+    Call<List<Meal>> getAllMeals();
+
+    @GET("api/meals/{id}")
+    Call<Meal> getMealById(@Path("id") String id);
+
+    @POST("api/meals")
+    Call<Meal> createMeal(@Body Meal meal);
+
+    @GET("api/meals/search")
+    Call<List<Meal>> searchMealsByName(@Query("name") String name);
+
+    @GET("api/meals/calories")
+    Call<List<Meal>> getMealsByCalorieRange(@Query("minCalories") int minCalories, @Query("maxCalories") int maxCalories);
 }
