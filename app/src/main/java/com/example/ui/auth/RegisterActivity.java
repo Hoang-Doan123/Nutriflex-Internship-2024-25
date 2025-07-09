@@ -234,7 +234,10 @@ public class RegisterActivity extends AppCompatActivity {
                             savedUser.getAge(),
                             savedUser.getGender()
                         );
-                        Log.d("SessionDebug", "Saved userId to session: " + savedUser.getId());
+                        // Lưu userId vào SharedPreferences để các fragment khác dùng
+                        getSharedPreferences("NutriFlexPrefs", MODE_PRIVATE)
+                            .edit().putString("userId", savedUser.getId()).apply();
+                        Log.d("SessionDebug", "Saved userId to session and SharedPreferences: " + savedUser.getId());
                         // Lưu workoutType vào questionnaires
                         int workoutTypePosition = 10; // Đúng vị trí câu hỏi Workout Type
                         String workoutType = getSelectedOption(workoutTypePosition);

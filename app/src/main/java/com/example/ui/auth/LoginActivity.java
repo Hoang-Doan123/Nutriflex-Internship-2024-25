@@ -79,7 +79,10 @@ public class LoginActivity extends AppCompatActivity {
                                     user.getAge(),
                                     user.getGender()
                                 );
-                                Log.d("SessionDebug", "Saved userId to session: " + user.getId());
+                                // Lưu userId vào SharedPreferences để các fragment khác dùng
+                                getSharedPreferences("NutriFlexPrefs", MODE_PRIVATE)
+                                    .edit().putString("userId", user.getId()).apply();
+                                Log.d("SessionDebug", "Saved userId to session and SharedPreferences: " + user.getId());
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             }

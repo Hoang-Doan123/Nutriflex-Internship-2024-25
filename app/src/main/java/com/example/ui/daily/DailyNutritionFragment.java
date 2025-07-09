@@ -1,69 +1,74 @@
 package com.example.ui.daily;
 
+import android.app.AlertDialog;
+import android.content.*;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.*;
+import android.widget.*;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.recyclerview.widget.*;
 
 import com.example.R;
+import com.example.model.MealPlan;
+import com.example.model.NutritionGoals;
+import com.example.service.MealPlanService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link DailyNutritionFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment for displaying daily nutrition information and creating personalized meal plans.
  */
 public class DailyNutritionFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "DailyNutritionFragment";
+    private static final String PREF_NAME = "NutriFlexPrefs";
+    private static final String KEY_USER_ID = "userId";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // UI Components
+    private TextView tvBreakfastMeal, tvBreakfastCalories, tvBreakfastTime;
+    private TextView tvLunchMeal, tvLunchCalories, tvLunchTime;
+    private TextView tvDinnerMeal, tvDinnerCalories, tvDinnerTime;
+    private TextView tvTotalCalories, tvMacros;
+    private LinearProgressIndicator progressCalories;
+    private FloatingActionButton fabCreateMealPlan;
+    private ProgressBar progressBar;
+
+    // Services
+    private MealPlanService mealPlanService;
+    private String userId;
+    private MealPlan currentMealPlan;
 
     public DailyNutritionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DailyNutritionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DailyNutritionFragment newInstance(String param1, String param2) {
-        DailyNutritionFragment fragment = new DailyNutritionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static DailyNutritionFragment newInstance() {
+        return new DailyNutritionFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        mealPlanService = new MealPlanService(requireContext());
+        userId = getUserId();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_daily_nutrition, container, false);
     }
 
@@ -71,12 +76,354 @@ public class DailyNutritionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupUI(view);
+        loadTodayMealPlan();
     }
 
     private void setupUI(View view) {
-        // TODO: Implement meal schedule display
-        // TODO: Implement nutrition tracking
-        // TODO: Implement streaks
-        // TODO: Implement calorie tracking
+        Log.d(TAG, "Setting up UI components");
+        
+        // Initialize UI components
+        tvBreakfastMeal = view.findViewById(R.id.tvBreakfastMeal);
+        tvBreakfastCalories = view.findViewById(R.id.tvBreakfastCalories);
+        tvBreakfastTime = view.findViewById(R.id.tvBreakfastTime);
+        
+        tvLunchMeal = view.findViewById(R.id.tvLunchMeal);
+        tvLunchCalories = view.findViewById(R.id.tvLunchCalories);
+        tvLunchTime = view.findViewById(R.id.tvLunchTime);
+        
+        tvDinnerMeal = view.findViewById(R.id.tvDinnerMeal);
+        tvDinnerCalories = view.findViewById(R.id.tvDinnerCalories);
+        tvDinnerTime = view.findViewById(R.id.tvDinnerTime);
+        
+        tvTotalCalories = view.findViewById(R.id.tvTotalCalories);
+        tvMacros = view.findViewById(R.id.tvMacros);
+        progressCalories = view.findViewById(R.id.progressCalories);
+        fabCreateMealPlan = view.findViewById(R.id.fabCreateMealPlan);
+
+        // Set up click listeners
+        fabCreateMealPlan.setOnClickListener(v -> {
+            Log.d(TAG, "FAB clicked - showing nutrition goals dialog");
+            showNutritionGoalsDialog();
+        });
+
+        // Set default meal times
+        tvBreakfastTime.setText("8:00 AM");
+        tvLunchTime.setText("1:00 PM");
+        tvDinnerTime.setText("7:00 PM");
+        
+        Log.d(TAG, "UI setup completed successfully");
+    }
+
+    private void loadTodayMealPlan() {
+        Log.d(TAG, "Loading today's meal plan");
+        
+        if (TextUtils.isEmpty(userId)) {
+            Log.w(TAG, "User ID is empty, cannot load meal plan");
+            return;
+        }
+
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        Log.d(TAG, "Loading meal plan for date: " + today + ", User ID: " + userId);
+        
+        mealPlanService.getMealPlan(userId, today, new MealPlanService.MealPlanCallback() {
+            @Override
+            public void onSuccess(MealPlan mealPlan) {
+                Log.d(TAG, "Meal plan loaded successfully");
+                currentMealPlan = mealPlan;
+                updateUIWithMealPlan(mealPlan);
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Failed to load meal plan: " + error);
+                // Show default/empty state
+                showDefaultMealPlan();
+            }
+        });
+    }
+
+    private void showNutritionGoalsDialog() {
+        Log.d(TAG, "Showing nutrition goals dialog");
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_nutrition_goals, null);
+        
+        builder.setView(dialogView)
+                .setTitle("Create Personalized Meal Plan")
+                .setPositiveButton("Generate Plan", (dialog, which) -> {
+                    Log.d(TAG, "Generate Plan button clicked");
+                    NutritionGoals goals = extractNutritionGoals(dialogView);
+                    if (goals != null) {
+                        Log.d(TAG, "Nutrition goals extracted successfully");
+                        generateMealPlan(goals);
+                    } else {
+                        Log.w(TAG, "Failed to extract nutrition goals");
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    Log.d(TAG, "Cancel button clicked");
+                    dialog.dismiss();
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Log.d(TAG, "Nutrition goals dialog displayed");
+    }
+
+    private NutritionGoals extractNutritionGoals(View dialogView) {
+        Log.d(TAG, "Extracting nutrition goals from dialog");
+        try {
+            // Extract daily calories
+            TextInputEditText etDailyCalories = dialogView.findViewById(R.id.etDailyCalories);
+            int dailyCalories = Integer.parseInt(etDailyCalories.getText().toString());
+            Log.d(TAG, "Daily calories: " + dailyCalories);
+
+            // Extract meal plan type
+            RadioGroup rgMealPlanType = dialogView.findViewById(R.id.rgMealPlanType);
+            String mealPlanType = getMealPlanType(rgMealPlanType.getCheckedRadioButtonId());
+            Log.d(TAG, "Meal plan type: " + mealPlanType);
+
+            // Extract meals per day
+            RadioGroup rgMealsPerDay = dialogView.findViewById(R.id.rgMealsPerDay);
+            int mealsPerDay = getMealsPerDay(rgMealsPerDay.getCheckedRadioButtonId());
+            Log.d(TAG, "Meals per day: " + mealsPerDay);
+
+            // Extract include snacks
+            CheckBox cbIncludeSnacks = dialogView.findViewById(R.id.cbIncludeSnacks);
+            boolean includeSnacks = cbIncludeSnacks.isChecked();
+            Log.d(TAG, "Include snacks: " + includeSnacks);
+
+            // Extract dietary restrictions
+            List<String> dietaryRestrictions = new ArrayList<>();
+            if (((CheckBox) dialogView.findViewById(R.id.cbVegetarian)).isChecked()) dietaryRestrictions.add("vegetarian");
+            if (((CheckBox) dialogView.findViewById(R.id.cbVegan)).isChecked()) dietaryRestrictions.add("vegan");
+            if (((CheckBox) dialogView.findViewById(R.id.cbGlutenFree)).isChecked()) dietaryRestrictions.add("gluten-free");
+            if (((CheckBox) dialogView.findViewById(R.id.cbDairyFree)).isChecked()) dietaryRestrictions.add("dairy-free");
+            if (((CheckBox) dialogView.findViewById(R.id.cbLowCarb)).isChecked()) dietaryRestrictions.add("low-carb");
+            if (((CheckBox) dialogView.findViewById(R.id.cbLowFat)).isChecked()) dietaryRestrictions.add("low-fat");
+            Log.d(TAG, "Dietary restrictions: " + dietaryRestrictions);
+
+            // Extract food preferences
+            TextInputEditText etFoodPreferences = dialogView.findViewById(R.id.etFoodPreferences);
+            String foodPreferencesText = etFoodPreferences.getText().toString();
+            List<String> foodPreferences = TextUtils.isEmpty(foodPreferencesText) ? 
+                new ArrayList<>() : Arrays.asList(foodPreferencesText.split(","));
+            Log.d(TAG, "Food preferences: " + foodPreferences);
+
+            // Extract allergies
+            TextInputEditText etAllergies = dialogView.findViewById(R.id.etAllergies);
+            String allergiesText = etAllergies.getText().toString();
+            List<String> allergies = TextUtils.isEmpty(allergiesText) ? 
+                new ArrayList<>() : Arrays.asList(allergiesText.split(","));
+            Log.d(TAG, "Allergies: " + allergies);
+
+            // Set default macronutrient percentages based on meal plan type
+            double proteinPercentage, carbohydratePercentage, fatPercentage;
+            switch (mealPlanType) {
+                case "weight_loss":
+                    proteinPercentage = 30.0;
+                    carbohydratePercentage = 40.0;
+                    fatPercentage = 30.0;
+                    break;
+                case "muscle_gain":
+                    proteinPercentage = 35.0;
+                    carbohydratePercentage = 45.0;
+                    fatPercentage = 20.0;
+                    break;
+                case "maintenance":
+                    proteinPercentage = 25.0;
+                    carbohydratePercentage = 50.0;
+                    fatPercentage = 25.0;
+                    break;
+                default: // general_health
+                    proteinPercentage = 20.0;
+                    carbohydratePercentage = 55.0;
+                    fatPercentage = 25.0;
+                    break;
+            }
+            
+            Log.d(TAG, "Macronutrient percentages - Protein: " + proteinPercentage + 
+                      "%, Carbs: " + carbohydratePercentage + "%, Fat: " + fatPercentage + "%");
+            String currentUserId = getUserId();
+            if (TextUtils.isEmpty(currentUserId)) {
+                Log.e(TAG, "User ID is empty! Cannot create NutritionGoals.");
+                Toast.makeText(requireContext(), "User not logged in. Please log in again.", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            NutritionGoals goals = new NutritionGoals(currentUserId, dailyCalories, proteinPercentage, 
+                                        carbohydratePercentage, fatPercentage, dietaryRestrictions, 
+                                        foodPreferences, allergies, mealPlanType, mealsPerDay, includeSnacks);
+            
+            Log.d(TAG, "Nutrition goals created successfully: " + goals.toString());
+            return goals;
+
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "NumberFormatException while parsing daily calories", e);
+            Toast.makeText(requireContext(), "Please enter valid daily calories", Toast.LENGTH_SHORT).show();
+            return null;
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error while extracting nutrition goals", e);
+            Toast.makeText(requireContext(), "Error processing nutrition goals", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    private String getMealPlanType(int checkedId) {
+        String mealPlanType;
+        if (checkedId == R.id.rbWeightLoss) mealPlanType = "weight_loss";
+        else if (checkedId == R.id.rbMuscleGain) mealPlanType = "muscle_gain";
+        else if (checkedId == R.id.rbMaintenance) mealPlanType = "maintenance";
+        else mealPlanType = "general_health";
+        
+        Log.d(TAG, "Meal plan type selected: " + mealPlanType + " (checkedId: " + checkedId + ")");
+        return mealPlanType;
+    }
+
+    private int getMealsPerDay(int checkedId) {
+        int mealsPerDay;
+        if (checkedId == R.id.rb3Meals) mealsPerDay = 3;
+        else if (checkedId == R.id.rb4Meals) mealsPerDay = 4;
+        else if (checkedId == R.id.rb5Meals) mealsPerDay = 5;
+        else mealsPerDay = 3;
+        
+        Log.d(TAG, "Meals per day selected: " + mealsPerDay + " (checkedId: " + checkedId + ")");
+        return mealsPerDay;
+    }
+
+    private void generateMealPlan(NutritionGoals nutritionGoals) {
+        Log.d(TAG, "Starting meal plan generation for user: " + userId);
+        Log.d(TAG, "Nutrition goals: " + nutritionGoals.toString());
+        
+        showLoading(true);
+        
+        mealPlanService.generateMealPlan(userId, nutritionGoals, new MealPlanService.MealPlanCallback() {
+            @Override
+            public void onSuccess(MealPlan mealPlan) {
+                Log.d(TAG, "Meal plan generated successfully");
+                showLoading(false);
+                currentMealPlan = mealPlan;
+                updateUIWithMealPlan(mealPlan);
+                
+                // Save the meal plan
+                Log.d(TAG, "Saving meal plan to database");
+                mealPlanService.saveMealPlan(mealPlan, new MealPlanService.MealPlanCallback() {
+                    @Override
+                    public void onSuccess(MealPlan savedMealPlan) {
+                        Log.d(TAG, "Meal plan saved successfully to database");
+                        Toast.makeText(requireContext(), "Meal plan created successfully!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "Failed to save meal plan to database: " + error);
+                        Toast.makeText(requireContext(), "Plan created but failed to save", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Failed to generate meal plan: " + error);
+                showLoading(false);
+                Toast.makeText(requireContext(), "Failed to generate meal plan: " + error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateUIWithMealPlan(MealPlan mealPlan) {
+        Log.d(TAG, "Updating UI with meal plan");
+        
+        if (mealPlan == null || mealPlan.getMeals() == null) {
+            Log.w(TAG, "Meal plan is null or has no meals, showing default");
+            showDefaultMealPlan();
+            return;
+        }
+
+        Log.d(TAG, "Meal plan has " + mealPlan.getMeals().size() + " meals");
+
+        // Update meals
+        for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
+            Log.d(TAG, "Processing meal: " + dailyMeal.getMealType() + " - " + dailyMeal.getMeal().getName());
+            
+            switch (dailyMeal.getMealType().toLowerCase()) {
+                case "breakfast":
+                    tvBreakfastMeal.setText(dailyMeal.getMeal().getName());
+                    tvBreakfastCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvBreakfastTime.setText(dailyMeal.getTime());
+                    Log.d(TAG, "Updated breakfast: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
+                    break;
+                case "lunch":
+                    tvLunchMeal.setText(dailyMeal.getMeal().getName());
+                    tvLunchCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvLunchTime.setText(dailyMeal.getTime());
+                    Log.d(TAG, "Updated lunch: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
+                    break;
+                case "dinner":
+                    tvDinnerMeal.setText(dailyMeal.getMeal().getName());
+                    tvDinnerCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvDinnerTime.setText(dailyMeal.getTime());
+                    Log.d(TAG, "Updated dinner: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
+                    break;
+                default:
+                    Log.w(TAG, "Unknown meal type: " + dailyMeal.getMealType());
+                    break;
+            }
+        }
+
+        // Update nutrition summary
+        MealPlan.NutritionSummary summary = mealPlan.getNutritionSummary();
+        if (summary != null) {
+            Log.d(TAG, "Updating nutrition summary - Total: " + summary.getTotalCalories() + 
+                      "/" + summary.getTargetCalories() + " cal");
+            
+            tvTotalCalories.setText(summary.getTotalCalories() + " / " + summary.getTargetCalories());
+            tvMacros.setText(String.format("Protein: %.0fg | Carbs: %.0fg | Fat: %.0fg", 
+                                         summary.getTotalProtein(), summary.getTotalCarbohydrates(), summary.getTotalFat()));
+            
+            // Update progress bar
+            int progress = (int) ((double) summary.getTotalCalories() / summary.getTargetCalories() * 100);
+            progressCalories.setProgress(progress);
+            Log.d(TAG, "Progress bar set to: " + progress + "%");
+        } else {
+            Log.w(TAG, "Nutrition summary is null");
+        }
+        
+        Log.d(TAG, "UI update completed successfully");
+    }
+
+    private void showDefaultMealPlan() {
+        Log.d(TAG, "Showing default meal plan (no meal plan available)");
+        
+        tvBreakfastMeal.setText("No meal plan yet");
+        tvBreakfastCalories.setText("0 calories");
+        tvLunchMeal.setText("No meal plan yet");
+        tvLunchCalories.setText("0 calories");
+        tvDinnerMeal.setText("No meal plan yet");
+        tvDinnerCalories.setText("0 calories");
+        
+        tvTotalCalories.setText("0 / 2000");
+        tvMacros.setText("Protein: 0g | Carbs: 0g | Fat: 0g");
+        progressCalories.setProgress(0);
+        
+        Log.d(TAG, "Default meal plan displayed");
+    }
+
+    private void showLoading(boolean show) {
+        Log.d(TAG, "Setting loading state: " + show);
+        
+        if (progressBar != null) {
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+        fabCreateMealPlan.setEnabled(!show);
+        
+        Log.d(TAG, "Loading state updated - FAB enabled: " + !show);
+    }
+
+    private String getUserId() {
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String userId = prefs.getString(KEY_USER_ID, "");
+        Log.d(TAG, "Retrieved user ID from preferences: " + (TextUtils.isEmpty(userId) ? "EMPTY" : userId));
+        return userId;
     }
 }
