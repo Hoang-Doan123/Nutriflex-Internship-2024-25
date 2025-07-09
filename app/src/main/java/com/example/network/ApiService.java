@@ -1,15 +1,8 @@
 package com.example.network;
 
-import com.example.model.Meal;
-import com.example.model.MealPlan;
-import com.example.model.NutritionGoals;
-import com.example.model.onboarding.OnboardingResponse;
-import com.example.model.PersonalData;
-import com.example.model.auth.RegisterRequest;
-import com.example.model.auth.RegisterResponse;
-import com.example.model.auth.User;
-import com.example.model.Workout;
-import com.example.model.WorkoutSession;
+import com.example.model.*;
+import com.example.model.onboarding.*;
+import com.example.model.auth.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,4 +37,14 @@ public interface ApiService {
 
     @POST("api/workout-sessions")
     Call<WorkoutSession> saveWorkoutSession(@Body WorkoutSession session);
+
+    @GET("api/kcal/history")
+    Call<List<KcalRecord>> getHistory(@Query("userId") String userId);
+
+    // Questionnaire APIs
+    @POST("api/questionnaires")
+    Call<Questionnaire> saveQuestionnaire(@Body Questionnaire questionnaire);
+
+    @GET("api/questionnaires/{userId}")
+    Call<List<Questionnaire>> getQuestionnairesByUserId(@Path("userId") String userId);
 }

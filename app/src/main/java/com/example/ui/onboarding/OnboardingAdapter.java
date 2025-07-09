@@ -49,28 +49,28 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         false,
                         OnboardingQuestion.QuestionType.GENDER
                 ),
-                // Question 1.1: Age (Input)
+                // Question 2: Age (Input)
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_age),
                         "",
                         R.drawable.ic_age,
                         OnboardingQuestion.QuestionType.INPUT
                 ),
-                // Question 1.2: Weight (Input)
+                // Question 3: Weight (Input)
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_weight),
                         "",
                         R.drawable.ic_weight,
                         OnboardingQuestion.QuestionType.INPUT
                 ),
-                // Question 1.3: Height (Input)
+                // Question 4: Height (Input)
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_height),
                         "",
                         R.drawable.ic_height,
                         OnboardingQuestion.QuestionType.INPUT
                 ),
-                // Question 1.4: Body Goal (Single Choice)
+                // Question 5: Body Goal (Single Choice)
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_body_goal),
                         "",
@@ -83,7 +83,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         false,
                         OnboardingQuestion.QuestionType.BODY_GOAL
                 ),
-                // Question 2: Motivation
+                // Question 6: Motivation
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_motivation),
                         "",
@@ -98,7 +98,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         false,
                         OnboardingQuestion.QuestionType.MOTIVATION
                 ),
-                // Question 3: Healthcare Issues
+                // Question 7: Healthcare Issues
                 new OnboardingQuestion(
                         context.getString(R.string.healthcare_issues),
                         "",
@@ -113,7 +113,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         true,
                         OnboardingQuestion.QuestionType.HEALTHCARE
                 ),
-                // Question 4: Injuries
+                // Question 8: Injuries
                 new OnboardingQuestion(
                         context.getString(R.string.injuries_title),
                         "",
@@ -131,7 +131,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         true,
                         OnboardingQuestion.QuestionType.INJURIES
                 ),
-                // Question 5: Dietary Restrictions
+                // Question 9: Dietary Restrictions
                 new OnboardingQuestion(
                         context.getString(R.string.nutrition_title),
                         "",
@@ -145,7 +145,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         true,
                         OnboardingQuestion.QuestionType.DIETARY_RESTRICTIONS
                 ),
-                // Question 6: Fitness Experience
+                // Question 10: Fitness Experience
                 new OnboardingQuestion(
                         context.getString(R.string.fitness_experience),
                         "",
@@ -157,6 +157,19 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         ),
                         false,
                         OnboardingQuestion.QuestionType.FITNESS_EXPERIENCE
+                ),
+                // Question 11: Workout Type
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_workout_type),
+                        "",
+                        R.drawable.ic_fitness, // Sử dụng tạm icon fitness, có thể thay bằng ic_workout nếu có
+                        Arrays.asList(
+                                context.getString(R.string.workout_type_cardio),
+                                context.getString(R.string.workout_type_hypertrophy),
+                                context.getString(R.string.workout_type_powerlifting)
+                        ),
+                        false,
+                        OnboardingQuestion.QuestionType.WORKOUT_TYPE
                 )
         );
     }

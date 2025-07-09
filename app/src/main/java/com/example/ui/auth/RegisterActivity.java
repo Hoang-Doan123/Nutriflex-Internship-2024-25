@@ -235,6 +235,27 @@ public class RegisterActivity extends AppCompatActivity {
                             savedUser.getGender()
                         );
                         Log.d("SessionDebug", "Saved userId to session: " + savedUser.getId());
+                        // Lưu workoutType vào questionnaires
+                        int workoutTypePosition = 10; // Đúng vị trí câu hỏi Workout Type
+                        String workoutType = getSelectedOption(workoutTypePosition);
+                        if (workoutType != null && !workoutType.isEmpty()) {
+                            com.example.model.Questionnaire questionnaire = new com.example.model.Questionnaire(savedUser.getId(), workoutType);
+                            ApiService apiService = ApiClient.getClient().create(ApiService.class);
+                            apiService.saveQuestionnaire(questionnaire).enqueue(new retrofit2.Callback<com.example.model.Questionnaire>() {
+                                @Override
+                                public void onResponse(retrofit2.Call<com.example.model.Questionnaire> call, retrofit2.Response<com.example.model.Questionnaire> response) {
+                                    if (response.isSuccessful()) {
+                                        Log.d("RegisterActivity", "WorkoutType saved to questionnaires successfully");
+                                    } else {
+                                        Log.e("RegisterActivity", "Failed to save workoutType: " + response.code());
+                                    }
+                                }
+                                @Override
+                                public void onFailure(retrofit2.Call<com.example.model.Questionnaire> call, Throwable t) {
+                                    Log.e("RegisterActivity", "Error saving workoutType: " + t.getMessage());
+                                }
+                            });
+                        }
                         // Register successfully, move to MainActivity
                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                         finish();

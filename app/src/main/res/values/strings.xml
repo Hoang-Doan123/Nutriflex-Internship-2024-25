@@ -129,4 +129,8 @@
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="get_started">Get Started</string>
+    <string name="onboarding_workout_type">What type of workout do you prefer?</string>
+    <string name="workout_type_cardio">Cardio (Boxing, Football, Running, ...)</string>
+    <string name="workout_type_hypertrophy">Hypertrophy (Cardio + Lifting)</string>
+    <string name="workout_type_powerlifting">Powerlifting (Lifting Only)</string>
 </resources>

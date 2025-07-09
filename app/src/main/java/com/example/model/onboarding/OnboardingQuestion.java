@@ -19,7 +19,8 @@ public class OnboardingQuestion {
         DIETARY_RESTRICTIONS,
         FITNESS_EXPERIENCE,
         INPUT,
-        BODY_GOAL
+        BODY_GOAL,
+        WORKOUT_TYPE
     }
 
     public OnboardingQuestion(String title, String description, int imageResId, 
