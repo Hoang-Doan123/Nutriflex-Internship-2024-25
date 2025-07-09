@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.*;
 import com.example.R;
 import com.example.model.MealPlan;
 import com.example.model.NutritionGoals;
+import com.example.model.PersonalData;
 import com.example.service.MealPlanService;
+import com.example.service.PersonalDataService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -49,6 +51,8 @@ public class DailyNutritionFragment extends Fragment {
     private MealPlanService mealPlanService;
     private String userId;
     private MealPlan currentMealPlan;
+    private String fetchedGoal = null;
+    private List<String> fetchedDietaryRestrictions = null;
 
     public DailyNutritionFragment() {
         // Required empty public constructor
@@ -143,32 +147,49 @@ public class DailyNutritionFragment extends Fragment {
     }
 
     private void showNutritionGoalsDialog() {
-        Log.d(TAG, "Showing nutrition goals dialog");
-        
+        // Gọi API lấy personal data trước
+        PersonalDataService personalDataService = new PersonalDataService();
+        personalDataService.getPersonalData(userId, new PersonalDataService.PersonalDataCallback() {
+            @Override
+            public void onSuccess(PersonalData data) {
+                fetchedGoal = data.getGoal();
+                fetchedDietaryRestrictions = data.getDietaryRestrictions();
+                requireActivity().runOnUiThread(() -> showNutritionGoalsDialogWithData());
+            }
+            @Override
+            public void onError(String error) {
+                Toast.makeText(requireContext(), "Cannot get personal data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showNutritionGoalsDialogWithData() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_nutrition_goals, null);
-        
-        builder.setView(dialogView)
-                .setTitle("Create Personalized Meal Plan")
-                .setPositiveButton("Generate Plan", (dialog, which) -> {
-                    Log.d(TAG, "Generate Plan button clicked");
-                    NutritionGoals goals = extractNutritionGoals(dialogView);
-                    if (goals != null) {
-                        Log.d(TAG, "Nutrition goals extracted successfully");
-                        generateMealPlan(goals);
-                    } else {
-                        Log.w(TAG, "Failed to extract nutrition goals");
-                    }
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Log.d(TAG, "Cancel button clicked");
-                    dialog.dismiss();
-                });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        Log.d(TAG, "Nutrition goals dialog displayed");
+        // Set dữ liệu cá nhân vào TextView
+        TextView tvMealPlanType = dialogView.findViewById(R.id.tvMealPlanType);
+        tvMealPlanType.setText(fetchedGoal != null ? fetchedGoal : "N/A");
+
+        TextView tvDietaryRestrictions = dialogView.findViewById(R.id.tvDietaryRestrictions);
+        if (fetchedDietaryRestrictions != null && !fetchedDietaryRestrictions.isEmpty()) {
+            tvDietaryRestrictions.setText(android.text.TextUtils.join(", ", fetchedDietaryRestrictions));
+        } else {
+            tvDietaryRestrictions.setText("None");
+        }
+
+        builder.setView(dialogView)
+            .setTitle("Create Personalized Meal Plan")
+            .setPositiveButton("Generate Plan", (dialog, which) -> {
+                NutritionGoals goals = extractNutritionGoals(dialogView);
+                if (goals != null) {
+                    generateMealPlan(goals);
+                }
+            })
+            .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.create().show();
     }
 
     private NutritionGoals extractNutritionGoals(View dialogView) {
@@ -179,10 +200,9 @@ public class DailyNutritionFragment extends Fragment {
             int dailyCalories = Integer.parseInt(etDailyCalories.getText().toString());
             Log.d(TAG, "Daily calories: " + dailyCalories);
 
-            // Extract meal plan type
-            RadioGroup rgMealPlanType = dialogView.findViewById(R.id.rgMealPlanType);
-            String mealPlanType = getMealPlanType(rgMealPlanType.getCheckedRadioButtonId());
-            Log.d(TAG, "Meal plan type: " + mealPlanType);
+            // Meal plan type lấy từ fetchedGoal
+            String mealPlanType = fetchedGoal != null ? fetchedGoal : "general_health";
+            Log.d(TAG, "Meal plan type (from personal data): " + mealPlanType);
 
             // Extract meals per day
             RadioGroup rgMealsPerDay = dialogView.findViewById(R.id.rgMealsPerDay);
@@ -194,15 +214,9 @@ public class DailyNutritionFragment extends Fragment {
             boolean includeSnacks = cbIncludeSnacks.isChecked();
             Log.d(TAG, "Include snacks: " + includeSnacks);
 
-            // Extract dietary restrictions
-            List<String> dietaryRestrictions = new ArrayList<>();
-            if (((CheckBox) dialogView.findViewById(R.id.cbVegetarian)).isChecked()) dietaryRestrictions.add("vegetarian");
-            if (((CheckBox) dialogView.findViewById(R.id.cbVegan)).isChecked()) dietaryRestrictions.add("vegan");
-            if (((CheckBox) dialogView.findViewById(R.id.cbGlutenFree)).isChecked()) dietaryRestrictions.add("gluten-free");
-            if (((CheckBox) dialogView.findViewById(R.id.cbDairyFree)).isChecked()) dietaryRestrictions.add("dairy-free");
-            if (((CheckBox) dialogView.findViewById(R.id.cbLowCarb)).isChecked()) dietaryRestrictions.add("low-carb");
-            if (((CheckBox) dialogView.findViewById(R.id.cbLowFat)).isChecked()) dietaryRestrictions.add("low-fat");
-            Log.d(TAG, "Dietary restrictions: " + dietaryRestrictions);
+            // Dietary restrictions lấy từ fetchedDietaryRestrictions
+            List<String> dietaryRestrictions = fetchedDietaryRestrictions != null ? fetchedDietaryRestrictions : new ArrayList<>();
+            Log.d(TAG, "Dietary restrictions (from personal data): " + dietaryRestrictions);
 
             // Extract food preferences
             TextInputEditText etFoodPreferences = dialogView.findViewById(R.id.etFoodPreferences);
@@ -242,7 +256,6 @@ public class DailyNutritionFragment extends Fragment {
                     fatPercentage = 25.0;
                     break;
             }
-            
             Log.d(TAG, "Macronutrient percentages - Protein: " + proteinPercentage + 
                       "%, Carbs: " + carbohydratePercentage + "%, Fat: " + fatPercentage + "%");
             String currentUserId = getUserId();
@@ -254,10 +267,8 @@ public class DailyNutritionFragment extends Fragment {
             NutritionGoals goals = new NutritionGoals(currentUserId, dailyCalories, proteinPercentage, 
                                         carbohydratePercentage, fatPercentage, dietaryRestrictions, 
                                         foodPreferences, allergies, mealPlanType, mealsPerDay, includeSnacks);
-            
             Log.d(TAG, "Nutrition goals created successfully: " + goals.toString());
             return goals;
-
         } catch (NumberFormatException e) {
             Log.e(TAG, "NumberFormatException while parsing daily calories", e);
             Toast.makeText(requireContext(), "Please enter valid daily calories", Toast.LENGTH_SHORT).show();
@@ -269,16 +280,16 @@ public class DailyNutritionFragment extends Fragment {
         }
     }
 
-    private String getMealPlanType(int checkedId) {
-        String mealPlanType;
-        if (checkedId == R.id.rbWeightLoss) mealPlanType = "weight_loss";
-        else if (checkedId == R.id.rbMuscleGain) mealPlanType = "muscle_gain";
-        else if (checkedId == R.id.rbMaintenance) mealPlanType = "maintenance";
-        else mealPlanType = "general_health";
-        
-        Log.d(TAG, "Meal plan type selected: " + mealPlanType + " (checkedId: " + checkedId + ")");
-        return mealPlanType;
-    }
+//    private String getMealPlanType(int checkedId) {
+//        String mealPlanType;
+//        if (checkedId == R.id.rbWeightLoss) mealPlanType = "weight_loss";
+//        else if (checkedId == R.id.rbMuscleGain) mealPlanType = "muscle_gain";
+//        else if (checkedId == R.id.rbMaintenance) mealPlanType = "maintenance";
+//        else mealPlanType = "general_health";
+//
+//        Log.d(TAG, "Meal plan type selected: " + mealPlanType + " (checkedId: " + checkedId + ")");
+//        return mealPlanType;
+//    }
 
     private int getMealsPerDay(int checkedId) {
         int mealsPerDay;

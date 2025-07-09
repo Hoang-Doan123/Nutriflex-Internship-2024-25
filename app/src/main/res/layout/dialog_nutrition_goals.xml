@@ -37,48 +37,24 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Meal Plan Type -->
+        <!-- Meal Plan Type (read-only) -->
         <TextView
+            android:id="@+id/tvMealPlanTypeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Meal Plan Type"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <RadioGroup
-            android:id="@+id/rgMealPlanType"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/tvMealPlanType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-
-            <RadioButton
-                android:id="@+id/rbWeightLoss"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weight Loss"
-                android:checked="true" />
-
-            <RadioButton
-                android:id="@+id/rbMuscleGain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Muscle Gain" />
-
-            <RadioButton
-                android:id="@+id/rbMaintenance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Maintenance" />
-
-            <RadioButton
-                android:id="@+id/rbGeneralHealth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="General Health" />
-
-        </RadioGroup>
+            android:text="Loading..."
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Meals Per Day -->
         <TextView
@@ -125,51 +101,24 @@
             android:text="Include Snacks"
             android:layout_marginBottom="16dp" />
 
-        <!-- Dietary Restrictions -->
+        <!-- Dietary Restrictions (read-only) -->
         <TextView
+            android:id="@+id/tvDietaryRestrictionsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dietary Restrictions (Optional)"
+            android:text="Dietary Restrictions"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <CheckBox
-            android:id="@+id/cbVegetarian"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/tvDietaryRestrictions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vegetarian" />
-
-        <CheckBox
-            android:id="@+id/cbVegan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Vegan" />
-
-        <CheckBox
-            android:id="@+id/cbGlutenFree"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gluten-Free" />
-
-        <CheckBox
-            android:id="@+id/cbDairyFree"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dairy-Free" />
-
-        <CheckBox
-            android:id="@+id/cbLowCarb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Low-Carb" />
-
-        <CheckBox
-            android:id="@+id/cbLowFat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Low-Fat" />
+            android:text="Loading..."
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Food Preferences -->
         <com.google.android.material.textfield.TextInputLayout
