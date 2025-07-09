@@ -103,7 +103,6 @@
     <string name="day_thursday">Thu</string>
     <string name="day_friday">Fri</string>
     <string name="day_saturday">Sat</string>
-
     <!-- Units -->
     <string name="unit_years">years</string>
     <string name="unit_cm">cm</string>
@@ -133,4 +132,10 @@
     <string name="workout_type_cardio">Cardio (Boxing, Football, Running, ...)</string>
     <string name="workout_type_hypertrophy">Hypertrophy (Cardio + Lifting)</string>
     <string name="workout_type_powerlifting">Powerlifting (Lifting Only)</string>
+    <string name="daily_todays_workout">Today Workout</string>
+    <string name="daily_start_workout">Start Workout</string>
+    <string name="daily_progress">Progress</string>
+    <string name="daily_current_streak">Current Streak: 1 days</string>
+    <string name="daily_total_workouts">Total Workouts: 1</string>
+    <string name="daily_motivation_quote">Push yourself, because no one else is going to do it for you.</string>
 </resources>

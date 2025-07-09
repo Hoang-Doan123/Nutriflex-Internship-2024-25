@@ -1,142 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".ui.daily.DailyWorkoutFragment">
+    android:background="@color/background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
+        <!-- Header -->
         <TextView
-            android:id="@+id/tvScheduleTitle"
+            android:id="@+id/tvHeader"
+            android:text="@string/daily_todays_workout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today's Workout"
-            android:textColor="@color/primary_text"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/primary"
+            android:drawableStart="@drawable/ic_dumbbell"
+            android:drawablePadding="8dp"
+            android:layout_marginBottom="16dp"/>
 
+        <!-- Workout Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tvScheduleTitle">
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tvWorkoutName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Back and Chest"
-                    android:textColor="@color/primary_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_dark"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/tvWorkoutTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:id="@+id/tvWorkoutDuration"
                     android:text="45 minutes"
-                    android:textColor="@color/secondary_text" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStartWorkout"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Start Workout"
-                    app:cornerRadius="8dp" />
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/secondary"/>
 
+                <TextView
+                    android:id="@+id/tvWorkoutDesc"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="A balanced workout for upper body strength."
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="8dp"/>
+
+                <ImageView
+                    android:id="@+id/ivWorkoutImage"
+                    android:src="@drawable/ic_workout"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tvProgressTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Progress"
-            android:textColor="@color/primary_text"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardSchedule" />
+        <!-- Start Workout Button -->
+        <Button
+            android:id="@+id/btnStartWorkout"
+            android:text="@string/daily_start_workout"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:backgroundTint="@color/primary"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardProgress"
+        <!-- Progress Section -->
+        <TextView
+            android:text="@string/daily_progress"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/primary"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tvProgressTitle">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:src="@drawable/ic_fire"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+            <TextView
+                android:id="@+id/tvStreak"
+                android:text="Current Streak: 5 days"
+                android:textSize="16sp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_width="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/primary_dark"/>
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Current Streak"
-                    android:textColor="@color/secondary_text" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-                <TextView
-                    android:id="@+id/tvStreak"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="5 days"
-                    android:textColor="@color/primary_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+            <ImageView
+                android:src="@drawable/ic_trophy"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+            <TextView
+                android:id="@+id/tvTotalWorkouts"
+                android:text="Total Workouts: 12"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/primary_dark"/>
+        </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@color/divider" />
+        <!-- Weekly Progress Bar -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressWeekly"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:progress="70"
+            android:max="100"
+            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+            android:layout_marginBottom="20dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Workouts"
-                    android:textColor="@color/secondary_text" />
+        <!-- Motivational Quote -->
+        <TextView
+            android:id="@+id/tvMotivation"
+            android:text="@string/daily_motivation_quote"
+            android:textSize="14sp"
+            android:textColor="@color/secondary"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
 
-                <TextView
-                    android:id="@+id/tvTotalWorkouts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="12"
-                    android:textColor="@color/primary_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</ScrollView>
