@@ -63,7 +63,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Oatmeal with fruits"
                     android:textColor="@color/primary_text" />
 
                 <TextView
@@ -71,7 +70,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="350 calories"
                     android:textColor="@color/secondary_text" />
 
             </LinearLayout>
@@ -114,7 +112,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Grilled chicken with rice"
                     android:textColor="@color/primary_text" />
 
                 <TextView
@@ -122,7 +119,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="550 calories"
                     android:textColor="@color/secondary_text" />
 
             </LinearLayout>
@@ -165,7 +161,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Salmon with vegetables"
                     android:textColor="@color/primary_text" />
 
                 <TextView
@@ -173,7 +168,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="450 calories"
                     android:textColor="@color/secondary_text" />
 
             </LinearLayout>
@@ -218,7 +212,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="1,350 / 2,000"
                     android:textColor="@color/primary_text"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -250,7 +243,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Protein: 80g | Carbs: 150g | Fat: 45g"
                     android:textColor="@color/primary_text"
                     android:textSize="16sp" />
 

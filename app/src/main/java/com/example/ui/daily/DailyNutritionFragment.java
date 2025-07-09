@@ -355,34 +355,44 @@ public class DailyNutritionFragment extends Fragment {
 
         // Update meals
         for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
-            Log.d(TAG, "Processing meal: " + dailyMeal.getMealType() + " - " + dailyMeal.getMeal().getName());
-            
+            String mealNames = "";
+            if (dailyMeal.getMeals() != null && !dailyMeal.getMeals().isEmpty()) {
+                List<String> names = new ArrayList<>();
+                for (com.example.model.Meal meal : dailyMeal.getMeals()) {
+                    names.add(meal.getName());
+                }
+                mealNames = TextUtils.join(", ", names);
+            } else {
+                mealNames = "No meals";
+            }
+            int totalCalories = 0;
+            if (dailyMeal.getMeals() != null) {
+                for (com.example.model.Meal meal : dailyMeal.getMeals()) {
+                    totalCalories += meal.getCalories();
+                }
+            }
             switch (dailyMeal.getMealType().toLowerCase()) {
                 case "breakfast":
-                    tvBreakfastMeal.setText(dailyMeal.getMeal().getName());
-                    tvBreakfastCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvBreakfastMeal.setText(mealNames);
+                    tvBreakfastCalories.setText(totalCalories + " calories");
                     tvBreakfastTime.setText(dailyMeal.getTime());
-                    Log.d(TAG, "Updated breakfast: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
                     break;
                 case "lunch":
-                    tvLunchMeal.setText(dailyMeal.getMeal().getName());
-                    tvLunchCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvLunchMeal.setText(mealNames);
+                    tvLunchCalories.setText(totalCalories + " calories");
                     tvLunchTime.setText(dailyMeal.getTime());
-                    Log.d(TAG, "Updated lunch: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
                     break;
                 case "dinner":
-                    tvDinnerMeal.setText(dailyMeal.getMeal().getName());
-                    tvDinnerCalories.setText(dailyMeal.getMeal().getCalories() + " calories");
+                    tvDinnerMeal.setText(mealNames);
+                    tvDinnerCalories.setText(totalCalories + " calories");
                     tvDinnerTime.setText(dailyMeal.getTime());
-                    Log.d(TAG, "Updated dinner: " + dailyMeal.getMeal().getName() + " (" + dailyMeal.getMeal().getCalories() + " cal)");
                     break;
                 default:
-                    Log.w(TAG, "Unknown meal type: " + dailyMeal.getMealType());
                     break;
             }
         }
 
-        // Update nutrition summary
+        // Update nutrition summary giữ nguyên
         MealPlan.NutritionSummary summary = mealPlan.getNutritionSummary();
         if (summary != null) {
             Log.d(TAG, "Updating nutrition summary - Total: " + summary.getTotalCalories() + 
@@ -413,7 +423,7 @@ public class DailyNutritionFragment extends Fragment {
         tvDinnerMeal.setText("No meal plan yet");
         tvDinnerCalories.setText("0 calories");
         
-        tvTotalCalories.setText("0 / 2000");
+        tvTotalCalories.setText("0 / 0");
         tvMacros.setText("Protein: 0g | Carbs: 0g | Fat: 0g");
         progressCalories.setProgress(0);
         

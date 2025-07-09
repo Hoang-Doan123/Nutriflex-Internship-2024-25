@@ -61,16 +61,16 @@ public class MealPlan {
     public static class DailyMeal {
         private String mealType; // "breakfast", "lunch", "dinner", "snack"
         private String time;
-        private Meal meal;
+        private List<Meal> meals;
         private int portionSize;
         private String notes;
 
         public DailyMeal() {}
 
-        public DailyMeal(String mealType, String time, Meal meal, int portionSize, String notes) {
+        public DailyMeal(String mealType, String time, List<Meal> meals, int portionSize, String notes) {
             this.mealType = mealType;
             this.time = time;
-            this.meal = meal;
+            this.meals = meals;
             this.portionSize = portionSize;
             this.notes = notes;
         }
@@ -78,14 +78,14 @@ public class MealPlan {
         // Getters
         public String getMealType() { return mealType; }
         public String getTime() { return time; }
-        public Meal getMeal() { return meal; }
+        public List<Meal> getMeals() { return meals; }
         public int getPortionSize() { return portionSize; }
         public String getNotes() { return notes; }
 
         // Setters
         public void setMealType(String mealType) { this.mealType = mealType; }
         public void setTime(String time) { this.time = time; }
-        public void setMeal(Meal meal) { this.meal = meal; }
+        public void setMeals(List<Meal> meals) { this.meals = meals; }
         public void setPortionSize(int portionSize) { this.portionSize = portionSize; }
         public void setNotes(String notes) { this.notes = notes; }
 
@@ -94,7 +94,7 @@ public class MealPlan {
             return "DailyMeal{" +
                     "mealType='" + mealType + '\'' +
                     ", time='" + time + '\'' +
-                    ", meal=" + meal +
+                    ", meals=" + meals +
                     ", portionSize=" + portionSize +
                     ", notes='" + notes + '\'' +
                     '}';
