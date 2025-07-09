@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Your Nutrition Goals"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Daily Calories -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Daily Calories"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDailyCalories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="200" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Meal Plan Type -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meal Plan Type"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgMealPlanType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbWeightLoss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weight Loss"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbMuscleGain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Muscle Gain" />
+
+            <RadioButton
+                android:id="@+id/rbMaintenance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Maintenance" />
+
+            <RadioButton
+                android:id="@+id/rbGeneralHealth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="General Health" />
+
+        </RadioGroup>
+
+        <!-- Meals Per Day -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meals Per Day"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgMealsPerDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rb3Meals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3 Meals"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rb4Meals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4 Meals" />
+
+            <RadioButton
+                android:id="@+id/rb5Meals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5 Meals" />
+
+        </RadioGroup>
+
+        <!-- Include Snacks -->
+        <CheckBox
+            android:id="@+id/cbIncludeSnacks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Include Snacks"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Dietary Restrictions -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dietary Restrictions (Optional)"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/cbVegetarian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegetarian" />
+
+        <CheckBox
+            android:id="@+id/cbVegan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegan" />
+
+        <CheckBox
+            android:id="@+id/cbGlutenFree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gluten-Free" />
+
+        <CheckBox
+            android:id="@+id/cbDairyFree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dairy-Free" />
+
+        <CheckBox
+            android:id="@+id/cbLowCarb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Low-Carb" />
+
+        <CheckBox
+            android:id="@+id/cbLowFat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Low-Fat" />
+
+        <!-- Food Preferences -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:hint="Food Preferences (e.g., Mediterranean, Asian, etc.)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFoodPreferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="3" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Allergies -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:hint="Allergies (e.g., nuts, shellfish, etc.)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAllergies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="3" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</ScrollView> 
