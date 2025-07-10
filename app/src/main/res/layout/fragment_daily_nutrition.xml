@@ -45,7 +45,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Breakfast"
+                    android:text="@string/breakfast"
                     android:textColor="@color/primary_text"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -55,7 +55,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="8:00 AM"
                     android:textColor="@color/secondary_text" />
 
                 <TextView
@@ -94,7 +93,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lunch"
+                    android:text="@string/lunch"
                     android:textColor="@color/primary_text"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -104,7 +103,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="1:00 PM"
                     android:textColor="@color/secondary_text" />
 
                 <TextView
@@ -143,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dinner"
+                    android:text="@string/dinner"
                     android:textColor="@color/primary_text"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -153,7 +151,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="7:00 PM"
                     android:textColor="@color/secondary_text" />
 
                 <TextView
@@ -179,7 +176,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Nutrition Summary"
+            android:text="@string/nutrition_summary"
             android:textColor="@color/primary_text"
             android:textSize="20sp"
             android:textStyle="bold"

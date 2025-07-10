@@ -138,4 +138,10 @@
     <string name="daily_current_streak">Current Streak: 1 days</string>
     <string name="daily_total_workouts">Total Workouts: 1</string>
     <string name="daily_motivation_quote">Push yourself, because no one else is going to do it for you.</string>
+
+    <!--DailyNutrition-->
+    <string name="breakfast">Breakfast</string>
+    <string name="lunch">Lunch</string>
+    <string name="dinner">Dinner</string>
+    <string name="nutrition_summary">Nutrition Summary</string>
 </resources>

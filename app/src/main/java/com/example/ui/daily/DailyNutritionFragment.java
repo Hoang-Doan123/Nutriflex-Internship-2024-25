@@ -1,5 +1,6 @@
 package com.example.ui.daily;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.*;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class DailyNutritionFragment extends Fragment {
         loadTodayMealPlan();
     }
 
+    @SuppressLint("SetTextI18n")
     private void setupUI(View view) {
         Log.d(TAG, "Setting up UI components");
         
@@ -105,7 +107,7 @@ public class DailyNutritionFragment extends Fragment {
 
         // Set default meal times
         tvBreakfastTime.setText("8:00 AM");
-        tvLunchTime.setText("1:00 PM");
+        tvLunchTime.setText("12:00 PM");
         tvDinnerTime.setText("7:00 PM");
         
         Log.d(TAG, "UI setup completed successfully");
@@ -156,6 +158,7 @@ public class DailyNutritionFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void showNutritionGoalsDialogWithData() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -347,6 +350,7 @@ public class DailyNutritionFragment extends Fragment {
         });
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void updateUIWithMealPlan(MealPlan mealPlan) {
         Log.d(TAG, "Updating UI with meal plan");
         
@@ -419,6 +423,7 @@ public class DailyNutritionFragment extends Fragment {
         Log.d(TAG, "UI update completed successfully");
     }
 
+    @SuppressLint("SetTextI18n")
     private void showDefaultMealPlan() {
         Log.d(TAG, "Showing default meal plan (no meal plan available)");
         
