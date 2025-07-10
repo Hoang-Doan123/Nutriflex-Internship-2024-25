@@ -10,7 +10,7 @@ public interface KcalApi {
     Call<KcalRecord> measureAndSave(@Body KcalRequest req);
 
     @GET("api/kcal/history/{userId}")
-    Call<List<KcalRecord>> getHistory(@Path("userId") long userId);
+    Call<List<KcalRecord>> getHistory(@Path("userId") String userId);
 
     @POST("api/nutrition/recommendation")
     Call<CalorieRecommendationResponse> getCalorieRecommendation(@Body CalorieRecommendationRequest req);

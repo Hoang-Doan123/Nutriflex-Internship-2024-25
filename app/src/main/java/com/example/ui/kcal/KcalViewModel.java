@@ -28,7 +28,7 @@ public class KcalViewModel extends ViewModel {
 
     public void fetchHistory(String userId) {
         Log.d("KcalDebug", "Fetching history for userId: " + userId);
-        RetrofitInstance.getApi().getHistory(Long.parseLong(userId)).enqueue(new Callback<List<KcalRecord>>() {
+        RetrofitInstance.getApi().getHistory(userId).enqueue(new Callback<List<KcalRecord>>() {
             @Override
             public void onResponse(Call<List<KcalRecord>> call, Response<List<KcalRecord>> response) {
                 Log.d("KcalDebug", "History response code: " + response.code());
