@@ -173,12 +173,16 @@ public class DailyNutritionFragment extends Fragment {
         }
 
         TextInputLayout tilAllergies = dialogView.findViewById(R.id.tilAllergies);
-        if (fetchedDietaryRestrictions != null && fetchedDietaryRestrictions.size() == 1
-                && ("Allergies".equalsIgnoreCase(fetchedDietaryRestrictions.get(0)) || "Allergy".equalsIgnoreCase(fetchedDietaryRestrictions.get(0)))) {
-            tilAllergies.setVisibility(View.VISIBLE);
-        } else {
-            tilAllergies.setVisibility(View.GONE);
+        boolean showAllergies = false;
+        if (fetchedDietaryRestrictions != null) {
+            for (String restriction : fetchedDietaryRestrictions) {
+                if (restriction != null && restriction.trim().equalsIgnoreCase("Allergies")) {
+                    showAllergies = true;
+                    break;
+                }
+            }
         }
+        tilAllergies.setVisibility(showAllergies ? View.VISIBLE : View.GONE);
 
         builder.setView(dialogView)
             .setTitle("Create Personalized Meal Plan")
