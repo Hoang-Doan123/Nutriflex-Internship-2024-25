@@ -13,21 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.*;
 
 import com.example.R;
-import com.example.model.MealPlan;
-import com.example.model.NutritionGoals;
-import com.example.model.PersonalData;
-import com.example.service.MealPlanService;
-import com.example.service.PersonalDataService;
+import com.example.model.*;
+import com.example.service.*;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * A fragment for displaying daily nutrition information and creating personalized meal plans.
@@ -177,6 +170,14 @@ public class DailyNutritionFragment extends Fragment {
             tvDietaryRestrictions.setText(android.text.TextUtils.join(", ", fetchedDietaryRestrictions));
         } else {
             tvDietaryRestrictions.setText("None");
+        }
+
+        TextInputLayout tilAllergies = dialogView.findViewById(R.id.tilAllergies);
+        if (fetchedDietaryRestrictions != null && fetchedDietaryRestrictions.size() == 1
+                && ("Allergies".equalsIgnoreCase(fetchedDietaryRestrictions.get(0)) || "Allergy".equalsIgnoreCase(fetchedDietaryRestrictions.get(0)))) {
+            tilAllergies.setVisibility(View.VISIBLE);
+        } else {
+            tilAllergies.setVisibility(View.GONE);
         }
 
         builder.setView(dialogView)
