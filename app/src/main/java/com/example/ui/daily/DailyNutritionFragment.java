@@ -354,7 +354,8 @@ public class DailyNutritionFragment extends Fragment {
         Log.d(TAG, "Meal plan has " + mealPlan.getMeals().size() + " meals");
 
         // Update meals
-        for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
+        List<MealPlan.DailyMeal> dailyMeals = mealPlan.getMeals() != null ? mealPlan.getMeals() : java.util.Collections.emptyList();
+        for (MealPlan.DailyMeal dailyMeal : dailyMeals) {
             String mealNames = "";
             if (dailyMeal.getMeals() != null && !dailyMeal.getMeals().isEmpty()) {
                 List<String> names = new ArrayList<>();

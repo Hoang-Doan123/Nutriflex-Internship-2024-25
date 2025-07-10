@@ -78,7 +78,7 @@ public class MealPlan {
         // Getters
         public String getMealType() { return mealType; }
         public String getTime() { return time; }
-        public List<Meal> getMeals() { return meals; }
+        public List<Meal> getMeals() { return meals == null ? java.util.Collections.emptyList() : meals; }
         public int getPortionSize() { return portionSize; }
         public String getNotes() { return notes; }
 
