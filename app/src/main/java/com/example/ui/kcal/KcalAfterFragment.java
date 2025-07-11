@@ -44,6 +44,7 @@ public class KcalAfterFragment extends Fragment {
     private String userGoal = "Maintain Weight";
     private int caloriesBurned = 0;
     private String userId = "";
+    private String sessionId = "";
 
     public KcalAfterFragment() {
         // Required empty public constructor
@@ -83,7 +84,7 @@ public class KcalAfterFragment extends Fragment {
         tvCalorieRecommendation = view.findViewById(R.id.tvCalorieRecommendation);
         tvCalorieBurned = view.findViewById(R.id.tvCalorieBurned);
         tvNutritionAdvice = view.findViewById(R.id.tvNutritionAdvice);
-        tvMealSuggestion = view.findViewById(R.id.tvMealSuggestion);
+//        tvMealSuggestion = view.findViewById(R.id.tvMealSuggestion);
         imgNutrition = view.findViewById(R.id.imgNutrition);
         viewModel = new ViewModelProvider(this).get(KcalViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(KcalSharedViewModel.class);
@@ -93,6 +94,8 @@ public class KcalAfterFragment extends Fragment {
             if (workoutResult != null && workoutResult.userId != null && !workoutResult.userId.isEmpty()) {
                 userId = workoutResult.userId;
                 caloriesBurned = workoutResult.caloriesBurned;
+                // Lưu sessionId nếu có
+                if (workoutResult.sessionId != null) sessionId = workoutResult.sessionId;
                 fetchUserGoalAndUpdateUI();
             } else {
                 tvGoal.setText("Goal: --");
@@ -131,8 +134,33 @@ public class KcalAfterFragment extends Fragment {
         int recommendedCalories = calculateRecommendedCalories(userGoal, caloriesBurned);
         tvCalorieRecommendation.setText("Recommended Intake: " + recommendedCalories + " kcal");
         tvNutritionAdvice.setText(getAdviceForGoal(userGoal));
-        tvMealSuggestion.setText(getMealSuggestionForGoal(userGoal));
-        // Có thể đổi icon dinh dưỡng theo goal nếu muốn
+//        tvMealSuggestion.setText(getMealSuggestionForGoal(userGoal));
+        // Lưu NutritionPlan vào backend
+        saveNutritionPlanToBackend(userId, sessionId, recommendedCalories);
+    }
+
+    private void saveNutritionPlanToBackend(String userId, String sessionId, int recommendedCalories) {
+        if (userId == null || userId.isEmpty() || sessionId == null || sessionId.isEmpty()) {
+            Log.e("KcalAfterFragment", "Not saving NutritionPlan: userId or sessionId missing. userId=" + userId + ", sessionId=" + sessionId);
+            return;
+        }
+        Log.d("KcalAfterFragment", "Saving NutritionPlan: userId=" + userId + ", sessionId=" + sessionId + ", recommendedCalories=" + recommendedCalories);
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        com.example.model.NutritionPlan plan = new com.example.model.NutritionPlan(userId, sessionId, recommendedCalories, null);
+        apiService.saveNutritionPlan(plan).enqueue(new retrofit2.Callback<com.example.model.NutritionPlan>() {
+            @Override
+            public void onResponse(Call<com.example.model.NutritionPlan> call, Response<com.example.model.NutritionPlan> response) {
+                if (response.isSuccessful()) {
+                    Log.d("KcalAfterFragment", "NutritionPlan saved: " + response.body());
+                } else {
+                    Log.e("KcalAfterFragment", "Failed to save NutritionPlan: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.model.NutritionPlan> call, Throwable t) {
+                Log.e("KcalAfterFragment", "Error saving NutritionPlan", t);
+            }
+        });
     }
 
     private int calculateRecommendedCalories(String goal, int caloriesBurned) {
@@ -150,24 +178,24 @@ public class KcalAfterFragment extends Fragment {
     private String getAdviceForGoal(String goal) {
         switch (goal) {
             case "Lose Weight":
-                return "Ăn nhiều rau xanh, protein nạc, hạn chế tinh bột nhanh và đồ ngọt.";
+                return "Eat more green vegetables, lean protein, limit fast starches and sweets";
             case "Gain Weight":
-                return "Tăng cường thực phẩm giàu protein, tinh bột tốt, ăn thêm bữa phụ giàu năng lượng.";
+                return "Increase foods rich in protein, good starch, and eat extra energy-rich snacks";
             case "Maintain Weight":
             default:
-                return "Ăn cân bằng các nhóm chất, duy trì chế độ ăn lành mạnh.";
+                return "Eat a balanced diet and maintain a healthy diet";
         }
     }
 
-    private String getMealSuggestionForGoal(String goal) {
-        switch (goal) {
-            case "Lose Weight":
-                return "- Ức gà, salad, trứng luộc, yến mạch, cá hồi áp chảo.";
-            case "Gain Weight":
-                return "- Cơm, thịt bò, cá hồi, bơ, chuối, sữa chua Hy Lạp.";
-            case "Maintain Weight":
-            default:
-                return "- Cơm, thịt nạc, rau củ, trái cây tươi, sữa ít béo.";
-        }
-    }
+//    private String getMealSuggestionForGoal(String goal) {
+//        switch (goal) {
+//            case "Lose Weight":
+//                return "- Ức gà, salad, trứng luộc, yến mạch, cá hồi áp chảo.";
+//            case "Gain Weight":
+//                return "- Cơm, thịt bò, cá hồi, bơ, chuối, sữa chua Hy Lạp.";
+//            case "Maintain Weight":
+//            default:
+//                return "- Cơm, thịt nạc, rau củ, trái cây tươi, sữa ít béo.";
+//        }
+//    }
 }

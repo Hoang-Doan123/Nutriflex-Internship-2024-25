@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Breakfast"
+                    android:text="@string/breakfast"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -59,15 +59,6 @@
                     android:id="@+id/tvBreakfastMeal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Oatmeal with fruits and nuts"
-                    android:layout_marginTop="4dp" />
-
-                <TextView
-                    android:id="@+id/tvBreakfastCalories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="350 calories"
-                    android:textColor="@color/secondary_text"
                     android:layout_marginTop="4dp" />
 
                 <View
@@ -80,7 +71,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lunch"
+                    android:text="@string/lunch"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -88,7 +79,7 @@
                     android:id="@+id/tvLunchTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1:00 PM"
+                    android:text="12:00 PM"
                     android:textColor="@color/secondary_text"
                     android:layout_marginTop="4dp" />
 
@@ -96,15 +87,6 @@
                     android:id="@+id/tvLunchMeal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Grilled chicken with brown rice and vegetables"
-                    android:layout_marginTop="4dp" />
-
-                <TextView
-                    android:id="@+id/tvLunchCalories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="550 calories"
-                    android:textColor="@color/secondary_text"
                     android:layout_marginTop="4dp" />
 
                 <View
@@ -117,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dinner"
+                    android:text="@string/dinner"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -133,35 +115,6 @@
                     android:id="@+id/tvDinnerMeal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Salmon with sweet potato and steamed vegetables"
-                    android:layout_marginTop="4dp" />
-
-                <TextView
-                    android:id="@+id/tvDinnerCalories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="450 calories"
-                    android:textColor="@color/secondary_text"
-                    android:layout_marginTop="4dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Calories: 1350 kcal"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Macros: Protein 120g, Carbs 150g, Fat 45g"
-                    android:textColor="@color/secondary_text"
                     android:layout_marginTop="4dp" />
 
                 <com.google.android.material.button.MaterialButton

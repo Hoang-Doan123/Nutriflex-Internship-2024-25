@@ -38,8 +38,8 @@ public interface ApiService {
     @POST("api/workout-sessions")
     Call<WorkoutSession> saveWorkoutSession(@Body WorkoutSession session);
 
-    @GET("api/kcal/history")
-    Call<List<KcalRecord>> getHistory(@Query("userId") String userId);
+    @GET("api/kcal/history/{userId}")
+    Call<List<KcalRecord>> getHistory(@Path("userId") String userId);
 
     // Questionnaire APIs
     @POST("api/questionnaires")
@@ -60,7 +60,7 @@ public interface ApiService {
     Call<MealPlan> generateMealPlan(@Query("userId") String userId, @Body NutritionGoals nutritionGoals);
 
     @GET("api/meal-plans/{userId}/{date}")
-    Call<MealPlan> getMealPlan(@Path("userId") String userId, @Path("date") String date);
+    Call<List<MealPlan>> getMealPlan(@Path("userId") String userId, @Path("date") String date);
 
     @POST("api/meal-plans")
     Call<MealPlan> saveMealPlan(@Body MealPlan mealPlan);
@@ -96,4 +96,11 @@ public interface ApiService {
 
     @GET("api/meals/calories")
     Call<List<Meal>> getMealsByCalorieRange(@Query("minCalories") int minCalories, @Query("maxCalories") int maxCalories);
+
+    // Nutrition Plan APIs
+    @GET("api/nutrition-plan")
+    Call<List<NutritionPlan>> getNutritionPlansByUserId(@Query("userId") String userId);
+
+    @POST("api/nutrition-plan")
+    Call<NutritionPlan> saveNutritionPlan(@Body NutritionPlan plan);
 }

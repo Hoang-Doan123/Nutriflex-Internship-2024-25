@@ -1,9 +1,9 @@
 package com.example.ui.alert;
 
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -15,8 +15,7 @@ import android.view.ViewGroup;
 import com.example.R;
 import com.example.ui.alert.meal.AlertMealFragment;
 import com.example.ui.alert.training.AlertTrainingFragment;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.tabs.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +68,7 @@ public class AlertFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("AlertFragment", "onCreateView called");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_alert, container, false);
     }
@@ -76,6 +76,7 @@ public class AlertFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("AlertFragment", "onViewCreated called");
 
         ViewPager2 viewPagerAlert = view.findViewById(R.id.viewPagerAlert);
         TabLayout tabLayoutAlert = view.findViewById(R.id.tabLayoutAlert);
@@ -84,10 +85,13 @@ public class AlertFragment extends Fragment {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
+                Log.d("AlertFragment", "Creating fragment at position: " + position);
                 switch (position) {
                     case 0:
+                        Log.d("AlertFragment", "Creating AlertTrainingFragment");
                         return new AlertTrainingFragment();
                     case 1:
+                        Log.d("AlertFragment", "Creating AlertMealFragment");
                         return new AlertMealFragment();
                     default:
                         throw new IllegalArgumentException();
@@ -113,5 +117,7 @@ public class AlertFragment extends Fragment {
                             break;
                     }
                 }).attach();
+        
+        Log.d("AlertFragment", "ViewPager and TabLayout setup completed");
     }
 }

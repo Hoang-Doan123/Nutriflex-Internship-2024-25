@@ -217,8 +217,10 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                sharedViewModel.setWorkoutResult(userId, caloriesBurned);
-                                sharedViewModel.requestSwitchToAfterTab();
+                                // Trong callback khi đã có WorkoutSession (sau khi gửi lên backend và nhận về _id):
+                                // String sessionId = response.body() != null && response.body().getId() != null ? response.body().getId() : "";
+                                // sharedViewModel.setWorkoutResult(userId, caloriesBurned, sessionId);
+                                // sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
                             });
@@ -234,7 +236,8 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                sharedViewModel.setWorkoutResult(userId, caloriesBurned);
+                                // Nếu chưa có sessionId, truyền rỗng:
+                                // sharedViewModel.setWorkoutResult(userId, caloriesBurned, "");
                                 sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
@@ -531,7 +534,11 @@ public class KcalBeforeFragment extends Fragment {
         apiService.saveWorkoutSession(session).enqueue(new retrofit2.Callback<com.example.model.WorkoutSession>() {
             @Override
             public void onResponse(retrofit2.Call<com.example.model.WorkoutSession> call, retrofit2.Response<com.example.model.WorkoutSession> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String sessionId = response.body().getId() != null ? response.body().getId() : "";
+                    Log.d("KcalBeforeFragment", "Passing sessionId to sharedViewModel: " + sessionId);
+                    sharedViewModel.setWorkoutResult(userId, caloriesBurned, sessionId);
+                    sharedViewModel.requestSwitchToAfterTab(); // <-- chuyển sang KcalAfter
                     Log.d("KcalDebug", "WorkoutSession saved to backend: " + response.body());
                 } else {
                     Log.e("KcalDebug", "Failed to save WorkoutSession: " + response.code());

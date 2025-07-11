@@ -161,23 +161,24 @@ public class MealPlanService {
      */
     public void getMealPlan(String userId, String date, MealPlanCallback callback) {
         Log.d(TAG, "Getting meal plan for user: " + userId + " on date: " + date);
-        
-        Call<MealPlan> call = apiService.getMealPlan(userId, date);
-        call.enqueue(new Callback<MealPlan>() {
+        Call<List<MealPlan>> call = apiService.getMealPlan(userId, date);
+        call.enqueue(new Callback<List<MealPlan>>() {
             @Override
-            public void onResponse(Call<MealPlan> call, Response<MealPlan> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(Call<List<MealPlan>> call, Response<List<MealPlan>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    // Lấy meal plan mới nhất (giả sử cuối danh sách là mới nhất)
+                    MealPlan latest = response.body().get(response.body().size() - 1);
                     Log.d(TAG, "Meal plan retrieved successfully");
-                    callback.onSuccess(response.body());
+                    callback.onSuccess(latest);
                 } else {
-                    String error = "Failed to get meal plan: " + response.code();
+                    String error = "No meal plan found";
                     Log.e(TAG, error);
                     callback.onError(error);
                 }
             }
 
             @Override
-            public void onFailure(Call<MealPlan> call, Throwable t) {
+            public void onFailure(Call<List<MealPlan>> call, Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);
