@@ -83,7 +83,13 @@
                 android:id="@+id/rb4Meals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4 Meals" />
+                android:text="4 Meals (Breakfast, Mid‑morning, Lunch, Dinner)" />
+
+            <RadioButton
+                android:id="@+id/rb4Meals2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4 Meals (Breakfast, Lunch, Afternoon, Dinner)" />
 
             <RadioButton
                 android:id="@+id/rb5Meals"

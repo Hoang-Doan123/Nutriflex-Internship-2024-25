@@ -40,6 +40,9 @@ public class DailyNutritionFragment extends Fragment {
     private LinearProgressIndicator progressCalories;
     private FloatingActionButton fabCreateMealPlan;
     private ProgressBar progressBar;
+    private TextView tvMidmorningMeal, tvMidmorningCalories, tvMidmorningTime;
+    private TextView tvAfternoonMeal, tvAfternoonCalories, tvAfternoonTime;
+    private View cardBreakfast, cardMidmorning, cardLunch, cardAfternoon, cardDinner;
 
     // Services
     private MealPlanService mealPlanService;
@@ -98,6 +101,17 @@ public class DailyNutritionFragment extends Fragment {
         tvMacros = view.findViewById(R.id.tvMacros);
         progressCalories = view.findViewById(R.id.progressCalories);
         fabCreateMealPlan = view.findViewById(R.id.fabCreateMealPlan);
+        tvMidmorningMeal = view.findViewById(R.id.tvMidmorningMeal);
+        tvMidmorningCalories = view.findViewById(R.id.tvMidmorningCalories);
+        tvMidmorningTime = view.findViewById(R.id.tvMidmorningTime);
+        tvAfternoonMeal = view.findViewById(R.id.tvAfternoonMeal);
+        tvAfternoonCalories = view.findViewById(R.id.tvAfternoonCalories);
+        tvAfternoonTime = view.findViewById(R.id.tvAfternoonTime);
+        cardBreakfast = view.findViewById(R.id.cardBreakfast);
+        cardMidmorning = view.findViewById(R.id.cardMidmorning);
+        cardLunch = view.findViewById(R.id.cardLunch);
+        cardAfternoon = view.findViewById(R.id.cardAfternoon);
+        cardDinner = view.findViewById(R.id.cardDinner);
 
         // Set up click listeners
         fabCreateMealPlan.setOnClickListener(v -> {
@@ -215,6 +229,7 @@ public class DailyNutritionFragment extends Fragment {
             // Extract meals per day
             RadioGroup rgMealsPerDay = dialogView.findViewById(R.id.rgMealsPerDay);
             int mealsPerDay = getMealsPerDay(rgMealsPerDay.getCheckedRadioButtonId());
+            String mealPatternType = getMealPatternType(rgMealsPerDay.getCheckedRadioButtonId());
             Log.d(TAG, "Meals per day: " + mealsPerDay);
 
             // Extract include snacks
@@ -274,7 +289,7 @@ public class DailyNutritionFragment extends Fragment {
             }
             NutritionGoals goals = new NutritionGoals(currentUserId, dailyCalories, proteinPercentage, 
                                         carbohydratePercentage, fatPercentage, dietaryRestrictions, 
-                                        foodPreferences, allergies, mealPlanType, mealsPerDay, includeSnacks);
+                                        foodPreferences, allergies, mealPlanType, mealsPerDay, includeSnacks, mealPatternType);
             Log.d(TAG, "Nutrition goals created successfully: " + goals.toString());
             return goals;
         } catch (NumberFormatException e) {
@@ -288,16 +303,13 @@ public class DailyNutritionFragment extends Fragment {
         }
     }
 
-//    private String getMealPlanType(int checkedId) {
-//        String mealPlanType;
-//        if (checkedId == R.id.rbWeightLoss) mealPlanType = "weight_loss";
-//        else if (checkedId == R.id.rbMuscleGain) mealPlanType = "muscle_gain";
-//        else if (checkedId == R.id.rbMaintenance) mealPlanType = "maintenance";
-//        else mealPlanType = "general_health";
-//
-//        Log.d(TAG, "Meal plan type selected: " + mealPlanType + " (checkedId: " + checkedId + ")");
-//        return mealPlanType;
-//    }
+    private String getMealPatternType(int checkedId) {
+        if (checkedId == R.id.rb3Meals) return "3";
+        if (checkedId == R.id.rb4Meals) return "4a";
+        if (checkedId == R.id.rb4Meals2) return "4b";
+        if (checkedId == R.id.rb5Meals) return "5";
+        return "3";
+    }
 
     private int getMealsPerDay(int checkedId) {
         int mealsPerDay;
@@ -366,7 +378,64 @@ public class DailyNutritionFragment extends Fragment {
 
         Log.d(TAG, "Meal plan has " + mealPlan.getMeals().size() + " meals");
 
-        // Update meals
+        // Xác định mealPatternType
+        String mealPatternType = null;
+        if (mealPlan instanceof com.example.model.MealPlan) {
+            // Nếu mealPlan có trường mealPatternType thì lấy ra (nếu backend trả về)
+            try {
+                java.lang.reflect.Method m = mealPlan.getClass().getMethod("getMealPatternType");
+                mealPatternType = (String) m.invoke(mealPlan);
+            } catch (Exception e) {
+                mealPatternType = null;
+            }
+        }
+        // Nếu không có, fallback theo số lượng mealType
+        if (mealPatternType == null) {
+            int n = mealPlan.getMeals().size();
+            if (n == 3) mealPatternType = "3";
+            else if (n == 4) mealPatternType = "4a"; // default 4a nếu không rõ
+            else if (n == 5) mealPatternType = "5";
+            else mealPatternType = "3";
+        }
+        // Set visibility theo pattern
+        switch (mealPatternType) {
+            case "3":
+                cardBreakfast.setVisibility(View.VISIBLE);
+                cardMidmorning.setVisibility(View.GONE);
+                cardLunch.setVisibility(View.VISIBLE);
+                cardAfternoon.setVisibility(View.GONE);
+                cardDinner.setVisibility(View.VISIBLE);
+                break;
+            case "4a":
+                cardBreakfast.setVisibility(View.VISIBLE);
+                cardMidmorning.setVisibility(View.VISIBLE);
+                cardLunch.setVisibility(View.VISIBLE);
+                cardAfternoon.setVisibility(View.GONE);
+                cardDinner.setVisibility(View.VISIBLE);
+                break;
+            case "4b":
+                cardBreakfast.setVisibility(View.VISIBLE);
+                cardMidmorning.setVisibility(View.GONE);
+                cardLunch.setVisibility(View.VISIBLE);
+                cardAfternoon.setVisibility(View.VISIBLE);
+                cardDinner.setVisibility(View.VISIBLE);
+                break;
+            case "5":
+                cardBreakfast.setVisibility(View.VISIBLE);
+                cardMidmorning.setVisibility(View.VISIBLE);
+                cardLunch.setVisibility(View.VISIBLE);
+                cardAfternoon.setVisibility(View.VISIBLE);
+                cardDinner.setVisibility(View.VISIBLE);
+                break;
+            default:
+                cardBreakfast.setVisibility(View.VISIBLE);
+                cardMidmorning.setVisibility(View.GONE);
+                cardLunch.setVisibility(View.VISIBLE);
+                cardAfternoon.setVisibility(View.GONE);
+                cardDinner.setVisibility(View.VISIBLE);
+                break;
+        }
+        // Tiếp tục cập nhật nội dung các meal như cũ
         List<MealPlan.DailyMeal> dailyMeals = mealPlan.getMeals() != null ? mealPlan.getMeals() : java.util.Collections.emptyList();
         for (MealPlan.DailyMeal dailyMeal : dailyMeals) {
             String mealNames = "";
@@ -391,10 +460,20 @@ public class DailyNutritionFragment extends Fragment {
                     tvBreakfastCalories.setText(totalCalories + " calories");
                     tvBreakfastTime.setText(dailyMeal.getTime());
                     break;
+                case "midmorning":
+                    tvMidmorningMeal.setText(mealNames);
+                    tvMidmorningCalories.setText(totalCalories + " calories");
+                    tvMidmorningTime.setText(dailyMeal.getTime());
+                    break;
                 case "lunch":
                     tvLunchMeal.setText(mealNames);
                     tvLunchCalories.setText(totalCalories + " calories");
                     tvLunchTime.setText(dailyMeal.getTime());
+                    break;
+                case "afternoon":
+                    tvAfternoonMeal.setText(mealNames);
+                    tvAfternoonCalories.setText(totalCalories + " calories");
+                    tvAfternoonTime.setText(dailyMeal.getTime());
                     break;
                 case "dinner":
                     tvDinnerMeal.setText(mealNames);

@@ -144,4 +144,6 @@
     <string name="lunch">Lunch</string>
     <string name="dinner">Dinner</string>
     <string name="nutrition_summary">Nutrition Summary</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="mid_morning">Mid-morning</string>
 </resources>

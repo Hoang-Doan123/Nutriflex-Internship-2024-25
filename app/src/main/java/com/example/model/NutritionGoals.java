@@ -17,6 +17,7 @@ public class NutritionGoals {
     private String mealPlanType; // "weight_loss", "muscle_gain", "maintenance", "general_health"
     private int mealsPerDay;
     private boolean includeSnacks;
+    private String mealPatternType;
 
     public NutritionGoals() {}
 
@@ -24,7 +25,7 @@ public class NutritionGoals {
                          double carbohydratePercentage, double fatPercentage, 
                          List<String> dietaryRestrictions, List<String> foodPreferences, 
                          List<String> allergies, String mealPlanType, int mealsPerDay, 
-                         boolean includeSnacks) {
+                         boolean includeSnacks, String mealPatternType) {
         this.userId = userId;
         this.dailyCalories = dailyCalories;
         this.proteinPercentage = proteinPercentage;
@@ -36,6 +37,7 @@ public class NutritionGoals {
         this.mealPlanType = mealPlanType;
         this.mealsPerDay = mealsPerDay;
         this.includeSnacks = includeSnacks;
+        this.mealPatternType = mealPatternType;
     }
 
     // Getters
@@ -51,6 +53,7 @@ public class NutritionGoals {
     public String getMealPlanType() { return mealPlanType; }
     public int getMealsPerDay() { return mealsPerDay; }
     public boolean isIncludeSnacks() { return includeSnacks; }
+    public String getMealPatternType() { return mealPatternType; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -65,6 +68,7 @@ public class NutritionGoals {
     public void setMealPlanType(String mealPlanType) { this.mealPlanType = mealPlanType; }
     public void setMealsPerDay(int mealsPerDay) { this.mealsPerDay = mealsPerDay; }
     public void setIncludeSnacks(boolean includeSnacks) { this.includeSnacks = includeSnacks; }
+    public void setMealPatternType(String mealPatternType) { this.mealPatternType = mealPatternType; }
 
     @Override
     public String toString() {
@@ -81,6 +85,7 @@ public class NutritionGoals {
                 ", mealPlanType='" + mealPlanType + '\'' +
                 ", mealsPerDay=" + mealsPerDay +
                 ", includeSnacks=" + includeSnacks +
+                ", mealPatternType='" + mealPatternType + '\'' +
                 '}';
     }
 } 
