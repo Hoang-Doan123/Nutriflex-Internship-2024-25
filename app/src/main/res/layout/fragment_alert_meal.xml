@@ -62,8 +62,38 @@
                     android:layout_marginTop="4dp" />
 
                 <View
+                    android:id="@+id/divider1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginVertical="8dp" />
+
+                <!-- Midmorning -->
+                <TextView
+                    android:id="@+id/tvMidmorningTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mid_morning"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvMidmorningTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10:30 AM"
+                    android:textColor="@color/secondary_text"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tvMidmorningMeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
                     android:background="@color/divider"
                     android:layout_marginVertical="8dp" />
 
@@ -85,6 +115,36 @@
 
                 <TextView
                     android:id="@+id/tvLunchMeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginVertical="8dp" />
+
+                <!-- Afternoon -->
+                <TextView
+                    android:id="@+id/tvAfternoonTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/afternoon"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvAfternoonTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4:00 PM"
+                    android:textColor="@color/secondary_text"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tvAfternoonMeal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />

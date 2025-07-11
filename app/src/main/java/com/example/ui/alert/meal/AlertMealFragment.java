@@ -1,5 +1,6 @@
 package com.example.ui.alert.meal;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,9 @@ public class AlertMealFragment extends Fragment {
     private static final String KEY_USER_ID = "userId";
     private static final String TAG = "AlertMealFragment";
 
+    private TextView tvBreakfast, tvBreakfastTime, tvMidmorningTitle, tvMidmorning, tvMidmorningTime, tvLunch, tvLunchTime, tvAfternoonTitle, tvAfternoon, tvAfternoonTime, tvDinner, tvDinnerTime;
+    private View divider1, divider2;
+
     public AlertMealFragment() {
         // Required empty public constructor
     }
@@ -77,13 +81,23 @@ public class AlertMealFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_alert_meal, container, false);
 
-        // Lấy các TextView để hiển thị món ăn
-        TextView tvBreakfast = view.findViewById(R.id.tvBreakfastMeal);
-        TextView tvLunch = view.findViewById(R.id.tvLunchMeal);
-        TextView tvDinner = view.findViewById(R.id.tvDinnerMeal);
+        tvBreakfast = view.findViewById(R.id.tvBreakfastMeal);
+        tvBreakfastTime = view.findViewById(R.id.tvBreakfastTime);
+        tvMidmorningTitle = view.findViewById(R.id.tvMidmorningTitle);
+        tvMidmorning = view.findViewById(R.id.tvMidmorningMeal);
+        tvMidmorningTime = view.findViewById(R.id.tvMidmorningTime);
+        tvLunch = view.findViewById(R.id.tvLunchMeal);
+        tvLunchTime = view.findViewById(R.id.tvLunchTime);
+        tvAfternoonTitle = view.findViewById(R.id.tvAfternoonTitle);
+        tvAfternoon = view.findViewById(R.id.tvAfternoonMeal);
+        tvAfternoonTime = view.findViewById(R.id.tvAfternoonTime);
+        tvDinner = view.findViewById(R.id.tvDinnerMeal);
+        tvDinnerTime = view.findViewById(R.id.tvDinnerTime);
+        divider1 = view.findViewById(R.id.divider1);
+        divider2 = view.findViewById(R.id.divider2);
 
         if (mealPlan != null && mealPlan.getMeals() != null) {
-            displayMealPlan(mealPlan, tvBreakfast, tvLunch, tvDinner);
+            displayMealPlan(mealPlan);
         } else {
             // Nếu không truyền mealPlan qua arguments, tự động lấy meal plan gần nhất từ backend
             String userId = getUserId();
@@ -93,13 +107,16 @@ public class AlertMealFragment extends Fragment {
                 @Override
                 public void onSuccess(MealPlan latestMealPlan) {
                     Log.d(TAG, "Loaded latest meal plan from backend");
-                    displayMealPlan(latestMealPlan, tvBreakfast, tvLunch, tvDinner);
+                    displayMealPlan(latestMealPlan);
                 }
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onError(String error) {
                     Log.e(TAG, "No meal plan found, showing default");
                     tvBreakfast.setText("No meal plan yet");
+                    tvMidmorning.setText("No meal plan yet");
                     tvLunch.setText("No meal plan yet");
+                    tvAfternoon.setText("No meal plan yet");
                     tvDinner.setText("No meal plan yet");
                 }
             });
@@ -108,7 +125,106 @@ public class AlertMealFragment extends Fragment {
         return view;
     }
 
-    private void displayMealPlan(MealPlan mealPlan, TextView tvBreakfast, TextView tvLunch, TextView tvDinner) {
+    private void displayMealPlan(MealPlan mealPlan) {
+        // Xác định mealPatternType
+        String mealPatternType = null;
+        try {
+            java.lang.reflect.Method m = mealPlan.getClass().getMethod("getMealPatternType");
+            mealPatternType = (String) m.invoke(mealPlan);
+        } catch (Exception e) {
+            mealPatternType = null;
+        }
+        if (mealPatternType == null) {
+            int n = mealPlan.getMeals().size();
+            if (n == 3) mealPatternType = "3";
+            else if (n == 4) mealPatternType = "4a";
+            else if (n == 5) mealPatternType = "5";
+            else mealPatternType = "3";
+        }
+        // Set visibility theo pattern
+        switch (mealPatternType) {
+            case "3":
+                tvBreakfast.setVisibility(View.VISIBLE);
+                tvBreakfastTime.setVisibility(View.VISIBLE);
+                divider1.setVisibility(View.GONE);
+                tvMidmorningTitle.setVisibility(View.GONE);
+                tvMidmorning.setVisibility(View.GONE);
+                tvMidmorningTime.setVisibility(View.GONE);
+                tvLunch.setVisibility(View.VISIBLE);
+                tvLunchTime.setVisibility(View.VISIBLE);
+                divider2.setVisibility(View.GONE);
+                tvAfternoonTitle.setVisibility(View.GONE);
+                tvAfternoon.setVisibility(View.GONE);
+                tvAfternoonTime.setVisibility(View.GONE);
+                tvDinner.setVisibility(View.VISIBLE);
+                tvDinnerTime.setVisibility(View.VISIBLE);
+                break;
+            case "4a":
+                tvBreakfast.setVisibility(View.VISIBLE);
+                tvBreakfastTime.setVisibility(View.VISIBLE);
+                divider1.setVisibility(View.VISIBLE);
+                tvMidmorningTitle.setVisibility(View.VISIBLE);
+                tvMidmorning.setVisibility(View.VISIBLE);
+                tvMidmorningTime.setVisibility(View.VISIBLE);
+                tvLunch.setVisibility(View.VISIBLE);
+                tvLunchTime.setVisibility(View.VISIBLE);
+                divider2.setVisibility(View.GONE);
+                tvAfternoonTitle.setVisibility(View.GONE);
+                tvAfternoon.setVisibility(View.GONE);
+                tvAfternoonTime.setVisibility(View.GONE);
+                tvDinner.setVisibility(View.VISIBLE);
+                tvDinnerTime.setVisibility(View.VISIBLE);
+                break;
+            case "4b":
+                tvBreakfast.setVisibility(View.VISIBLE);
+                tvBreakfastTime.setVisibility(View.VISIBLE);
+                divider1.setVisibility(View.GONE);
+                tvMidmorningTitle.setVisibility(View.GONE);
+                tvMidmorning.setVisibility(View.GONE);
+                tvMidmorningTime.setVisibility(View.GONE);
+                tvLunch.setVisibility(View.VISIBLE);
+                tvLunchTime.setVisibility(View.VISIBLE);
+                divider2.setVisibility(View.VISIBLE);
+                tvAfternoonTitle.setVisibility(View.VISIBLE);
+                tvAfternoon.setVisibility(View.VISIBLE);
+                tvAfternoonTime.setVisibility(View.VISIBLE);
+                tvDinner.setVisibility(View.VISIBLE);
+                tvDinnerTime.setVisibility(View.VISIBLE);
+                break;
+            case "5":
+                tvBreakfast.setVisibility(View.VISIBLE);
+                tvBreakfastTime.setVisibility(View.VISIBLE);
+                divider1.setVisibility(View.VISIBLE);
+                tvMidmorningTitle.setVisibility(View.VISIBLE);
+                tvMidmorning.setVisibility(View.VISIBLE);
+                tvMidmorningTime.setVisibility(View.VISIBLE);
+                tvLunch.setVisibility(View.VISIBLE);
+                tvLunchTime.setVisibility(View.VISIBLE);
+                divider2.setVisibility(View.VISIBLE);
+                tvAfternoonTitle.setVisibility(View.VISIBLE);
+                tvAfternoon.setVisibility(View.VISIBLE);
+                tvAfternoonTime.setVisibility(View.VISIBLE);
+                tvDinner.setVisibility(View.VISIBLE);
+                tvDinnerTime.setVisibility(View.VISIBLE);
+                break;
+            default:
+                tvBreakfast.setVisibility(View.VISIBLE);
+                tvBreakfastTime.setVisibility(View.VISIBLE);
+                divider1.setVisibility(View.GONE);
+                tvMidmorningTitle.setVisibility(View.GONE);
+                tvMidmorning.setVisibility(View.GONE);
+                tvMidmorningTime.setVisibility(View.GONE);
+                tvLunch.setVisibility(View.VISIBLE);
+                tvLunchTime.setVisibility(View.VISIBLE);
+                divider2.setVisibility(View.GONE);
+                tvAfternoonTitle.setVisibility(View.GONE);
+                tvAfternoon.setVisibility(View.GONE);
+                tvAfternoonTime.setVisibility(View.GONE);
+                tvDinner.setVisibility(View.VISIBLE);
+                tvDinnerTime.setVisibility(View.VISIBLE);
+                break;
+        }
+        // Hiển thị nội dung từng meal
         for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
             StringBuilder mealNames = new StringBuilder();
             if (dailyMeal.getMeals() != null) {
@@ -122,12 +238,23 @@ public class AlertMealFragment extends Fragment {
             switch (dailyMeal.getMealType().toLowerCase()) {
                 case "breakfast":
                     tvBreakfast.setText(mealList);
+                    tvBreakfastTime.setText(dailyMeal.getTime());
+                    break;
+                case "midmorning":
+                    tvMidmorning.setText(mealList);
+                    tvMidmorningTime.setText(dailyMeal.getTime());
                     break;
                 case "lunch":
                     tvLunch.setText(mealList);
+                    tvLunchTime.setText(dailyMeal.getTime());
+                    break;
+                case "afternoon":
+                    tvAfternoon.setText(mealList);
+                    tvAfternoonTime.setText(dailyMeal.getTime());
                     break;
                 case "dinner":
                     tvDinner.setText(mealList);
+                    tvDinnerTime.setText(dailyMeal.getTime());
                     break;
             }
         }
