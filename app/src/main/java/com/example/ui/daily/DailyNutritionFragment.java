@@ -331,6 +331,10 @@ public class DailyNutritionFragment extends Fragment {
                     public void onSuccess(MealPlan savedMealPlan) {
                         Log.d(TAG, "Meal plan saved successfully to database");
                         Toast.makeText(requireContext(), "Meal plan created successfully!", Toast.LENGTH_SHORT).show();
+                        // Cập nhật UI trực tiếp với meal plan vừa lưu
+                        currentMealPlan = savedMealPlan;
+                        updateUIWithMealPlan(savedMealPlan);
+                        // Không gọi loadTodayMealPlan() ngay lập tức nữa
                     }
 
                     @Override

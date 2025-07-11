@@ -60,7 +60,7 @@ public interface ApiService {
     Call<MealPlan> generateMealPlan(@Query("userId") String userId, @Body NutritionGoals nutritionGoals);
 
     @GET("api/meal-plans/{userId}/{date}")
-    Call<MealPlan> getMealPlan(@Path("userId") String userId, @Path("date") String date);
+    Call<List<MealPlan>> getMealPlan(@Path("userId") String userId, @Path("date") String date);
 
     @POST("api/meal-plans")
     Call<MealPlan> saveMealPlan(@Body MealPlan mealPlan);
