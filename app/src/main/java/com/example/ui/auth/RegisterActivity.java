@@ -238,24 +238,45 @@ public class RegisterActivity extends AppCompatActivity {
                         getSharedPreferences("NutriFlexPrefs", MODE_PRIVATE)
                             .edit().putString("userId", savedUser.getId()).apply();
                         Log.d("SessionDebug", "Saved userId to session and SharedPreferences: " + savedUser.getId());
-                        // Lưu workoutType vào questionnaires
-                        int workoutTypePosition = 10; // Đúng vị trí câu hỏi Workout Type
+                        // Save all workout-related onboarding answers to questionnaires
+                        int workoutTypePosition = 10; // Workout Type
+                        int fitnessExperiencePosition = 9; // Fitness Experience
+                        int injuriesPosition = 7; // Injuries
+                        int healthcareIssuesPosition = 6; // Healthcare Issues
+                        int dietaryRestrictionsPosition = 8; // Dietary Restrictions
+                        int goalPosition = 4; // Body Goal
+                        int motivationPosition = 5; // Motivation
                         String workoutType = getSelectedOption(workoutTypePosition);
+                        String fitnessExperience = getSelectedOption(fitnessExperiencePosition);
+                        List<String> injuries = onboardingData.get(injuriesPosition);
+                        List<String> healthcareIssues = onboardingData.get(healthcareIssuesPosition);
+                        List<String> dietaryRestrictions = onboardingData.get(dietaryRestrictionsPosition);
+                        String goal = getSelectedOption(goalPosition);
+                        String motivation = getSelectedOption(motivationPosition);
                         if (workoutType != null && !workoutType.isEmpty()) {
-                            com.example.model.Questionnaire questionnaire = new com.example.model.Questionnaire(savedUser.getId(), workoutType);
+                            com.example.model.Questionnaire questionnaire = new com.example.model.Questionnaire(
+                                savedUser.getId(),
+                                workoutType,
+                                fitnessExperience,
+                                injuries,
+                                healthcareIssues,
+                                dietaryRestrictions,
+                                goal,
+                                motivation
+                            );
                             ApiService apiService = ApiClient.getClient().create(ApiService.class);
                             apiService.saveQuestionnaire(questionnaire).enqueue(new retrofit2.Callback<com.example.model.Questionnaire>() {
                                 @Override
                                 public void onResponse(retrofit2.Call<com.example.model.Questionnaire> call, retrofit2.Response<com.example.model.Questionnaire> response) {
                                     if (response.isSuccessful()) {
-                                        Log.d("RegisterActivity", "WorkoutType saved to questionnaires successfully");
+                                        Log.d("RegisterActivity", "Workout questionnaire saved to MongoDB successfully");
                                     } else {
-                                        Log.e("RegisterActivity", "Failed to save workoutType: " + response.code());
+                                        Log.e("RegisterActivity", "Failed to save workout questionnaire: " + response.code());
                                     }
                                 }
                                 @Override
                                 public void onFailure(retrofit2.Call<com.example.model.Questionnaire> call, Throwable t) {
-                                    Log.e("RegisterActivity", "Error saving workoutType: " + t.getMessage());
+                                    Log.e("RegisterActivity", "Error saving workout questionnaire: " + t.getMessage());
                                 }
                             });
                         }
