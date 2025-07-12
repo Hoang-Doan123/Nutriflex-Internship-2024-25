@@ -15,6 +15,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/material_card_background_color"
             app:cardCornerRadius="12dp"
             app:cardElevation="6dp"
             android:layout_marginBottom="16dp">
@@ -30,6 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Today's Meal Plan"
+                    android:textColor="@color/main_text_color"
                     android:textStyle="bold"
                     android:textSize="20sp" />
 
@@ -44,6 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/breakfast"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -52,11 +55,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="8:00 AM"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvBreakfastMeal"
+                    android:textColor="@color/text_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />
@@ -74,6 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mid_morning"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -82,18 +87,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:30 AM"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvMidmorningMeal"
+                    android:textColor="@color/text_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/divider"
                     android:layout_marginVertical="8dp" />
 
@@ -102,6 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lunch"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -110,11 +117,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12:00 PM"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvLunchMeal"
+                    android:textColor="@color/text_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />
@@ -132,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/afternoon"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -140,11 +149,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4:00 PM"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvAfternoonMeal"
+                    android:textColor="@color/text_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />
@@ -160,6 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dinner"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -168,11 +179,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="7:00 PM"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvDinnerMeal"
+                    android:textColor="@color/text_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" />
@@ -181,6 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Set Meal Reminder"
+                    android:textColor="@color/reminder_text_color"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_marginTop="12dp" />
 

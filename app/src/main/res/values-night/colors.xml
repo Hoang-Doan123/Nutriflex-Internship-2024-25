@@ -24,21 +24,21 @@
     <color name="colorSurface">@color/surface</color>
 
     <!-- Text Colors -->
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="text_secondary">#757575</color>
-    <color name="main_text_color">#FF000000</color>
-    <color name="tab_layout_text_color">#FF000000</color>
-    <color name="reminder_text_color">#00009A</color>
+    <color name="primary_text">#FFFFFFFF</color>
+    <color name="secondary_text">#FFFFFFFF</color>
+    <color name="text_secondary">#FFFFFFFF</color>
+    <color name="main_text_color">#FFFFFFFF</color>
+    <color name="tab_layout_text_color">#FFFFFFFF</color>
+    <color name="reminder_text_color">#FFFFFFFF</color>
 
     <!-- UI Element Colors -->
     <color name="icons">#FFFFFF</color>
-    <color name="divider">#FF000000</color>
+    <color name="divider">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
     <color name="surface">#F4F6F8</color>
-    <color name="main_background_color">#FFFFFFFF</color>
-    <color name="tab_layout_color">#FFFFFFFF</color>
-    <color name="view_pager_color">#FFFFFFFF</color>
-    <color name="card_background_color">#FFFFFFFF</color>
-    <color name="material_card_background_color">#E3DCEE</color>
+    <color name="main_background_color">#FF000000</color>
+    <color name="tab_layout_color">#FF000000</color>
+    <color name="view_pager_color">#FF000000</color>
+    <color name="card_background_color">#FF000000</color>
+    <color name="material_card_background_color">#FF000000</color>
 </resources>

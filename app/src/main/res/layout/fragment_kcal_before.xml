@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:text="The result will be here"
             android:textSize="16sp"
+            android:textColor="@color/main_text_color"
             android:layout_marginTop="16dp"
             android:gravity="center" />
 
@@ -25,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start"
+            android:textColor="@color/white"
             android:layout_marginTop="16dp" />
 
         <Button
@@ -32,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Stop"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp" />
 
         <org.osmdroid.views.MapView

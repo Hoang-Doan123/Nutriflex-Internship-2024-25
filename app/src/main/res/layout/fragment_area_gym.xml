@@ -16,6 +16,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/material_card_background_color"
             app:cardCornerRadius="12dp"
             app:cardElevation="6dp"
             android:layout_marginBottom="16dp">
@@ -37,6 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Luxury Gym Center"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_marginTop="8dp" />
@@ -45,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="123 Nguyen Trai, Hanoi"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="2dp" />
 
                 <RatingBar
@@ -61,12 +63,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Type: Luxury"
+                    android:textColor="@color/secondary"
                     android:layout_marginTop="2dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description: Modern gym with full equipment, sauna, and swimming pool."
+                    android:textColor="@color/text_secondary"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

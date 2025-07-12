@@ -12,6 +12,7 @@
         android:padding="16dp">
 
         <androidx.cardview.widget.CardView
+            android:background="@color/card_background_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -39,32 +40,39 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nickname: [Tên người dùng]" />
+                        android:text="Nickname: [Username]"
+                        android:textColor="@color/main_text_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UID: 741a6151451" />
+                        android:text="UID: [UserId]"
+                        android:textColor="@color/main_text_color" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email: [Email]" />
+                        android:text="Email: [Email]"
+                        android:textColor="@color/main_text_color" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gender: Male" />
+                        android:text="Gender: [Gender]"
+                        android:textColor="@color/main_text_color" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Age: 21" />
+                        android:text="Age: [Age]"
+                        android:textColor="@color/main_text_color" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Height: 159cm" />
+                        android:text="Height: [Height]"
+                        android:textColor="@color/main_text_color" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:background="@color/card_background_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -83,7 +91,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:text="Setting" />
+                    android:text="Setting"
+                    android:textColor="@color/main_text_color" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -106,7 +115,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:text="Noti" />
+                    android:text="Noti"
+                    android:textColor="@color/main_text_color" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -134,7 +144,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="16dp"
-                        android:text="Weight" />
+                        android:text="Weight"
+                        android:textColor="@color/main_text_color" />
                     <ImageView
                         android:id="@+id/ivEditWeight"
                         android:layout_width="24dp"
@@ -181,7 +192,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:text="RM Calculator" />
+                    android:text="RM Calculator"
+                    android:textColor="@color/main_text_color" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

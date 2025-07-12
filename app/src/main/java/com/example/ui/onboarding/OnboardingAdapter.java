@@ -1,5 +1,6 @@
 package com.example.ui.onboarding;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -232,9 +233,12 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
             llOptions = itemView.findViewById(R.id.llOptions);
         }
 
+        @SuppressLint("ResourceAsColor")
         public void bind(OnboardingQuestion question, int questionPosition) {
             tvTitle.setText(question.getTitle());
+            tvTitle.setTextColor(R.color.main_text_color);
             tvDescription.setText(question.getDescription());
+            tvDescription.setTextColor(R.color.main_text_color);
             ivImage.setImageResource(question.getImageResId());
 
             // Clear previous options
