@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.R;
+import com.example.ui.area.food.AreaFoodFragment;
+import com.example.ui.area.gym.AreaGymFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -73,7 +75,6 @@ public class AreaFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         ViewPager2 viewPagerArea = view.findViewById(R.id.viewPagerArea);
         TabLayout tabLayoutArea = view.findViewById(R.id.tabLayoutArea);
