@@ -121,7 +121,9 @@ public class DailyNutritionFragment extends Fragment {
 
         // Set default meal times
         tvBreakfastTime.setText("8:00 AM");
+        tvMidmorningTime.setText("10:30 AM");
         tvLunchTime.setText("12:00 PM");
+        tvAfternoonTime.setText("4:00 PM");
         tvDinnerTime.setText("7:00 PM");
         
         Log.d(TAG, "UI setup completed successfully");
@@ -512,8 +514,12 @@ public class DailyNutritionFragment extends Fragment {
         
         tvBreakfastMeal.setText("No meal plan yet");
         tvBreakfastCalories.setText("0 calories");
+        tvMidmorningMeal.setText("No meal plan yet");
+        tvMidmorningCalories.setText("0 calories");
         tvLunchMeal.setText("No meal plan yet");
         tvLunchCalories.setText("0 calories");
+        tvAfternoonMeal.setText("No meal plan yet");
+        tvAfternoonCalories.setText("0 calories");
         tvDinnerMeal.setText("No meal plan yet");
         tvDinnerCalories.setText("0 calories");
         
