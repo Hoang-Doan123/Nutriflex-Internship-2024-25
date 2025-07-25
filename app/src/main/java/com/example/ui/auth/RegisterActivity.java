@@ -4,35 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.*;
 
 import com.example.R;
-import com.example.model.PersonalData;
-import com.example.model.auth.RegisterRequest;
-import com.example.model.auth.RegisterResponse;
-import com.example.model.auth.User;
-import com.example.network.ApiClient;
-import com.example.network.ApiService;
+import com.example.model.*;
+import com.example.model.auth.*;
+import com.example.network.*;
 import com.example.ui.main.MainActivity;
 import com.example.utils.SessionManager;
 import com.example.network.RetrofitInstance;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import retrofit2.*;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -76,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             onboardingData = new HashMap<>();
         }
-        // Nhận thêm age, weight, height
+        // Get information from onboarding age, weight, height
         String ageStr = intent.getStringExtra("age");
         String weightStr = intent.getStringExtra("weight");
         String heightStr = intent.getStringExtra("height");
@@ -106,9 +96,10 @@ public class RegisterActivity extends AppCompatActivity {
                 List<String> injuries = onboardingData.get(7); // Question 7: Injuries
                 List<String> dietaryRestrictions = onboardingData.get(8); // Question 8: Dietary Restrictions
                 String fitnessExperience = getSelectedOption(9); // Question 9: Fitness Experience
+                String activityLevel = getSelectedOption(10); // Question 10: Activity Level
 
                 // Debug: Check all onboarding data positions
-                for (int i = 0; i <= 9; i++) {
+                for (int i = 0; i <= 10; i++) {
                     List<String> data = onboardingData.get(i);
                     Log.d("RegisterActivity", "Question " + i + ": " + data);
                 }
@@ -121,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                 registerRequest.setAge(age);
                 registerRequest.setWeight(weight);
                 registerRequest.setHeight(height);
+                registerRequest.setActivityLevel(activityLevel);
 
                 // Log the data being sent
                 Log.d("RegisterActivity", "Sending registration data:");
@@ -133,6 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("RegisterActivity", "Injuries: " + injuries);
                 Log.d("RegisterActivity", "Dietary Restrictions: " + dietaryRestrictions);
                 Log.d("RegisterActivity", "Fitness Experience: " + fitnessExperience);
+                Log.d("RegisterActivity", "Activity Level: " + activityLevel);
                 Log.d("RegisterActivity", "Age: " + age);
                 Log.d("RegisterActivity", "Weight: " + weight);
                 Log.d("RegisterActivity", "Height: " + height);
@@ -142,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
                 // First, test backend connectivity
                 apiService.healthCheck().enqueue(new Callback<Map<String, String>>() {
                     @Override
-                    public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                    public void onResponse(@NonNull Call<Map<String, String>> call, @NonNull Response<Map<String, String>> response) {
                         Log.d("RegisterActivity", "Health check response - Code: " + response.code());
                         if (response.isSuccessful()) {
                             Log.d("RegisterActivity", "Backend is accessible, proceeding with registration");
@@ -157,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                    public void onFailure(@NonNull Call<Map<String, String>> call, @NonNull Throwable t) {
                         Log.e("RegisterActivity", "Health check failed: " + t.getMessage(), t);
                         runOnUiThread(() ->
                             Toast.makeText(RegisterActivity.this, "Cannot connect to backend: " + t.getMessage(), Toast.LENGTH_LONG).show()
@@ -208,7 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void performRegistration(ApiService apiService, RegisterRequest registerRequest) {
         apiService.registerUser(registerRequest).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
                 Log.d("RegisterActivity", "Response received - Code: " + response.code());
                 Log.d("RegisterActivity", "Response headers: " + response.headers());
                 
@@ -234,7 +227,7 @@ public class RegisterActivity extends AppCompatActivity {
                             savedUser.getAge(),
                             savedUser.getGender()
                         );
-                        // Lưu userId vào SharedPreferences để các fragment khác dùng
+                        // Save userId into SharedPreferences so that the other fragments can use
                         getSharedPreferences("NutriFlexPrefs", MODE_PRIVATE)
                             .edit().putString("userId", savedUser.getId()).apply();
                         Log.d("SessionDebug", "Saved userId to session and SharedPreferences: " + savedUser.getId());
@@ -265,9 +258,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 motivation
                             );
                             ApiService apiService = ApiClient.getClient().create(ApiService.class);
-                            apiService.saveQuestionnaire(questionnaire).enqueue(new retrofit2.Callback<com.example.model.Questionnaire>() {
+                            apiService.saveQuestionnaire(questionnaire).enqueue(new retrofit2.Callback<Questionnaire>() {
                                 @Override
-                                public void onResponse(retrofit2.Call<com.example.model.Questionnaire> call, retrofit2.Response<com.example.model.Questionnaire> response) {
+                                public void onResponse(@NonNull Call<Questionnaire> call, @NonNull Response<Questionnaire> response) {
                                     if (response.isSuccessful()) {
                                         Log.d("RegisterActivity", "Workout questionnaire saved to MongoDB successfully");
                                     } else {
@@ -275,7 +268,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 }
                                 @Override
-                                public void onFailure(retrofit2.Call<com.example.model.Questionnaire> call, Throwable t) {
+                                public void onFailure(@NonNull Call<Questionnaire> call, @NonNull Throwable t) {
                                     Log.e("RegisterActivity", "Error saving workout questionnaire: " + t.getMessage());
                                 }
                             });
@@ -305,7 +298,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 Log.e("RegisterActivity", "Network failure: " + t.getMessage(), t);
                 Log.e("RegisterActivity", "Call URL: " + call.request().url());
                 Log.e("RegisterActivity", "Call method: " + call.request().method());

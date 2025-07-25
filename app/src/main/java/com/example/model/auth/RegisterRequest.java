@@ -21,6 +21,7 @@ public class RegisterRequest {
     private Double weight;
     private Double height;
     private String goal;
+    private String activityLevel;
 
     public RegisterRequest() {
     }
@@ -94,6 +95,10 @@ public class RegisterRequest {
         return goal;
     }
 
+    public String getActivityLevel() {
+        return activityLevel;
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -145,5 +150,9 @@ public class RegisterRequest {
 
     public void setGoal(String goal) {
         this.goal = goal;
+    }
+
+    public void setActivityLevel(String activityLevel) {
+        this.activityLevel = activityLevel;
     }
 } 

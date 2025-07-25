@@ -2,13 +2,8 @@ package com.example.ui.onboarding;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,11 +13,7 @@ import com.example.R;
 import com.example.model.onboarding.OnboardingQuestion;
 import com.google.android.material.card.MaterialCardView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.OnboardingViewHolder> {
 
@@ -159,7 +150,22 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
                         false,
                         OnboardingQuestion.QuestionType.FITNESS_EXPERIENCE
                 ),
-                // Question 11: Workout Type
+                // Question 11: Activity Level
+                new OnboardingQuestion(
+                        context.getString(R.string.onboarding_activity_level),
+                        context.getString(R.string.onboarding_activity_level_desc),
+                        R.drawable.ic_fitness,
+                        Arrays.asList(
+                                context.getString(R.string.onboarding_activity_sedentary),
+                                context.getString(R.string.onboarding_activity_light),
+                                context.getString(R.string.onboarding_activity_moderate),
+                                context.getString(R.string.onboarding_activity_active),
+                                context.getString(R.string.onboarding_activity_very_active)
+                        ),
+                        false,
+                        OnboardingQuestion.QuestionType.ACTIVITY_LEVEL
+                ),
+                // Question 12: Workout Type
                 new OnboardingQuestion(
                         context.getString(R.string.onboarding_workout_type),
                         "",

@@ -20,7 +20,8 @@ public class OnboardingQuestion {
         FITNESS_EXPERIENCE,
         INPUT,
         BODY_GOAL,
-        WORKOUT_TYPE
+        WORKOUT_TYPE,
+        ACTIVITY_LEVEL
     }
 
     public OnboardingQuestion(String title, String description, int imageResId, 
