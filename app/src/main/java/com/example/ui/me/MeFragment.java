@@ -1,19 +1,14 @@
 package com.example.ui.me;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.*;
 
 import com.example.R;
 
@@ -89,6 +84,7 @@ public class MeFragment extends Fragment {
 
     private void setupWeightSeekBar() {
         seekBarWeight.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvWeightValue.setText(progress + " kg");
