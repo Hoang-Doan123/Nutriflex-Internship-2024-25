@@ -1,24 +1,20 @@
 package com.example.ui.kcal;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.R;
-import com.example.model.auth.User;
+import com.example.model.NutritionPlan;
 import com.example.service.UserService;
-import com.example.ui.kcal.KcalSharedViewModel.WorkoutResult;
 import android.util.Log;
 import com.example.model.PersonalData;
-import com.example.network.ApiClient;
-import com.example.network.ApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.network.*;
+import retrofit2.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +73,7 @@ public class KcalAfterFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kcal_after, container, false);
@@ -94,7 +91,7 @@ public class KcalAfterFragment extends Fragment {
             if (workoutResult != null && workoutResult.userId != null && !workoutResult.userId.isEmpty()) {
                 userId = workoutResult.userId;
                 caloriesBurned = workoutResult.caloriesBurned;
-                // Lưu sessionId nếu có
+                // Save sessionId if any
                 if (workoutResult.sessionId != null) sessionId = workoutResult.sessionId;
                 fetchUserGoalAndUpdateUI();
             } else {
@@ -112,7 +109,7 @@ public class KcalAfterFragment extends Fragment {
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         apiService.getPersonalData(String.valueOf(userId)).enqueue(new Callback<PersonalData>() {
             @Override
-            public void onResponse(Call<PersonalData> call, Response<PersonalData> response) {
+            public void onResponse(@NonNull Call<PersonalData> call, @NonNull Response<PersonalData> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     userGoal = response.body().getGoal() != null ? response.body().getGoal() : "Maintain Weight";
                 } else {
@@ -121,13 +118,14 @@ public class KcalAfterFragment extends Fragment {
                 updateNutritionUI();
             }
             @Override
-            public void onFailure(Call<PersonalData> call, Throwable t) {
+            public void onFailure(@NonNull Call<PersonalData> call, @NonNull Throwable t) {
                 userGoal = "Maintain Weight";
                 updateNutritionUI();
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateNutritionUI() {
         tvGoal.setText("Goal: " + userGoal);
         tvCalorieBurned.setText("Calories Burned: " + caloriesBurned + " kcal");
@@ -135,7 +133,7 @@ public class KcalAfterFragment extends Fragment {
         tvCalorieRecommendation.setText("Recommended Intake: " + recommendedCalories + " kcal");
         tvNutritionAdvice.setText(getAdviceForGoal(userGoal));
 //        tvMealSuggestion.setText(getMealSuggestionForGoal(userGoal));
-        // Lưu NutritionPlan vào backend
+        // Save NutritionPlan into backend
         saveNutritionPlanToBackend(userId, sessionId, recommendedCalories);
     }
 
@@ -146,10 +144,10 @@ public class KcalAfterFragment extends Fragment {
         }
         Log.d("KcalAfterFragment", "Saving NutritionPlan: userId=" + userId + ", sessionId=" + sessionId + ", recommendedCalories=" + recommendedCalories);
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
-        com.example.model.NutritionPlan plan = new com.example.model.NutritionPlan(userId, sessionId, recommendedCalories, null);
-        apiService.saveNutritionPlan(plan).enqueue(new retrofit2.Callback<com.example.model.NutritionPlan>() {
+        NutritionPlan plan = new NutritionPlan(userId, sessionId, recommendedCalories, null);
+        apiService.saveNutritionPlan(plan).enqueue(new Callback<NutritionPlan>() {
             @Override
-            public void onResponse(Call<com.example.model.NutritionPlan> call, Response<com.example.model.NutritionPlan> response) {
+            public void onResponse(@NonNull Call<NutritionPlan> call, @NonNull Response<NutritionPlan> response) {
                 if (response.isSuccessful()) {
                     Log.d("KcalAfterFragment", "NutritionPlan saved: " + response.body());
                 } else {
@@ -157,7 +155,7 @@ public class KcalAfterFragment extends Fragment {
                 }
             }
             @Override
-            public void onFailure(Call<com.example.model.NutritionPlan> call, Throwable t) {
+            public void onFailure(@NonNull Call<NutritionPlan> call, @NonNull Throwable t) {
                 Log.e("KcalAfterFragment", "Error saving NutritionPlan", t);
             }
         });
@@ -166,9 +164,9 @@ public class KcalAfterFragment extends Fragment {
     private int calculateRecommendedCalories(String goal, int caloriesBurned) {
         switch (goal) {
             case "Lose Weight":
-                return (int) (caloriesBurned * 0.8); // Giảm 20%
+                return (int) (caloriesBurned * 0.8); // Decrease by 20%
             case "Gain Weight":
-                return (int) (caloriesBurned * 1.2); // Tăng 20%
+                return (int) (caloriesBurned * 1.2); // Increase by 20%
             case "Maintain Weight":
             default:
                 return caloriesBurned;
@@ -190,12 +188,12 @@ public class KcalAfterFragment extends Fragment {
 //    private String getMealSuggestionForGoal(String goal) {
 //        switch (goal) {
 //            case "Lose Weight":
-//                return "- Ức gà, salad, trứng luộc, yến mạch, cá hồi áp chảo.";
+//                return "- Chicken breast, salad, boiled eggs, oatmeal, pan-fried salmon.";
 //            case "Gain Weight":
-//                return "- Cơm, thịt bò, cá hồi, bơ, chuối, sữa chua Hy Lạp.";
+//                return "- Rice, beef, salmon, avocado, banana, Greek yogurt.";
 //            case "Maintain Weight":
 //            default:
-//                return "- Cơm, thịt nạc, rau củ, trái cây tươi, sữa ít béo.";
+//                return "- Rice, lean meat, vegetables, fresh fruit, low-fat milk.";
 //        }
 //    }
 }

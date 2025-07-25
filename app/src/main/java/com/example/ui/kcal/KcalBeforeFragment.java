@@ -1,6 +1,8 @@
 package com.example.ui.kcal;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,13 +14,13 @@ import androidx.annotation.*;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.*;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.NavController;
 
+import android.text.InputType;
 import android.view.*;
 import android.widget.*;
 
 import com.example.R;
+import com.example.model.WorkoutSession;
 import com.example.model.auth.User;
 import com.example.network.*;
 import com.example.service.UserService;
@@ -34,9 +36,10 @@ import java.util.*;
 
 import android.util.Log;
 
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.ZoneId;
+
+import retrofit2.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -200,7 +203,7 @@ public class KcalBeforeFragment extends Fragment {
                     }
                 }
                 drawRouteOrMarker();
-                String debugInfo = String.format("Points: %d, Distance: %.3f km, Duration: %d min %d sec", 
+                @SuppressLint("DefaultLocale") String debugInfo = String.format("Points: %d, Distance: %.3f km, Duration: %d min %d sec",
                     routePoints.size(), distance, minutes, seconds);
                 Log.d("KcalDebug", debugInfo);
                 String userId = sessionManager.getUserId();
@@ -217,10 +220,6 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                // Trong callback khi đã có WorkoutSession (sau khi gửi lên backend và nhận về _id):
-                                // String sessionId = response.body() != null && response.body().getId() != null ? response.body().getId() : "";
-                                // sharedViewModel.setWorkoutResult(userId, caloriesBurned, sessionId);
-                                // sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
                             });
@@ -236,8 +235,6 @@ public class KcalBeforeFragment extends Fragment {
                             float heartRateAvg = heartRate > 0 ? heartRate : -1;
                             requireActivity().runOnUiThread(() -> {
                                 showMeasurementResults(distance, minutes, seconds, routePoints.size(), caloriesBurned, userId, heartRateAvg);
-                                // Nếu chưa có sessionId, truyền rỗng:
-                                // sharedViewModel.setWorkoutResult(userId, caloriesBurned, "");
                                 sharedViewModel.requestSwitchToAfterTab();
                                 KcalRequest request = new KcalRequest(userId, distance, duration, userWeight, routeStr.toString());
                                 viewModel.measureAndSave(request);
@@ -253,8 +250,9 @@ public class KcalBeforeFragment extends Fragment {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void drawRouteOrMarker() {
-        if (mapView == null) return; // An toàn khi mapView bị destroy
+        if (mapView == null) return; // Safe when mapView is destroyed
         if (routePoints.size() > 1) {
             if (polyline == null) {
                 polyline = new Polyline();
@@ -273,7 +271,7 @@ public class KcalBeforeFragment extends Fragment {
                 long elapsedMillis = System.currentTimeMillis() - startTime;
                 int minutes = (int) (elapsedMillis / 60000);
                 int seconds = (int) ((elapsedMillis % 60000) / 1000);
-                String realTimeInfo = String.format("Distance: %.2f km | Time: %02d:%02d | Points: %d", 
+                @SuppressLint("DefaultLocale") String realTimeInfo = String.format("Distance: %.2f km | Time: %02d:%02d | Points: %d",
                     currentDistance, minutes, seconds, routePoints.size());
                 tvResult.setText("Measuring...\n" + realTimeInfo);
             }
@@ -282,7 +280,7 @@ public class KcalBeforeFragment extends Fragment {
                 mapView.getOverlays().remove(polyline);
                 polyline = null;
             }
-            // KHÔNG clear overlays toàn bộ, chỉ add marker nếu chưa có
+            // DO NOT clear overlays completely, only add markers if not already present
             boolean hasMarker = false;
             for (Overlay overlay : mapView.getOverlays()) {
                 if (overlay instanceof Marker) {
@@ -370,6 +368,7 @@ public class KcalBeforeFragment extends Fragment {
         void onResult(GeoPoint geoPoint);
     }
 
+    @SuppressLint("SetTextI18n")
     private void startMeasuring() {
         isMeasuring = true;
         startTime = System.currentTimeMillis();
@@ -377,7 +376,7 @@ public class KcalBeforeFragment extends Fragment {
         tvResult.setText("Measuring...");
         locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 
-        // Luôn tạo polyline mới gắn với mapView hiện tại
+        // Always create new polyline attached to current mapView
         if (polyline != null) {
             if (mapView != null) mapView.getOverlays().remove(polyline);
             polyline = null;
@@ -479,8 +478,9 @@ public class KcalBeforeFragment extends Fragment {
     /**
      * Show measurement results immediately after stopping
      */
+    @SuppressLint("DefaultLocale")
     private void showMeasurementResults(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned, String userId, float heartRateAvg) {
-        String timeStr = String.format("%d min %02d sec", minutes, seconds);
+        @SuppressLint("DefaultLocale") String timeStr = String.format("%d min %02d sec", minutes, seconds);
         
         // Calculate speed in km/h and m/s
         String speedKmh = "--";
@@ -495,7 +495,7 @@ public class KcalBeforeFragment extends Fragment {
             speedMs = String.format("%.2f", speedMetersPerSecond);
         }
         
-        String resultText = String.format(
+        @SuppressLint("DefaultLocale") String resultText = String.format(
                 "Distance: %.3f km\nTime: %s\nSpeed: %s km/h\nSpeed: %s m/s\nPoints: %d\nKcal: %d",
                 distance,
                 timeStr,
@@ -512,28 +512,28 @@ public class KcalBeforeFragment extends Fragment {
         tvResult.setText(resultText);
         Log.d("KcalDebug", "Showing results with local calories: " + caloriesBurned);
 
-        // Gửi WorkoutSession lên backend
+        // Send WorkoutSession to backend
         sendWorkoutSessionToBackend(distance, minutes, seconds, totalPoints, caloriesBurned, userId, heartRateAvg);
     }
 
     private void sendWorkoutSessionToBackend(double distance, int minutes, int seconds, int totalPoints, int caloriesBurned, String userId, float heartRateAvg) {
         Log.d("KcalDebug", "userId uploaded to backend: " + userId + ", heartRateAvg uploaded: " + heartRateAvg);
-        // Lưu ý: cần lưu lại startTime và endTime thực tế
-        String type = "Running"; // hoặc lấy từ UI nếu có nhiều loại
+        // Note: need to save the actual startTime and endTime
+        String type = "Running"; // or get from UI if there are multiple types
         ZonedDateTime nowVN = ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         String endTime = nowVN.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String startTime = nowVN.minusMinutes(minutes).minusSeconds(seconds).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         float calories = (float) caloriesBurned;
         float dist = (float) distance;
-        int steps = totalPoints; // hoặc tính toán lại nếu có cảm biến bước chân
+        int steps = totalPoints; // or recalculate if there is a step sensor
 
-        com.example.model.WorkoutSession session = new com.example.model.WorkoutSession(
+        WorkoutSession session = new com.example.model.WorkoutSession(
             userId, type, startTime, endTime, calories, dist, steps, heartRateAvg
         );
-        com.example.network.ApiService apiService = com.example.network.ApiClient.getClient().create(com.example.network.ApiService.class);
-        apiService.saveWorkoutSession(session).enqueue(new retrofit2.Callback<com.example.model.WorkoutSession>() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        apiService.saveWorkoutSession(session).enqueue(new Callback<WorkoutSession>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.model.WorkoutSession> call, retrofit2.Response<com.example.model.WorkoutSession> response) {
+            public void onResponse(@NonNull Call<WorkoutSession> call, @NonNull Response<WorkoutSession> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String sessionId = response.body().getId() != null ? response.body().getId() : "";
                     Log.d("KcalBeforeFragment", "Passing sessionId to sharedViewModel: " + sessionId);
@@ -545,23 +545,23 @@ public class KcalBeforeFragment extends Fragment {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<com.example.model.WorkoutSession> call, Throwable t) {
+            public void onFailure(@NonNull Call<WorkoutSession> call, @NonNull Throwable t) {
                 Log.e("KcalDebug", "Error saving WorkoutSession: " + t.getMessage());
             }
         });
     }
 
-    // Lưu lại nhịp tim vừa nhập để gửi lên backend
+    // Save the entered heart rate to send to backend
     private float lastHeartRateAvg = -1;
 
-    // Hàm hiển thị dialog nhập nhịp tim
+    // Display heart rate input dialog
     private void showHeartRateInputDialog(HeartRateCallback callback) {
         requireActivity().runOnUiThread(() -> {
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle("Insert average heart rate");
             builder.setMessage("Insert average heart rate on your sensor device (bpm):");
-            final android.widget.EditText input = new android.widget.EditText(requireContext());
-            input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+            final EditText input = new EditText(requireContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
             input.setHint("Example: 135");
             builder.setView(input);
             builder.setPositiveButton("OK", (dialog, which) -> {
@@ -579,12 +579,12 @@ public class KcalBeforeFragment extends Fragment {
         });
     }
 
-    // Callback interface cho dialog nhập nhịp tim
+    // Callback interface for heart rate input dialog
     private interface HeartRateCallback {
         void onHeartRateEntered(int heartRate);
     }
 
-    // Hàm tính calo có xét nhịp tim
+    // Calorie calculator with heart rate
     private int calculateCaloriesWithHeartRate(double distanceKm, int durationMinutes, double weightKg, int heartRate, int age) {
         if (distanceKm <= 0 || durationMinutes <= 0) {
             return 0;
@@ -597,7 +597,7 @@ public class KcalBeforeFragment extends Fragment {
             calories = ((age * 0.2017) - (weightKg * 0.09036) + (heartRate * 0.6309) - 55.0969) * durationMinutes / 4.184;
             usedHeartRateFormula = true;
         }
-        // Nếu calories < 1 hoặc âm, fallback sang MET
+        // If calories < 1 or negative, fallback to METs
         if (calories < 1) {
             double speedKmh = (distanceKm / durationMinutes) * 60.0;
             double met;

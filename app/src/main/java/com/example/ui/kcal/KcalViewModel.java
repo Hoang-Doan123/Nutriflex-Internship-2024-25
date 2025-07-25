@@ -1,6 +1,8 @@
 package com.example.ui.kcal;
 
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.*;
 
 import com.example.network.*;
@@ -30,7 +32,7 @@ public class KcalViewModel extends ViewModel {
         Log.d("KcalDebug", "Fetching history for userId: " + userId);
         RetrofitInstance.getApi().getHistory(userId).enqueue(new Callback<List<KcalRecord>>() {
             @Override
-            public void onResponse(Call<List<KcalRecord>> call, Response<List<KcalRecord>> response) {
+            public void onResponse(@NonNull Call<List<KcalRecord>> call, @NonNull Response<List<KcalRecord>> response) {
                 Log.d("KcalDebug", "History response code: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("KcalDebug", "History fetched successfully, count: " + response.body().size());
@@ -62,7 +64,7 @@ public class KcalViewModel extends ViewModel {
         
         RetrofitInstance.getApi().measureAndSave(request).enqueue(new Callback<KcalRecord>() {
             @Override
-            public void onResponse(Call<KcalRecord> call, Response<KcalRecord> response) {
+            public void onResponse(@NonNull Call<KcalRecord> call, @NonNull Response<KcalRecord> response) {
                 String responseMsg = "Server response code: " + response.code();
                 Log.d("KcalDebug", responseMsg);
                 
@@ -88,7 +90,7 @@ public class KcalViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<KcalRecord> call, Throwable t) {
+            public void onFailure(@NonNull Call<KcalRecord> call, @NonNull Throwable t) {
                 String failureMsg = "Network failure: " + t.getMessage();
                 Log.e("KcalDebug", failureMsg, t);
                 measureResult.setValue(null);
@@ -100,7 +102,7 @@ public class KcalViewModel extends ViewModel {
         CalorieRecommendationRequest req = new CalorieRecommendationRequest(userId, caloriesBurned);
         RetrofitInstance.getApi().getCalorieRecommendation(req).enqueue(new Callback<CalorieRecommendationResponse>() {
             @Override
-            public void onResponse(Call<CalorieRecommendationResponse> call, Response<CalorieRecommendationResponse> response) {
+            public void onResponse(@NonNull Call<CalorieRecommendationResponse> call, @NonNull Response<CalorieRecommendationResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     recommendationResult.setValue(response.body());
                 } else {

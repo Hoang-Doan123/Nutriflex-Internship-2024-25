@@ -1,7 +1,6 @@
 package com.example.network;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.util.Log;
 
 public class NetworkConfig {

@@ -1,5 +1,6 @@
 package com.example.ui.onboarding;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -7,17 +8,14 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.*;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.R;
+import com.example.model.onboarding.OnboardingQuestion;
 import com.example.ui.auth.RegisterActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OnboardingActivity extends AppCompatActivity implements OnboardingAdapter.OnOptionSelectedListener {
     private ViewPager2 viewPager;
@@ -70,6 +68,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingA
         btnSkip.setOnClickListener(v -> navigateToRegister());
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateButtons(int position) {
         if (position == adapter.getItemCount() - 1) {
             btnNext.setText("Get Started");
@@ -82,9 +81,9 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingA
         Intent intent = new Intent(this, RegisterActivity.class);
         // Pass onboarding data to RegisterActivity if needed
         intent.putExtra("onboarding_data", new HashMap<>(selectedOptions));
-        // Lấy giá trị nhập liệu từ adapter
+        // Get input values from adapter
         if (adapter != null) {
-            List<com.example.model.onboarding.OnboardingQuestion> questions = adapter.getQuestions();
+            List<OnboardingQuestion> questions = adapter.getQuestions();
             intent.putExtra("age", questions.get(1).getInputValue());
             intent.putExtra("weight", questions.get(2).getInputValue());
             intent.putExtra("height", questions.get(3).getInputValue());

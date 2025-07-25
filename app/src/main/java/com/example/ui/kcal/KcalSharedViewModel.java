@@ -1,8 +1,6 @@
 package com.example.ui.kcal;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.*;
 
 public class KcalSharedViewModel extends ViewModel {
     private final MutableLiveData<Boolean> switchToAfterTab = new MutableLiveData<>();

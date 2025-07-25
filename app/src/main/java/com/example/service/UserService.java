@@ -3,17 +3,16 @@ package com.example.service;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.model.auth.User;
-import com.example.network.ApiService;
-import com.example.network.RetrofitInstance;
+import androidx.annotation.NonNull;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.model.auth.User;
+import com.example.network.*;
+
+import retrofit2.*;
 
 public class UserService {
     private static final String TAG = "UserService";
-    private ApiService apiService;
+    private final ApiService apiService;
     private Context context;
 
     public UserService(Context context) {
@@ -35,7 +34,7 @@ public class UserService {
         Call<User> call = apiService.getUserById(userId);
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
                     Log.d(TAG, "User data retrieved successfully: " + user.getName() + 
@@ -49,7 +48,7 @@ public class UserService {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);

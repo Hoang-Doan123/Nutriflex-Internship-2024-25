@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.*;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.*;
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 apiService.loginUser(loginRequest).enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
+                    public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             User user = response.body();
                             if (user.getId() == null || user.getId().isEmpty()) {
@@ -94,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) {
+                    public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                         runOnUiThread(() ->
                                 Toast.makeText(LoginActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show()
                         );

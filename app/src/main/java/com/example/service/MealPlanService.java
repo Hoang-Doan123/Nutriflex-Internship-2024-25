@@ -3,22 +3,18 @@ package com.example.service;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.model.MealPlan;
-import com.example.model.NutritionGoals;
-import com.example.model.PersonalData;
-import com.example.network.ApiService;
-import com.example.network.RetrofitInstance;
+import androidx.annotation.NonNull;
 
-import java.util.List;
-import java.util.Map;
+import com.example.model.*;
+import com.example.network.*;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.*;
+
+import retrofit2.*;
 
 public class MealPlanService {
     private static final String TAG = "MealPlanService";
-    private ApiService apiService;
+    private final ApiService apiService;
     private Context context;
 
     public MealPlanService(Context context) {
@@ -66,7 +62,7 @@ public class MealPlanService {
                 Call<MealPlan> call = apiService.generateMealPlan(userId, nutritionGoals);
                 call.enqueue(new Callback<MealPlan>() {
                     @Override
-                    public void onResponse(Call<MealPlan> call, Response<MealPlan> response) {
+                    public void onResponse(@NonNull Call<MealPlan> call, @NonNull Response<MealPlan> response) {
                         Log.d(TAG, "API response received - Code: " + response.code());
                         
                         if (response.isSuccessful() && response.body() != null) {
@@ -82,7 +78,7 @@ public class MealPlanService {
                     }
 
                     @Override
-                    public void onFailure(Call<MealPlan> call, Throwable t) {
+                    public void onFailure(@NonNull Call<MealPlan> call, @NonNull Throwable t) {
                         String error = "Network error: " + t.getMessage();
                         Log.e(TAG, error, t);
                         callback.onError(error);
@@ -107,7 +103,7 @@ public class MealPlanService {
         Call<NutritionGoals> call = apiService.saveNutritionGoals(nutritionGoals);
         call.enqueue(new Callback<NutritionGoals>() {
             @Override
-            public void onResponse(Call<NutritionGoals> call, Response<NutritionGoals> response) {
+            public void onResponse(@NonNull Call<NutritionGoals> call, @NonNull Response<NutritionGoals> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Nutrition goals saved successfully");
                     callback.onSuccess(response.body());
@@ -119,7 +115,7 @@ public class MealPlanService {
             }
 
             @Override
-            public void onFailure(Call<NutritionGoals> call, Throwable t) {
+            public void onFailure(@NonNull Call<NutritionGoals> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);
@@ -136,7 +132,7 @@ public class MealPlanService {
         Call<NutritionGoals> call = apiService.getNutritionGoals(userId);
         call.enqueue(new Callback<NutritionGoals>() {
             @Override
-            public void onResponse(Call<NutritionGoals> call, Response<NutritionGoals> response) {
+            public void onResponse(@NonNull Call<NutritionGoals> call, @NonNull Response<NutritionGoals> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Nutrition goals retrieved successfully");
                     callback.onSuccess(response.body());
@@ -148,7 +144,7 @@ public class MealPlanService {
             }
 
             @Override
-            public void onFailure(Call<NutritionGoals> call, Throwable t) {
+            public void onFailure(@NonNull Call<NutritionGoals> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);
@@ -164,9 +160,9 @@ public class MealPlanService {
         Call<List<MealPlan>> call = apiService.getMealPlan(userId, date);
         call.enqueue(new Callback<List<MealPlan>>() {
             @Override
-            public void onResponse(Call<List<MealPlan>> call, Response<List<MealPlan>> response) {
+            public void onResponse(@NonNull Call<List<MealPlan>> call, @NonNull Response<List<MealPlan>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    // Lấy meal plan mới nhất (giả sử cuối danh sách là mới nhất)
+                    // Get the latest meal plan (assuming the last one on the list is the latest)
                     MealPlan latest = response.body().get(response.body().size() - 1);
                     Log.d(TAG, "Meal plan retrieved successfully");
                     callback.onSuccess(latest);
@@ -178,7 +174,7 @@ public class MealPlanService {
             }
 
             @Override
-            public void onFailure(Call<List<MealPlan>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<MealPlan>> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);
@@ -195,7 +191,7 @@ public class MealPlanService {
         Call<MealPlan> call = apiService.saveMealPlan(mealPlan);
         call.enqueue(new Callback<MealPlan>() {
             @Override
-            public void onResponse(Call<MealPlan> call, Response<MealPlan> response) {
+            public void onResponse(@NonNull Call<MealPlan> call, @NonNull Response<MealPlan> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Meal plan saved successfully");
                     callback.onSuccess(response.body());
@@ -207,7 +203,7 @@ public class MealPlanService {
             }
 
             @Override
-            public void onFailure(Call<MealPlan> call, Throwable t) {
+            public void onFailure(@NonNull Call<MealPlan> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);
@@ -224,7 +220,7 @@ public class MealPlanService {
         Call<PersonalData> call = apiService.getPersonalData(userId);
         call.enqueue(new Callback<PersonalData>() {
             @Override
-            public void onResponse(Call<PersonalData> call, Response<PersonalData> response) {
+            public void onResponse(@NonNull Call<PersonalData> call, @NonNull Response<PersonalData> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Personal data retrieved successfully");
                     callback.onSuccess(response.body());
@@ -236,7 +232,7 @@ public class MealPlanService {
             }
 
             @Override
-            public void onFailure(Call<PersonalData> call, Throwable t) {
+            public void onFailure(@NonNull Call<PersonalData> call, @NonNull Throwable t) {
                 String error = "Network error: " + t.getMessage();
                 Log.e(TAG, error, t);
                 callback.onError(error);

@@ -1,5 +1,7 @@
 package com.example.model;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Meal {
@@ -41,6 +43,7 @@ public class Meal {
     public double getFat() { return fat; }
     public void setFat(double fat) { this.fat = fat; }
 
+    @NonNull
     @Override
     public String toString() {
         return "Meal{" +

@@ -1,16 +1,16 @@
 package com.example.service;
 
+import androidx.annotation.NonNull;
+
 import com.example.model.PersonalData;
 import com.example.network.*;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import retrofit2.*;
 
 public class PersonalDataService {
-    private ApiService api;
+    private final ApiService apiService;
 
     public PersonalDataService() {
-        api = ApiClient.getClient().create(ApiService.class);
+        apiService = ApiClient.getClient().create(ApiService.class);
     }
 
     public interface PersonalDataCallback {
@@ -19,9 +19,9 @@ public class PersonalDataService {
     }
 
     public void getPersonalData(String userId, PersonalDataCallback callback) {
-        api.getPersonalData(userId).enqueue(new Callback<PersonalData>() {
+        apiService.getPersonalData(userId).enqueue(new Callback<PersonalData>() {
             @Override
-            public void onResponse(Call<PersonalData> call, Response<PersonalData> response) {
+            public void onResponse(@NonNull Call<PersonalData> call, @NonNull Response<PersonalData> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onSuccess(response.body());
                 } else {
@@ -29,7 +29,7 @@ public class PersonalDataService {
                 }
             }
             @Override
-            public void onFailure(Call<PersonalData> call, Throwable t) {
+            public void onFailure(@NonNull Call<PersonalData> call, @NonNull Throwable t) {
                 callback.onError(t.getMessage());
             }
         });

@@ -1,7 +1,6 @@
 package com.example.utils;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.*;
 
 public class SessionManager {
     private static final String PREF_NAME = "NutriFlexSession";

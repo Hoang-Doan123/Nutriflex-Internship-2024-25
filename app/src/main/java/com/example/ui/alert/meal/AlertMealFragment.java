@@ -5,16 +5,12 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 
 import com.example.R;
 import android.widget.TextView;
-import com.example.model.MealPlan;
-import com.example.model.Meal;
-import android.content.Context;
-import android.content.SharedPreferences;
+import com.example.model.*;
+import android.content.*;
 import android.text.TextUtils;
 import android.util.Log;
 import com.example.service.MealPlanService;
@@ -99,7 +95,7 @@ public class AlertMealFragment extends Fragment {
         if (mealPlan != null && mealPlan.getMeals() != null) {
             displayMealPlan(mealPlan);
         } else {
-            // Nếu không truyền mealPlan qua arguments, tự động lấy meal plan gần nhất từ backend
+            // If no mealPlan passed in arguments, automatically get the most recent meal plan from the backend
             String userId = getUserId();
             String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
             MealPlanService mealPlanService = new MealPlanService(requireContext());
@@ -126,7 +122,7 @@ public class AlertMealFragment extends Fragment {
     }
 
     private void displayMealPlan(MealPlan mealPlan) {
-        // Xác định mealPatternType
+        // Define mealPatternType
         String mealPatternType = null;
         try {
             java.lang.reflect.Method m = mealPlan.getClass().getMethod("getMealPatternType");
@@ -141,7 +137,7 @@ public class AlertMealFragment extends Fragment {
             else if (n == 5) mealPatternType = "5";
             else mealPatternType = "3";
         }
-        // Set visibility theo pattern
+        // Set visibility based on pattern
         switch (mealPatternType) {
             case "3":
                 tvBreakfast.setVisibility(View.VISIBLE);
@@ -224,7 +220,7 @@ public class AlertMealFragment extends Fragment {
                 tvDinnerTime.setVisibility(View.VISIBLE);
                 break;
         }
-        // Hiển thị nội dung từng meal
+        // Display the content of each meal
         for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
             StringBuilder mealNames = new StringBuilder();
             if (dailyMeal.getMeals() != null) {

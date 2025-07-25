@@ -224,7 +224,7 @@ public class DailyNutritionFragment extends Fragment {
             int dailyCalories = Integer.parseInt(etDailyCalories.getText().toString());
             Log.d(TAG, "Daily calories: " + dailyCalories);
 
-            // Meal plan type lấy từ fetchedGoal
+            // Meal plan type take from fetchedGoal
             String mealPlanType = fetchedGoal != null ? fetchedGoal : "general_health";
             Log.d(TAG, "Meal plan type (from personal data): " + mealPlanType);
 
