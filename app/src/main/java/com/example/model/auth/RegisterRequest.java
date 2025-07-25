@@ -29,7 +29,7 @@ public class RegisterRequest {
     public RegisterRequest(String name, String email, String password, String gender, 
                           String motivation, List<String> healthcareIssues, 
                           List<String> injuries, List<String> dietaryRestrictions, 
-                          String fitnessExperience, String goal) {
+                          String fitnessExperience, String goal, String activityLevel) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -40,6 +40,7 @@ public class RegisterRequest {
         this.dietaryRestrictions = dietaryRestrictions;
         this.fitnessExperience = fitnessExperience;
         this.goal = goal;
+        this.activityLevel = activityLevel;
     }
 
     // Getters

@@ -107,7 +107,8 @@ public class RegisterActivity extends AppCompatActivity {
                 // Create RegisterRequest with all data
                 RegisterRequest registerRequest = new RegisterRequest(
                     name, email, password, gender, motivation,
-                    healthcareIssues, injuries, dietaryRestrictions, fitnessExperience, goal
+                    healthcareIssues, injuries, dietaryRestrictions,
+                    fitnessExperience, goal, activityLevel
                 );
                 registerRequest.setAge(age);
                 registerRequest.setWeight(weight);
