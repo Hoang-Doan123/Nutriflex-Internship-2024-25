@@ -3,9 +3,8 @@ package com.example.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+import android.util.*;
 import android.widget.*;
-import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
