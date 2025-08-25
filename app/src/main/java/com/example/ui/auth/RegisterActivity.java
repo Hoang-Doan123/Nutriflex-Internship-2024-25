@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.*;
+import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -182,6 +183,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
+            etEmail.setError("Invalid email format");
             return false;
         }
         if (TextUtils.isEmpty(password)) {
