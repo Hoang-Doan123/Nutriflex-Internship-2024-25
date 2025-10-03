@@ -25,8 +25,21 @@ public class NetworkConfig {
         
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedUrl = prefs.getString(KEY_BASE_URL, null);
+        // Migration: replace old hardcoded IP with localhost for real devices
+        if (savedUrl != null && savedUrl.contains("192.168.88.168")) {
+            savedUrl = LOCALHOST_URL;
+            prefs.edit().putString(KEY_BASE_URL, savedUrl).apply();
+            Log.d(TAG, "Migrated saved URL to: " + savedUrl);
+        }
         
         if (savedUrl != null) {
+            // If running on emulator, always force the emulator URL
+            if (isEmulator() && !EMULATOR_URL.equals(savedUrl)) {
+                currentBaseUrl = EMULATOR_URL;
+                prefs.edit().putString(KEY_BASE_URL, currentBaseUrl).apply();
+                Log.d(TAG, "Overriding saved URL for emulator: " + currentBaseUrl);
+                return currentBaseUrl;
+            }
             currentBaseUrl = savedUrl;
             Log.d(TAG, "Using saved URL: " + currentBaseUrl);
             return currentBaseUrl;

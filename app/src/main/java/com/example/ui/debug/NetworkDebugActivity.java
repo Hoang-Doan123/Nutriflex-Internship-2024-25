@@ -1,5 +1,7 @@
 package com.example.ui.debug;
 
+import static android.os.Build.*;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.*;
@@ -47,12 +49,12 @@ public class NetworkDebugActivity extends AppCompatActivity {
         // Device info
         StringBuilder deviceInfo = new StringBuilder();
         deviceInfo.append("Device Information:\n");
-        deviceInfo.append("FINGERPRINT: ").append(android.os.Build.FINGERPRINT).append("\n");
-        deviceInfo.append("MODEL: ").append(android.os.Build.MODEL).append("\n");
-        deviceInfo.append("MANUFACTURER: ").append(android.os.Build.MANUFACTURER).append("\n");
-        deviceInfo.append("BRAND: ").append(android.os.Build.BRAND).append("\n");
-        deviceInfo.append("DEVICE: ").append(android.os.Build.DEVICE).append("\n");
-        deviceInfo.append("PRODUCT: ").append(android.os.Build.PRODUCT).append("\n");
+        deviceInfo.append("FINGERPRINT: ").append(FINGERPRINT).append("\n");
+        deviceInfo.append("MODEL: ").append(MODEL).append("\n");
+        deviceInfo.append("MANUFACTURER: ").append(MANUFACTURER).append("\n");
+        deviceInfo.append("BRAND: ").append(BRAND).append("\n");
+        deviceInfo.append("DEVICE: ").append(DEVICE).append("\n");
+        deviceInfo.append("PRODUCT: ").append(PRODUCT).append("\n");
         
         tvDeviceInfo.setText(deviceInfo.toString());
     }
@@ -96,13 +98,13 @@ public class NetworkDebugActivity extends AppCompatActivity {
         NetworkConfig.setBaseUrl(this, "http://10.0.2.2:8080/");
         ApiClient.setBaseUrl("http://10.0.2.2:8080/");
         updateDisplay();
-        Toast.makeText(this, "Set to emulator URL", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Set to emulator URL (10.0.2.2:8080)", Toast.LENGTH_SHORT).show();
     }
 
     private void setRealDeviceUrl() {
         NetworkConfig.setBaseUrl(this, "http://192.168.88.168:8080/");
         ApiClient.setBaseUrl("http://192.168.88.168:8080/");
         updateDisplay();
-        Toast.makeText(this, "Set to real device URL", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Set to real device URL (requires: adb reverse tcp:8080 tcp:8080)", Toast.LENGTH_SHORT).show();
     }
 } 
