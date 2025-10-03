@@ -1,5 +1,7 @@
 package com.example.ui.me;
 
+import static java.util.Locale.*;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -176,7 +178,7 @@ public class MeFragment extends Fragment {
         if (Math.abs(v - Math.round(v)) < 0.001) {
             return String.valueOf(v.intValue());
         }
-        return String.format(java.util.Locale.getDefault(), "%.1f", v);
+        return String.format(getDefault(), "%.2f", v);
     }
 
     private double getCurrentWeightKg() {
@@ -206,7 +208,7 @@ public class MeFragment extends Fragment {
         if (weightKg > 0 && heightCm > 0) {
             double heightM = heightCm / 100.0;
             double bmi = weightKg / (heightM * heightM);
-            tvBmiValue.setText("BMI: " + String.format(java.util.Locale.getDefault(), "%.1f", bmi));
+            tvBmiValue.setText("BMI: " + String.format(getDefault(), "%.2f", bmi));
             if (tvBmiCategory != null) {
                 tvBmiCategory.setText(classifyBmiAdult(bmi));
             }
