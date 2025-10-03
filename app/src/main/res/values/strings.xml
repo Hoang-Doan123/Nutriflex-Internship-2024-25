@@ -8,7 +8,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    <string name="alredy_have_account">Alredy have an account? </string>
+    <string name="already_have_account">Already have an account? </string>
     <string name="login">Login</string>
     <string name="don_t_have_account">Don\'t have an account? </string>
     <string name="welcome_back">Welcome Back!</string>
@@ -129,7 +129,7 @@
     <string name="done">Done</string>
     <string name="get_started">Get Started</string>
     <string name="onboarding_workout_type">What type of workout do you prefer?</string>
-    <string name="workout_type_cardio">Cardio (Boxing, Football, Running, ...)</string>
+    <string name="workout_type_cardio">Cardio (Boxing, Football, Running, …)</string>
     <string name="workout_type_hypertrophy">Hypertrophy (Cardio + Lifting)</string>
     <string name="workout_type_powerlifting">Powerlifting (Lifting Only)</string>
     <string name="daily_todays_workout">Today Workout</string>
@@ -153,4 +153,12 @@
     <string name="onboarding_activity_moderate">Moderate (moderate exercise/sports 3–5 days/week)</string>
     <string name="onboarding_activity_active">Active (hard exercise/sports 6–7 days/week)</string>
     <string name="onboarding_activity_very_active">Very Active (very hard exercise and physical job)</string>
+
+    <!--Me (User data)-->
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
+    <string name="notification">Notification</string>
+    <string name="weight">Weight</string>
+    <string name="edit_weight">Edit Weight</string>
+    <string name="rm_calculator">RM Calculator</string>
 </resources>
