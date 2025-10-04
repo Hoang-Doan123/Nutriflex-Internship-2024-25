@@ -97,6 +97,8 @@ public class RegisterActivity extends AppCompatActivity {
                 List<String> dietaryRestrictions = onboardingData.get(8); // Question 8: Dietary Restrictions
                 String fitnessExperience = getSelectedOption(9); // Question 9: Fitness Experience
                 String activityLevel = getSelectedOption(10); // Question 10: Activity Level
+                // Convert full activity level description to short value
+                String shortActivityLevel = mapActivityLevelToShortValue(activityLevel);
 
                 // Debug: Check all onboarding data positions
                 for (int i = 0; i <= 10; i++) {
@@ -108,12 +110,12 @@ public class RegisterActivity extends AppCompatActivity {
                 RegisterRequest registerRequest = new RegisterRequest(
                     name, email, password, gender, motivation,
                     healthcareIssues, injuries, dietaryRestrictions,
-                    fitnessExperience, goal, activityLevel
+                    fitnessExperience, goal, shortActivityLevel
                 );
                 registerRequest.setAge(age);
                 registerRequest.setWeight(weight);
                 registerRequest.setHeight(height);
-                registerRequest.setActivityLevel(activityLevel);
+                registerRequest.setActivityLevel(shortActivityLevel);
 
                 // Log the data being sent
                 Log.d("RegisterActivity", "Sending registration data:");
@@ -126,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("RegisterActivity", "Injuries: " + injuries);
                 Log.d("RegisterActivity", "Dietary Restrictions: " + dietaryRestrictions);
                 Log.d("RegisterActivity", "Fitness Experience: " + fitnessExperience);
-                Log.d("RegisterActivity", "Activity Level: " + activityLevel);
+                Log.d("RegisterActivity", "Activity Level: " + activityLevel + " -> " + shortActivityLevel);
                 Log.d("RegisterActivity", "Age: " + age);
                 Log.d("RegisterActivity", "Weight: " + weight);
                 Log.d("RegisterActivity", "Height: " + height);
@@ -173,6 +175,26 @@ public class RegisterActivity extends AppCompatActivity {
             return options.get(0); // Return first selected option for single-select questions
         }
         return null;
+    }
+
+    private String mapActivityLevelToShortValue(String fullActivityLevel) {
+        if (fullActivityLevel == null) return null;
+        
+        // Map full descriptions to short values
+        if (fullActivityLevel.contains("Sedentary")) {
+            return "sedentary";
+        } else if (fullActivityLevel.contains("Light")) {
+            return "light";
+        } else if (fullActivityLevel.contains("Moderate")) {
+            return "moderate";
+        } else if (fullActivityLevel.contains("Active") && !fullActivityLevel.contains("Very")) {
+            return "active";
+        } else if (fullActivityLevel.contains("Very Active")) {
+            return "very_active";
+        }
+        
+        // If no match found, return the original value
+        return fullActivityLevel;
     }
 
     private boolean validateInput(String name, String email, String password, String confirmPassword) {
