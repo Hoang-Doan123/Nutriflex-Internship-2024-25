@@ -14,7 +14,8 @@ import androidx.annotation.*;
 
 import com.example.R;
 import com.example.model.auth.User;
-import com.example.service.UserService;
+import com.example.model.PersonalData;
+import com.example.service.*;
 import com.example.utils.SessionManager;
 
 /**
@@ -32,11 +33,16 @@ public class MeFragment extends Fragment {
     private TextView tvGender;
     private TextView tvAge;
     private TextView tvHeight;
+    private TextView tvGoal;
+    private TextView tvActivityLevel;
     private TextView tvBmiValue;
     private TextView tvBmiCategory;
+    private TextView tvBmrValue;
+    private TextView tvTdeeValue;
 
     private SessionManager sessionManager;
     private UserService userService;
+    private PersonalDataService personalDataService;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -98,17 +104,23 @@ public class MeFragment extends Fragment {
         tvGender = view.findViewById(R.id.tvGender);
         tvAge = view.findViewById(R.id.tvAge);
         tvHeight = view.findViewById(R.id.tvHeight);
+        tvGoal = view.findViewById(R.id.tvGoal);
+        tvActivityLevel = view.findViewById(R.id.tvActivityLevel);
         tvBmiValue = view.findViewById(R.id.tvBmiValue);
         tvBmiCategory = view.findViewById(R.id.tvBmiCategory);
+        tvBmrValue = view.findViewById(R.id.tvBmrValue);
+        tvTdeeValue = view.findViewById(R.id.tvTdeeValue);
 
         sessionManager = new SessionManager(requireContext());
         userService = new UserService(requireContext());
+        personalDataService = new PersonalDataService();
 
         setupWeightSeekBar();
 
         String userId = sessionManager.getUserId();
         if (userId != null && !userId.isEmpty()) {
             fetchAndPopulateUser(userId);
+            fetchAndPopulatePersonalData(userId);
         }
     }
 
@@ -119,6 +131,7 @@ public class MeFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvWeightValue.setText(progress + " kg");
                 updateBmiFromFields(progress, getCurrentHeightCm());
+                calculateAndDisplayBmrTdee();
             }
 
             @Override
@@ -169,6 +182,47 @@ public class MeFragment extends Fragment {
         }
 
         updateBmiFromFields(getCurrentWeightKg(), getCurrentHeightCm());
+        calculateAndDisplayBmrTdee();
+    }
+
+    private void fetchAndPopulatePersonalData(String userId) {
+        personalDataService.getPersonalData(userId, new PersonalDataService.PersonalDataCallback() {
+            @Override
+            public void onSuccess(PersonalData personalData) {
+                requireActivity().runOnUiThread(() -> populatePersonalData(personalData));
+            }
+
+            @Override
+            public void onError(String error) {
+                // Optionally show a toast
+            }
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void populatePersonalData(PersonalData personalData) {
+        if (personalData == null) return;
+
+        if (tvGoal != null) {
+            String goal = personalData.getGoal();
+            if (goal != null && !goal.isEmpty()) {
+                tvGoal.setText("Goal: " + goal);
+            } else {
+                tvGoal.setText("Goal: --");
+            }
+        }
+
+        if (tvActivityLevel != null) {
+            String activityLevel = personalData.getActivityLevel();
+            if (activityLevel != null && !activityLevel.isEmpty()) {
+                tvActivityLevel.setText("Activity Level: " + formatActivityLevelDisplay(activityLevel));
+            } else {
+                tvActivityLevel.setText("Activity Level: --");
+            }
+        }
+
+        // Recalculate BMR and TDEE with personal data
+        calculateAndDisplayBmrTdee();
     }
 
     private String safe(String v) { return v == null ? "" : v; }
@@ -228,5 +282,123 @@ public class MeFragment extends Fragment {
         if (bmi < 35.0) return "Obesity class I";
         if (bmi < 40.0) return "Obesity class II";
         return "Obesity class III";
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void calculateAndDisplayBmrTdee() {
+        if (tvBmrValue == null || tvTdeeValue == null) return;
+
+        double weightKg = getCurrentWeightKg();
+        double heightCm = getCurrentHeightCm();
+        String gender = getCurrentGender();
+        Integer age = getCurrentAge();
+        String activityLevel = getCurrentActivityLevel();
+
+        if (weightKg > 0 && heightCm > 0 && gender != null && age != null) {
+            // Calculate BMR using Mifflin-St Jeor Equation
+            double bmr;
+            if (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("nam")) {
+                bmr = 88.362 + 13.397 * weightKg + 4.799 * heightCm + (-5.677) * age;
+            } else {
+                bmr = 447.593 + 9.247 * weightKg + 3.098 * heightCm + (-4.330) * age;
+            }
+
+            // Calculate activity factor
+            double activityFactor = getActivityFactor(activityLevel);
+            double tdee = bmr * activityFactor;
+
+            tvBmrValue.setText("BMR: " + String.format(getDefault(), "%.0f", bmr) + " kcal/day");
+            tvTdeeValue.setText("TDEE: " + String.format(getDefault(), "%.0f", tdee) + " kcal/day");
+        } else {
+            tvBmrValue.setText("BMR: --");
+            tvTdeeValue.setText("TDEE: --");
+        }
+    }
+
+    private double getActivityFactor(String activityLevel) {
+        if (activityLevel == null) return 1.55; // default moderate
+        
+        switch (activityLevel.toLowerCase()) {
+            case "sedentary": return 1.2;
+            case "light": return 1.375;
+            case "moderate": return 1.55;
+            case "active": return 1.725;
+            case "very_active": return 1.9;
+            default: return 1.55; // default moderate
+        }
+    }
+
+    private String getCurrentGender() {
+        try {
+            String text = tvGender.getText().toString(); // e.g., "Gender: male"
+            if (text.contains(":")) {
+                return text.substring(text.indexOf(":") + 1).trim();
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Integer getCurrentAge() {
+        try {
+            String text = tvAge.getText().toString(); // e.g., "Age: 25"
+            if (text.contains(":")) {
+                String ageStr = text.substring(text.indexOf(":") + 1).trim();
+                return Integer.parseInt(ageStr);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String getCurrentActivityLevel() {
+        try {
+            String text = tvActivityLevel.getText().toString(); // e.g., "Activity Level: Moderate (moderate exercise/sports 3–5 days/week)"
+            if (text.contains(":")) {
+                String displayText = text.substring(text.indexOf(":") + 1).trim();
+                // Extract the original lowercase activity level from the display text
+                return extractOriginalActivityLevel(displayText);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String formatActivityLevelDisplay(String activityLevel) {
+        if (activityLevel == null) return "--";
+        
+        switch (activityLevel.toLowerCase()) {
+            case "sedentary":
+                return "Sedentary (little or no exercise)";
+            case "light":
+                return "Light (light exercise/sports 1–3 days/week)";
+            case "moderate":
+                return "Moderate (moderate exercise/sports 3–5 days/week)";
+            case "active":
+                return "Active (hard exercise/sports 6–7 days/week)";
+            case "very_active":
+                return "Very Active (very hard exercise and physical job)";
+            default:
+                return activityLevel; // fallback to original value
+        }
+    }
+
+    private String extractOriginalActivityLevel(String displayText) {
+        // Extract the original lowercase activity level from the formatted display text
+        if (displayText.toLowerCase().startsWith("sedentary")) {
+            return "sedentary";
+        } else if (displayText.toLowerCase().startsWith("light")) {
+            return "light";
+        } else if (displayText.toLowerCase().startsWith("moderate")) {
+            return "moderate";
+        } else if (displayText.toLowerCase().startsWith("active")) {
+            return "active";
+        } else if (displayText.toLowerCase().startsWith("very active")) {
+            return "very_active";
+        }
+        return "moderate"; // default fallback
     }
 }

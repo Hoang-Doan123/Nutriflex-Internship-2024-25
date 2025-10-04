@@ -160,5 +160,5 @@
     <string name="notification">Notification</string>
     <string name="weight">Weight</string>
     <string name="edit_weight">Edit Weight</string>
-    <string name="rm_calculator">RM Calculator</string>
+    <string name="calculator">Calculator</string>
 </resources>
