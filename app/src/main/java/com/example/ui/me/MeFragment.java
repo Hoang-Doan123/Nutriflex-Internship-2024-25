@@ -3,6 +3,7 @@ package com.example.ui.me;
 import static java.util.Locale.*;
 
 import android.annotation.SuppressLint;
+import android.content.*;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import com.example.R;
 import com.example.model.auth.User;
 import com.example.model.PersonalData;
 import com.example.service.*;
+import com.example.ui.auth.*;
 import com.example.utils.SessionManager;
 
 /**
@@ -39,6 +41,7 @@ public class MeFragment extends Fragment {
     private TextView tvBmiCategory;
     private TextView tvBmrValue;
     private TextView tvTdeeValue;
+    private LinearLayout btnLogout;
 
     private SessionManager sessionManager;
     private UserService userService;
@@ -110,12 +113,14 @@ public class MeFragment extends Fragment {
         tvBmiCategory = view.findViewById(R.id.tvBmiCategory);
         tvBmrValue = view.findViewById(R.id.tvBmrValue);
         tvTdeeValue = view.findViewById(R.id.tvTdeeValue);
+        btnLogout = view.findViewById(R.id.logoutButton);
 
         sessionManager = new SessionManager(requireContext());
         userService = new UserService(requireContext());
         personalDataService = new PersonalDataService();
 
         setupWeightSeekBar();
+        setupLogoutButton();
 
         String userId = sessionManager.getUserId();
         if (userId != null && !userId.isEmpty()) {
@@ -144,6 +149,28 @@ public class MeFragment extends Fragment {
         ivEditWeight.setOnClickListener(v -> seekBarWeight.requestFocus());
     }
 
+    private void setupLogoutButton() {
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                // Clear session data
+                sessionManager.logout();
+                
+                // Clear SharedPreferences
+                requireContext().getSharedPreferences("NutriFlexPrefs", 0).edit().clear().apply();
+                
+                // Navigate to LoginActivity and clear back stack
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                
+                // Finish the current activity if it exists
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            });
+        }
+    }
+
     private void fetchAndPopulateUser(String userId) {
         userService.getUserById(userId, new UserService.UserCallback() {
             @Override
@@ -162,7 +189,7 @@ public class MeFragment extends Fragment {
     private void populateUiWithUser(User user) {
         if (user == null) return;
 
-        if (tvUsername != null) tvUsername.setText("Nickname: " + safe(user.getName()));
+        if (tvUsername != null) tvUsername.setText("Username: " + safe(user.getName()));
         if (tvEmail != null) tvEmail.setText("Email: " + safe(user.getEmail()));
         if (tvGender != null) tvGender.setText("Gender: " + safe(user.getGender()));
         if (tvAge != null) tvAge.setText("Age: " + (user.getAge() != null ? user.getAge() : "--"));
