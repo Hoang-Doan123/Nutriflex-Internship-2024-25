@@ -25,7 +25,7 @@ import retrofit2.*;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etEmail;
+    private EditText etEmailOrUsername;
     private EditText etPassword;
     private Button btnLogin;
     private TextView btnRegister;
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        etEmail = findViewById(R.id.etEmail);
+        etEmailOrUsername = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
@@ -54,13 +54,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> {
-            String email = etEmail.getText().toString();
+            String emailOrUsername = etEmailOrUsername.getText().toString().trim();
             String password = etPassword.getText().toString();
 
-            if (validateInput(email, password)) {
+            if (validateInput(emailOrUsername, password)) {
                 ApiService apiService = ApiClient.getClient().create(ApiService.class);
                 Map<String, String> loginRequest = new HashMap<>();
-                loginRequest.put("email", email);
+                // Send as "email" field since backend checks both email and username
+                loginRequest.put("email", emailOrUsername);
                 loginRequest.put("password", password);
 
                 apiService.loginUser(loginRequest).enqueue(new Callback<User>() {
@@ -88,8 +89,17 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                             }
                         } else {
+                            String errorMessage = "Login failed";
+                            if (response.code() == 401) {
+                                errorMessage = "Email/Username or password is incorrect";
+                            } else if (response.code() == 400) {
+                                errorMessage = "Please input all information";
+                            } else {
+                                errorMessage = "Login error: " + response.code();
+                            }
+                            String finalErrorMessage = errorMessage;
                             runOnUiThread(() ->
-                                    Toast.makeText(LoginActivity.this, "Login failed: " + response.code(), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(LoginActivity.this, finalErrorMessage, Toast.LENGTH_LONG).show()
                             );
                         }
                     }
@@ -97,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                         runOnUiThread(() ->
-                                Toast.makeText(LoginActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show()
+                                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show()
                         );
                     }
                 });
@@ -113,9 +123,9 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
-    private boolean validateInput(String email, String password) {
-        if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required");
+    private boolean validateInput(String emailOrUsername, String password) {
+        if (TextUtils.isEmpty(emailOrUsername)) {
+            etEmailOrUsername.setError("Email/Username is required");
             return false;
         }
         if (TextUtils.isEmpty(password)) {
