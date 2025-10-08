@@ -1,7 +1,7 @@
 package com.example.ui.daily;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.annotation.*;
+import android.app.*;
 import android.content.*;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.*;
 import com.example.R;
 import com.example.model.*;
 import com.example.service.*;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.floatingactionbutton.*;
+import com.google.android.material.progressindicator.*;
 import com.google.android.material.textfield.*;
 
-import java.text.SimpleDateFormat;
+import java.lang.reflect.*;
+import java.text.*;
 import java.util.*;
 
 /**
@@ -50,6 +51,7 @@ public class DailyNutritionFragment extends Fragment {
     private MealPlan currentMealPlan;
     private String fetchedGoal = null;
     private List<String> fetchedDietaryRestrictions = null;
+    private String selectedMealPatternType = null;
 
     public DailyNutritionFragment() {
         // Required empty public constructor
@@ -158,7 +160,7 @@ public class DailyNutritionFragment extends Fragment {
     }
 
     private void showNutritionGoalsDialog() {
-        // Gọi API lấy personal data trước
+        // Call API to take personal data first
         PersonalDataService personalDataService = new PersonalDataService();
         personalDataService.getPersonalData(userId, new PersonalDataService.PersonalDataCallback() {
             @Override
@@ -180,7 +182,7 @@ public class DailyNutritionFragment extends Fragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_nutrition_goals, null);
 
-        // Set dữ liệu cá nhân vào TextView
+        // Set personal data into TextView
         TextView tvMealPlanType = dialogView.findViewById(R.id.tvMealPlanType);
         tvMealPlanType.setText(fetchedGoal != null ? fetchedGoal : "N/A");
 
@@ -232,14 +234,15 @@ public class DailyNutritionFragment extends Fragment {
             RadioGroup rgMealsPerDay = dialogView.findViewById(R.id.rgMealsPerDay);
             int mealsPerDay = getMealsPerDay(rgMealsPerDay.getCheckedRadioButtonId());
             String mealPatternType = getMealPatternType(rgMealsPerDay.getCheckedRadioButtonId());
-            Log.d(TAG, "Meals per day: " + mealsPerDay);
+            selectedMealPatternType = mealPatternType; // Save the chosen mealPatternType
+            Log.d(TAG, "Meals per day: " + mealsPerDay + ", Pattern: " + mealPatternType);
 
             // Extract include snacks
             CheckBox cbIncludeSnacks = dialogView.findViewById(R.id.cbIncludeSnacks);
             boolean includeSnacks = cbIncludeSnacks.isChecked();
             Log.d(TAG, "Include snacks: " + includeSnacks);
 
-            // Dietary restrictions lấy từ fetchedDietaryRestrictions
+            // Take dietary restrictions from fetchedDietaryRestrictions
             List<String> dietaryRestrictions = fetchedDietaryRestrictions != null ? fetchedDietaryRestrictions : new ArrayList<>();
             Log.d(TAG, "Dietary restrictions (from personal data): " + dietaryRestrictions);
 
@@ -317,6 +320,7 @@ public class DailyNutritionFragment extends Fragment {
         int mealsPerDay;
         if (checkedId == R.id.rb3Meals) mealsPerDay = 3;
         else if (checkedId == R.id.rb4Meals) mealsPerDay = 4;
+        else if (checkedId == R.id.rb4Meals2) mealsPerDay = 4;
         else if (checkedId == R.id.rb5Meals) mealsPerDay = 5;
         else mealsPerDay = 3;
         
@@ -345,10 +349,10 @@ public class DailyNutritionFragment extends Fragment {
                     public void onSuccess(MealPlan savedMealPlan) {
                         Log.d(TAG, "Meal plan saved successfully to database");
                         Toast.makeText(requireContext(), "Meal plan created successfully!", Toast.LENGTH_SHORT).show();
-                        // Cập nhật UI trực tiếp với meal plan vừa lưu
+                        // Update UI directly with the saved meal plan
                         currentMealPlan = savedMealPlan;
                         updateUIWithMealPlan(savedMealPlan);
-                        // Không gọi loadTodayMealPlan() ngay lập tức nữa
+                        // No calling loadTodayMealPlan() immediately
                     }
 
                     @Override
@@ -380,26 +384,31 @@ public class DailyNutritionFragment extends Fragment {
 
         Log.d(TAG, "Meal plan has " + mealPlan.getMeals().size() + " meals");
 
-        // Xác định mealPatternType
+        // Define mealPatternType
         String mealPatternType = null;
-        if (mealPlan instanceof com.example.model.MealPlan) {
-            // Nếu mealPlan có trường mealPatternType thì lấy ra (nếu backend trả về)
+        
+        // Prefer to use selectedMealPatternType if available (from the selected dialog)
+        if (selectedMealPatternType != null) {
+            mealPatternType = selectedMealPatternType;
+            Log.d(TAG, "Using selected meal pattern: " + mealPatternType);
+        } else if (mealPlan instanceof MealPlan) {
+            // If mealPlan has mealPatternType field, get it (if the backend returns it)
             try {
-                java.lang.reflect.Method m = mealPlan.getClass().getMethod("getMealPatternType");
+                Method m = mealPlan.getClass().getMethod("getMealPatternType");
                 mealPatternType = (String) m.invoke(mealPlan);
+                Log.d(TAG, "Using meal plan pattern from backend: " + mealPatternType);
             } catch (Exception e) {
                 mealPatternType = null;
             }
         }
-        // Nếu không có, fallback theo số lượng mealType
+        
+        // If not, determine pattern based on actual meal types
         if (mealPatternType == null) {
-            int n = mealPlan.getMeals().size();
-            if (n == 3) mealPatternType = "3";
-            else if (n == 4) mealPatternType = "4a"; // default 4a nếu không rõ
-            else if (n == 5) mealPatternType = "5";
-            else mealPatternType = "3";
+            mealPatternType = determinePatternFromMealTypes(mealPlan.getMeals());
+            Log.d(TAG, "Using pattern determined from meal types: " + mealPatternType);
         }
-        // Set visibility theo pattern
+
+        // Set visibility based on pattern
         switch (mealPatternType) {
             case "3":
                 cardBreakfast.setVisibility(View.VISIBLE);
@@ -437,7 +446,8 @@ public class DailyNutritionFragment extends Fragment {
                 cardDinner.setVisibility(View.VISIBLE);
                 break;
         }
-        // Tiếp tục cập nhật nội dung các meal như cũ
+
+        // Continue to update meal content as usual
         List<MealPlan.DailyMeal> dailyMeals = mealPlan.getMeals() != null ? mealPlan.getMeals() : java.util.Collections.emptyList();
         for (MealPlan.DailyMeal dailyMeal : dailyMeals) {
             String mealNames = "";
@@ -487,7 +497,7 @@ public class DailyNutritionFragment extends Fragment {
             }
         }
 
-        // Update nutrition summary giữ nguyên
+        // Keep updating nutrition summary
         MealPlan.NutritionSummary summary = mealPlan.getNutritionSummary();
         if (summary != null) {
             Log.d(TAG, "Updating nutrition summary - Total: " + summary.getTotalCalories() + 
@@ -504,6 +514,9 @@ public class DailyNutritionFragment extends Fragment {
         } else {
             Log.w(TAG, "Nutrition summary is null");
         }
+        
+        // Reset selectedMealPatternType after use
+        selectedMealPatternType = null;
         
         Log.d(TAG, "UI update completed successfully");
     }
@@ -539,6 +552,45 @@ public class DailyNutritionFragment extends Fragment {
         fabCreateMealPlan.setEnabled(!show);
         
         Log.d(TAG, "Loading state updated - FAB enabled: " + !show);
+    }
+
+    private String determinePatternFromMealTypes(List<MealPlan.DailyMeal> meals) {
+        if (meals == null || meals.isEmpty()) {
+            return "3";
+        }
+        
+        // Collect all meal types
+        List<String> mealTypes = new ArrayList<>();
+        for (MealPlan.DailyMeal meal : meals) {
+            mealTypes.add(meal.getMealType().toLowerCase());
+        }
+        
+        Log.d(TAG, "Meal types found: " + mealTypes);
+        
+        // Determine pattern based on meal types
+        if (mealTypes.contains("breakfast") && mealTypes.contains("lunch") && mealTypes.contains("dinner") && 
+            !mealTypes.contains("midmorning") && !mealTypes.contains("afternoon")) {
+            return "3"; // Breakfast, Lunch, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("midmorning") && 
+                   mealTypes.contains("lunch") && mealTypes.contains("dinner") && 
+                   !mealTypes.contains("afternoon")) {
+            return "4a"; // Breakfast, Mid-morning, Lunch, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("lunch") && 
+                   mealTypes.contains("afternoon") && mealTypes.contains("dinner") && 
+                   !mealTypes.contains("midmorning")) {
+            return "4b"; // Breakfast, Lunch, Afternoon, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("midmorning") && 
+                   mealTypes.contains("lunch") && mealTypes.contains("afternoon") && 
+                   mealTypes.contains("dinner")) {
+            return "5"; // All 5 meals
+        } else {
+            // Fallback: determine by count
+            int count = mealTypes.size();
+            if (count == 3) return "3";
+            else if (count == 4) return "4a"; // default to 4a if unclear
+            else if (count == 5) return "5";
+            else return "3";
+        }
     }
 
     private String getUserId() {

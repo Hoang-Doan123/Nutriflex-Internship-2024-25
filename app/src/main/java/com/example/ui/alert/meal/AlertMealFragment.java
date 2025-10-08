@@ -1,19 +1,19 @@
 package com.example.ui.alert.meal;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
+import android.annotation.*;
+import android.os.*;
 
 import androidx.fragment.app.Fragment;
 
 import android.view.*;
 
 import com.example.R;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.model.*;
 import android.content.*;
-import android.text.TextUtils;
-import android.util.Log;
-import com.example.service.MealPlanService;
+import android.text.*;
+import android.util.*;
+import com.example.service.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -131,12 +131,10 @@ public class AlertMealFragment extends Fragment {
             mealPatternType = null;
         }
         if (mealPatternType == null) {
-            int n = mealPlan.getMeals().size();
-            if (n == 3) mealPatternType = "3";
-            else if (n == 4) mealPatternType = "4a";
-            else if (n == 5) mealPatternType = "5";
-            else mealPatternType = "3";
+            mealPatternType = determinePatternFromMealTypes(mealPlan.getMeals());
+            Log.d(TAG, "Using pattern determined from meal types: " + mealPatternType);
         }
+
         // Set visibility based on pattern
         switch (mealPatternType) {
             case "3":
@@ -220,6 +218,7 @@ public class AlertMealFragment extends Fragment {
                 tvDinnerTime.setVisibility(View.VISIBLE);
                 break;
         }
+
         // Display the content of each meal
         for (MealPlan.DailyMeal dailyMeal : mealPlan.getMeals()) {
             StringBuilder mealNames = new StringBuilder();
@@ -253,6 +252,45 @@ public class AlertMealFragment extends Fragment {
                     tvDinnerTime.setText(dailyMeal.getTime());
                     break;
             }
+        }
+    }
+
+    private String determinePatternFromMealTypes(java.util.List<MealPlan.DailyMeal> meals) {
+        if (meals == null || meals.isEmpty()) {
+            return "3";
+        }
+        
+        // Collect all meal types
+        java.util.List<String> mealTypes = new java.util.ArrayList<>();
+        for (MealPlan.DailyMeal meal : meals) {
+            mealTypes.add(meal.getMealType().toLowerCase());
+        }
+        
+        Log.d(TAG, "Meal types found: " + mealTypes);
+        
+        // Determine pattern based on meal types
+        if (mealTypes.contains("breakfast") && mealTypes.contains("lunch") && mealTypes.contains("dinner") && 
+            !mealTypes.contains("midmorning") && !mealTypes.contains("afternoon")) {
+            return "3"; // Breakfast, Lunch, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("midmorning") && 
+                   mealTypes.contains("lunch") && mealTypes.contains("dinner") && 
+                   !mealTypes.contains("afternoon")) {
+            return "4a"; // Breakfast, Mid-morning, Lunch, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("lunch") && 
+                   mealTypes.contains("afternoon") && mealTypes.contains("dinner") && 
+                   !mealTypes.contains("midmorning")) {
+            return "4b"; // Breakfast, Lunch, Afternoon, Dinner
+        } else if (mealTypes.contains("breakfast") && mealTypes.contains("midmorning") && 
+                   mealTypes.contains("lunch") && mealTypes.contains("afternoon") && 
+                   mealTypes.contains("dinner")) {
+            return "5"; // All 5 meals
+        } else {
+            // Fallback: determine by count
+            int count = mealTypes.size();
+            if (count == 3) return "3";
+            else if (count == 4) return "4a"; // default to 4a if unclear
+            else if (count == 5) return "5";
+            else return "3";
         }
     }
 

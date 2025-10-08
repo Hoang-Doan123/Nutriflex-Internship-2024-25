@@ -1,6 +1,8 @@
 package com.example.model;
 
-import com.google.gson.annotations.SerializedName;
+import androidx.annotation.*;
+
+import com.google.gson.annotations.*;
 import java.util.*;
 
 public class MealPlan {
@@ -12,8 +14,6 @@ public class MealPlan {
     private NutritionSummary nutritionSummary;
     private NutritionGoals nutritionGoals;
     private String status; // "active", "completed", "cancelled"
-
-    public MealPlan() {}
 
     public MealPlan(String userId, String date, List<DailyMeal> meals, 
                    NutritionSummary nutritionSummary, NutritionGoals nutritionGoals) {
@@ -43,6 +43,7 @@ public class MealPlan {
     public void setNutritionGoals(NutritionGoals nutritionGoals) { this.nutritionGoals = nutritionGoals; }
     public void setStatus(String status) { this.status = status; }
 
+    @NonNull
     @Override
     public String toString() {
         return "MealPlan{" +
@@ -63,8 +64,6 @@ public class MealPlan {
         private List<Meal> meals;
         private int portionSize;
         private String notes;
-
-        public DailyMeal() {}
 
         public DailyMeal(String mealType, String time, List<Meal> meals, int portionSize, String notes) {
             this.mealType = mealType;
@@ -88,6 +87,7 @@ public class MealPlan {
         public void setPortionSize(int portionSize) { this.portionSize = portionSize; }
         public void setNotes(String notes) { this.notes = notes; }
 
+        @NonNull
         @Override
         public String toString() {
             return "DailyMeal{" +
@@ -110,8 +110,6 @@ public class MealPlan {
         private double proteinPercentage;
         private double carbohydratePercentage;
         private double fatPercentage;
-
-        public NutritionSummary() {}
 
         public NutritionSummary(int totalCalories, double totalProtein, double totalCarbohydrates, 
                               double totalFat, int targetCalories, double proteinPercentage, 
@@ -146,6 +144,7 @@ public class MealPlan {
         public void setCarbohydratePercentage(double carbohydratePercentage) { this.carbohydratePercentage = carbohydratePercentage; }
         public void setFatPercentage(double fatPercentage) { this.fatPercentage = fatPercentage; }
 
+        @NonNull
         @Override
         public String toString() {
             return "NutritionSummary{" +
