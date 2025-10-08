@@ -8,7 +8,7 @@ import android.util.*;
 import android.widget.*;
 import android.text.*;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.*;
 
 import com.example.R;
 import com.example.network.*;
@@ -105,15 +105,43 @@ public class NetworkDebugActivity extends AppCompatActivity {
     }
 
     private void setRealDeviceUrl() {
-        // Prompt for LAN IP (e.g., 192.168.1.7) and set http://<ip>:8080/
+        // Show options: Auto-detect or Manual input
+        new AlertDialog.Builder(this)
+                .setTitle("Set Real Device URL")
+                .setMessage("Choose how to set the PC's IP address:")
+                .setPositiveButton("Auto-detect", (dialog, which) -> {
+                    autoDetectAndSetUrl();
+                })
+                .setNeutralButton("Manual Input", (dialog, which) -> {
+                    showManualInputDialog();
+                })
+                .setNegativeButton("Cancel", (d, w) -> {})
+                .show();
+    }
+    
+    private void autoDetectAndSetUrl() {
+        Toast.makeText(this, "Auto-detecting LAN IP...", Toast.LENGTH_SHORT).show();
+        
+        // Force re-detection and get new URL
+        NetworkConfig.forceReDetection(this);
+        String newUrl = NetworkConfig.getBaseUrl(this);
+        
+        // Update ApiClient
+        ApiClient.setBaseUrl(newUrl);
+        updateDisplay();
+        
+        Toast.makeText(this, "Auto-detected: " + newUrl, Toast.LENGTH_LONG).show();
+    }
+    
+    private void showManualInputDialog() {
         final EditText input = new EditText(this);
         input.setHint("192.168.1.7");
         input.setInputType(InputType.TYPE_CLASS_PHONE);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
 
-        new androidx.appcompat.app.AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle("Set LAN IP of PC")
-                .setMessage("Enter your PC's Wi‑Fi IP (e.g., 192.168.1.7)")
+                .setMessage("Enter your PC's Wi‑Fi IP")
                 .setView(input)
                 .setPositiveButton("Apply", (dialog, which) -> {
                     String ip = input.getText().toString().trim();

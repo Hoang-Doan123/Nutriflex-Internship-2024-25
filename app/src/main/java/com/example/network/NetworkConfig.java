@@ -4,15 +4,19 @@ import static android.os.Build.*;
 
 import android.content.*;
 import android.util.*;
+import java.net.*;
+import java.io.*;
+import java.util.concurrent.*;
 
 public class NetworkConfig {
     private static final String TAG = "NetworkConfig";
     private static final String PREF_NAME = "network_config";
     private static final String KEY_BASE_URL = "base_url";
+    private static final String KEY_AUTO_DETECTED_IP = "auto_detected_ip";
     
     // Default URLs
     private static final String EMULATOR_URL = "http://10.0.2.2:8080/";
-    private static final String DEVICE_URL = "http://192.168.1.7:8080/"; // Laptop IP
+    private static final String DEVICE_URL = "http://192.168.1.7:8080/"; // Fallback IP
     private static final String LOCALHOST_URL = "http://localhost:8080/";
     
     private static String currentBaseUrl = null;
@@ -48,13 +52,20 @@ public class NetworkConfig {
             return currentBaseUrl;
         }
         
-        // Auto-detect: if running on emulator, use emulator URL, otherwise use device URL
+        // Auto-detect: if running on emulator, use emulator URL, otherwise auto-detect LAN IP
         if (isEmulator()) {
             currentBaseUrl = EMULATOR_URL;
             Log.d(TAG, "Detected emulator, using: " + currentBaseUrl);
         } else {
-            currentBaseUrl = DEVICE_URL;
-            Log.d(TAG, "Detected real device, using: " + currentBaseUrl);
+            // Try to auto-detect LAN IP for real device
+            String detectedIp = autoDetectLanIp(context);
+            if (detectedIp != null) {
+                currentBaseUrl = "http://" + detectedIp + ":8080/";
+                Log.d(TAG, "Auto-detected LAN IP: " + currentBaseUrl);
+            } else {
+                currentBaseUrl = DEVICE_URL;
+                Log.d(TAG, "Auto-detect failed, using fallback: " + currentBaseUrl);
+            }
         }
         
         // Save for future use
@@ -113,5 +124,71 @@ public class NetworkConfig {
         Log.d(TAG, "Is Emulator: " + isEmulator);
         
         return isEmulator;
+    }
+    
+    /**
+     * Auto-detect LAN IP by scanning common subnets and testing connectivity
+     */
+    private static String autoDetectLanIp(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String cachedIp = prefs.getString(KEY_AUTO_DETECTED_IP, null);
+        
+        // Check if cached IP is still working
+        if (cachedIp != null && testConnectivity("http://" + cachedIp + ":8080/api/users/health")) {
+            Log.d(TAG, "Using cached LAN IP: " + cachedIp);
+            return cachedIp;
+        }
+        
+        // Scan common LAN subnets
+        String[] subnets = {"192.168.1.", "192.168.0.", "192.168.88.", "10.0.0."};
+        
+        for (String subnet : subnets) {
+            Log.d(TAG, "Scanning subnet: " + subnet);
+            for (int i = 1; i <= 254; i++) {
+                String ip = subnet + i;
+                String url = "http://" + ip + ":8080/api/users/health";
+                
+                if (testConnectivity(url)) {
+                    Log.d(TAG, "Found working IP: " + ip);
+                    // Cache the working IP
+                    prefs.edit().putString(KEY_AUTO_DETECTED_IP, ip).apply();
+                    return ip;
+                }
+            }
+        }
+        
+        Log.d(TAG, "No working LAN IP found");
+        return null;
+    }
+    
+    /**
+     * Test connectivity to a URL with short timeout
+     */
+    private static boolean testConnectivity(String url) {
+        try {
+            URL testUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) testUrl.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(1000); // 1 second timeout
+            connection.setReadTimeout(1000);
+            connection.setInstanceFollowRedirects(false);
+            
+            int responseCode = connection.getResponseCode();
+            connection.disconnect();
+            
+            return responseCode == 200;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Force re-detection of LAN IP (call this when IP might have changed)
+     */
+    public static void forceReDetection(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        prefs.edit().remove(KEY_AUTO_DETECTED_IP).apply();
+        currentBaseUrl = null; // Force re-detection on next getBaseUrl call
+        Log.d(TAG, "Forced LAN IP re-detection");
     }
 } 
