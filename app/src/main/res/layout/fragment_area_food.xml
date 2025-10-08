@@ -32,7 +32,7 @@
                     android:layout_height="160dp"
                     android:src="@drawable/ic_area"
                     android:scaleType="centerCrop"
-                    android:contentDescription="Restaurant image" />
+                    android:contentDescription="@string/restaurant_image" />
 
                 <TextView
                     android:layout_width="wrap_content"

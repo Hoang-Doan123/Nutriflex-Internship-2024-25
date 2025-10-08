@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Network Debug"
+        android:text="@string/network_debug"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -18,7 +18,7 @@
         android:id="@+id/tvCurrentUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current Base URL: Loading..."
+        android:text="@string/current_base_url_loading"
         android:textSize="16sp"
         android:background="#F0F0F0"
         android:padding="8dp"
@@ -34,7 +34,7 @@
             android:id="@+id/tvDeviceInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Device Information: Loading..."
+            android:text="@string/device_information_loading"
             android:textSize="12sp"
             android:background="#F8F8F8"
             android:padding="8dp"
@@ -51,14 +51,14 @@
             android:id="@+id/btnTestConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test Connection"
+            android:text="@string/test_connection"
             android:layout_marginBottom="8dp" />
 
         <Button
             android:id="@+id/btnResetToAuto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reset to Auto-Detect"
+            android:text="@string/reset_to_auto_detect"
             android:layout_marginBottom="8dp" />
 
         <LinearLayout
@@ -71,7 +71,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Set Emulator"
+                android:text="@string/set_emulator"
                 android:layout_marginEnd="4dp" />
 
             <Button
@@ -79,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Set Real Device"
+                android:text="@string/set_real_device"
                 android:layout_marginStart="4dp" />
 
         </LinearLayout>

@@ -32,7 +32,7 @@
                     android:layout_height="160dp"
                     android:src="@drawable/ic_area"
                     android:scaleType="centerCrop"
-                    android:contentDescription="Gym image" />
+                    android:contentDescription="@string/gym_image" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -3,6 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="training">Training</string>
+    <string name="workout">Workout</string>
     <string name="nutrition">Nutrition</string>
     <string name="sign_up">Sign Up</string>
     <string name="username">Username</string>
@@ -50,6 +51,13 @@
     <string name="onboarding_muscle_mass_current">What\'s your current muscle mass?</string>
     <string name="onboarding_muscle_mass_target">What\'s your target muscle mass?</string>
     <string name="onboarding_skip_optional">Skip (Optional)</string>
+    <string name="onboarding_activity_level">How intense do you do your physical activity?</string>
+    <string name="onboarding_activity_level_desc">This helps us personalize your calorie needs.</string>
+    <string name="onboarding_activity_sedentary">Sedentary (little or no exercise)</string>
+    <string name="onboarding_activity_light">Light (light exercise/sports 1–3 days/week)</string>
+    <string name="onboarding_activity_moderate">Moderate (moderate exercise/sports 3–5 days/week)</string>
+    <string name="onboarding_activity_active">Active (hard exercise/sports 6–7 days/week)</string>
+    <string name="onboarding_activity_very_active">Very Active (very hard exercise and physical job)</string>
 
     <!-- Healthcare Information -->
     <string name="healthcare_title">Healthcare Information</string>
@@ -104,10 +112,14 @@
     <string name="day_thursday">Thu</string>
     <string name="day_friday">Fri</string>
     <string name="day_saturday">Sat</string>
+
     <!-- Units -->
     <string name="unit_years">years</string>
     <string name="unit_cm">cm</string>
+    <string name="unit_m">m</string>
     <string name="unit_kg">kg</string>
+    <string name="unit_cal">cal</string>
+    <string name="unit_kcal">kcal</string>
     <string name="unit_percent">%</string>
 
     <!-- Main Navigation -->
@@ -140,20 +152,55 @@
     <string name="daily_total_workouts">Total Workouts: 1</string>
     <string name="daily_motivation_quote">Push yourself, because no one else is going to do it for you.</string>
 
-    <!--DailyNutrition-->
+    <!--Daily Workout-->
+    <string name="workout_image">Workout Image</string>
+    <string name="workout_streak">Workout Streak</string>
+    <string name="total_workouts">Total Workouts</string>
+
+    <!--Daily Nutrition-->
+    <string name="today_meals">Today\'s Meals</string>
     <string name="breakfast">Breakfast</string>
+    <string name="mid_morning">Mid-morning</string>
     <string name="lunch">Lunch</string>
+    <string name="afternoon">Afternoon</string>
     <string name="dinner">Dinner</string>
     <string name="nutrition_summary">Nutrition Summary</string>
-    <string name="afternoon">Afternoon</string>
-    <string name="mid_morning">Mid-morning</string>
-    <string name="onboarding_activity_level">How intense do you do your physical activity?</string>
-    <string name="onboarding_activity_level_desc">This helps us personalize your calorie needs.</string>
-    <string name="onboarding_activity_sedentary">Sedentary (little or no exercise)</string>
-    <string name="onboarding_activity_light">Light (light exercise/sports 1–3 days/week)</string>
-    <string name="onboarding_activity_moderate">Moderate (moderate exercise/sports 3–5 days/week)</string>
-    <string name="onboarding_activity_active">Active (hard exercise/sports 6–7 days/week)</string>
-    <string name="onboarding_activity_very_active">Very Active (very hard exercise and physical job)</string>
+    <string name="macronutrients">Macronutrients</string>
+    <string name="create_meal_plan">Create Meal Plan</string>
+
+    <!--Kcal Before-->
+    <string name="the_result_will_be_here">The result will be here</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
+    <!--Kcal After-->
+    <string name="nutrition_icon">Nutrition Icon</string>
+    <string name="set_your_nutrition_goals">Set Your Nutrition Goals</string>
+    <string name="daily_calories">Daily Calories</string>
+    <string name="meal_plan_type">Meal Plan Type</string>
+    <string name="loading">Loading…</string>
+    <string name="meals_per_day">Meals Per Day</string>
+    <string name="_3_meals">3 Meals</string>
+    <string name="_4_meals_a">4 Meals (Breakfast, Mid‑morning, Lunch, Dinner)</string>
+    <string name="_4_meals_b">4 Meals (Breakfast, Lunch, Afternoon, Dinner)</string>
+    <string name="_5_meals">5 Meals</string>
+    <string name="include_snacks">Include Snacks</string>
+    <string name="dietary_restrictions">Dietary Restrictions</string>
+    <string name="food_preferences_e_g_mediterranean_asian_etc">Food Preferences (e.g., Mediterranean, Asian, etc.)</string>
+    <string name="allergies_e_g_nuts_shellfish_etc">Allergies (e.g., nuts, shellfish, etc.)</string>
+
+    <!--Alert Training-->
+    <string name="set_training_reminder">Set Training Reminder</string>
+
+    <!--Alert Meal-->
+    <string name="meal_plan_today">Today\'s Meal Plan</string>
+    <string name="set_meal_reminder">Set Meal Reminder</string>
+
+    <!--Area Gym-->
+    <string name="gym_image">Gym Image</string>
+
+    <!--Area Food-->
+    <string name="restaurant_image">Restaurant Image</string>
 
     <!--Me (User data)-->
     <string name="profile">Profile</string>
@@ -163,4 +210,15 @@
     <string name="edit_weight">Edit Weight</string>
     <string name="calculator">Calculator</string>
     <string name="logout">Logout</string>
+
+    <!--Network Debug-->
+    <string name="network_debug">Network Debug</string>
+    <string name="current_base_url">Current Base URL</string>
+    <string name="current_base_url_loading">Current Base URL: Loading…</string>
+    <string name="device_information">Device Information</string>
+    <string name="device_information_loading">Device Information: Loading…</string>
+    <string name="test_connection">Test Connection</string>
+    <string name="reset_to_auto_detect">Reset to Auto-Detect</string>
+    <string name="set_emulator">Set Emulator</string>
+    <string name="set_real_device">Set Real Device</string>
 </resources>

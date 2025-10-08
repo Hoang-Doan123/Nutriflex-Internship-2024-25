@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Set Your Nutrition Goals"
+            android:text="@string/set_your_nutrition_goals"
             android:textColor="@color/primary_text"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Daily Calories"
+            android:hint="@string/daily_calories"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -42,7 +42,7 @@
             android:id="@+id/tvMealPlanTypeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Meal Plan Type"
+            android:text="@string/meal_plan_type"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
             android:id="@+id/tvMealPlanType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loading..."
+            android:text="@string/loading"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
@@ -60,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Meals Per Day"
+            android:text="@string/meals_per_day"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -76,26 +76,26 @@
                 android:id="@+id/rb3Meals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="3 Meals"
+                android:text="@string/_3_meals"
                 android:checked="true" />
 
             <RadioButton
                 android:id="@+id/rb4Meals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4 Meals (Breakfast, Mid‑morning, Lunch, Dinner)" />
+                android:text="@string/_4_meals_a" />
 
             <RadioButton
                 android:id="@+id/rb4Meals2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4 Meals (Breakfast, Lunch, Afternoon, Dinner)" />
+                android:text="@string/_4_meals_b" />
 
             <RadioButton
                 android:id="@+id/rb5Meals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5 Meals" />
+                android:text="@string/_5_meals" />
 
         </RadioGroup>
 
@@ -104,7 +104,7 @@
             android:id="@+id/cbIncludeSnacks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Include Snacks"
+            android:text="@string/include_snacks"
             android:layout_marginBottom="16dp" />
 
         <!-- Dietary Restrictions (read-only) -->
@@ -112,7 +112,7 @@
             android:id="@+id/tvDietaryRestrictionsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dietary Restrictions"
+            android:text="@string/dietary_restrictions"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -121,7 +121,7 @@
             android:id="@+id/tvDietaryRestrictions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loading..."
+            android:text="@string/loading"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:hint="Food Preferences (e.g., Mediterranean, Asian, etc.)"
+            android:hint="@string/food_preferences_e_g_mediterranean_asian_etc"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -150,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="Allergies (e.g., nuts, shellfish, etc.)"
+            android:hint="@string/allergies_e_g_nuts_shellfish_etc"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

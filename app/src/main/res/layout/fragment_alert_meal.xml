@@ -30,7 +30,7 @@
                     android:id="@+id/tvMealTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Today's Meal Plan"
+                    android:text="@string/meal_plan_today"
                     android:textColor="@color/main_text_color"
                     android:textStyle="bold"
                     android:textSize="20sp" />
@@ -192,7 +192,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Set Meal Reminder"
+                    android:text="@string/set_meal_reminder"
                     android:textColor="@color/reminder_text_color"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_marginTop="12dp" />
