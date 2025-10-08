@@ -2,9 +2,11 @@ package com.example.ui.debug;
 
 import static android.os.Build.*;
 
-import android.os.Bundle;
-import android.util.Log;
+import android.annotation.*;
+import android.os.*;
+import android.util.*;
 import android.widget.*;
+import android.text.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,6 +41,7 @@ public class NetworkDebugActivity extends AppCompatActivity {
         btnSetRealDevice = findViewById(R.id.btnSetRealDevice);
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateDisplay() {
         // Initialize ApiClient if not already done
         ApiClient.init(this);
@@ -47,16 +50,15 @@ public class NetworkDebugActivity extends AppCompatActivity {
         tvCurrentUrl.setText("Current Base URL: " + currentUrl);
 
         // Device info
-        StringBuilder deviceInfo = new StringBuilder();
-        deviceInfo.append("Device Information:\n");
-        deviceInfo.append("FINGERPRINT: ").append(FINGERPRINT).append("\n");
-        deviceInfo.append("MODEL: ").append(MODEL).append("\n");
-        deviceInfo.append("MANUFACTURER: ").append(MANUFACTURER).append("\n");
-        deviceInfo.append("BRAND: ").append(BRAND).append("\n");
-        deviceInfo.append("DEVICE: ").append(DEVICE).append("\n");
-        deviceInfo.append("PRODUCT: ").append(PRODUCT).append("\n");
+        String deviceInfo = "Device Information:\n" +
+                "FINGERPRINT: " + FINGERPRINT + "\n" +
+                "MODEL: " + MODEL + "\n" +
+                "MANUFACTURER: " + MANUFACTURER + "\n" +
+                "BRAND: " + BRAND + "\n" +
+                "DEVICE: " + DEVICE + "\n" +
+                "PRODUCT: " + PRODUCT + "\n";
         
-        tvDeviceInfo.setText(deviceInfo.toString());
+        tvDeviceInfo.setText(deviceInfo);
     }
 
     private void setupClickListeners() {
@@ -66,6 +68,7 @@ public class NetworkDebugActivity extends AppCompatActivity {
         btnSetRealDevice.setOnClickListener(v -> setRealDeviceUrl());
     }
 
+    @SuppressLint("SetTextI18n")
     private void testConnection() {
         btnTestConnection.setEnabled(false);
         btnTestConnection.setText("Testing...");
@@ -102,9 +105,35 @@ public class NetworkDebugActivity extends AppCompatActivity {
     }
 
     private void setRealDeviceUrl() {
-        NetworkConfig.setBaseUrl(this, "http://192.168.88.168:8080/");
-        ApiClient.setBaseUrl("http://192.168.88.168:8080/");
-        updateDisplay();
-        Toast.makeText(this, "Set to real device URL (requires: adb reverse tcp:8080 tcp:8080)", Toast.LENGTH_SHORT).show();
+        // Prompt for LAN IP (e.g., 192.168.1.7) and set http://<ip>:8080/
+        final EditText input = new EditText(this);
+        input.setHint("192.168.1.7");
+        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Set LAN IP of PC")
+                .setMessage("Enter your PC's Wi‑Fi IP (e.g., 192.168.1.7)")
+                .setView(input)
+                .setPositiveButton("Apply", (dialog, which) -> {
+                    String ip = input.getText().toString().trim();
+                    if (isValidIPv4(ip)) {
+                        String url = "http://" + ip + ":8080/";
+                        NetworkConfig.setBaseUrl(this, url);
+                        ApiClient.setBaseUrl(url);
+                        updateDisplay();
+                        Toast.makeText(this, "Set to LAN: " + url, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Invalid IP address", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", (d, w) -> {})
+                .show();
+    }
+
+    private boolean isValidIPv4(String ip) {
+        if (ip == null) return false;
+        String ipv4 = "^(25[0-5]|2[0-4]\\d|1?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|1?\\d?\\d)){3}$";
+        return ip.matches(ipv4);
     }
 } 

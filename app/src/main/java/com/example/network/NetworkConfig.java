@@ -1,7 +1,9 @@
 package com.example.network;
 
+import static android.os.Build.*;
+
 import android.content.*;
-import android.util.Log;
+import android.util.*;
 
 public class NetworkConfig {
     private static final String TAG = "NetworkConfig";
@@ -10,7 +12,7 @@ public class NetworkConfig {
     
     // Default URLs
     private static final String EMULATOR_URL = "http://10.0.2.2:8080/";
-    private static final String DEVICE_URL = "http://192.168.88.168:8080/"; // Laptop IP
+    private static final String DEVICE_URL = "http://192.168.1.7:8080/"; // Laptop IP
     private static final String LOCALHOST_URL = "http://localhost:8080/";
     
     private static String currentBaseUrl = null;
@@ -25,12 +27,6 @@ public class NetworkConfig {
         
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedUrl = prefs.getString(KEY_BASE_URL, null);
-        // Migration: replace old hardcoded IP with localhost for real devices
-        if (savedUrl != null && savedUrl.contains("192.168.88.168")) {
-            savedUrl = LOCALHOST_URL;
-            prefs.edit().putString(KEY_BASE_URL, savedUrl).apply();
-            Log.d(TAG, "Migrated saved URL to: " + savedUrl);
-        }
         
         if (savedUrl != null) {
             // If running on emulator, always force the emulator URL
@@ -38,6 +34,13 @@ public class NetworkConfig {
                 currentBaseUrl = EMULATOR_URL;
                 prefs.edit().putString(KEY_BASE_URL, currentBaseUrl).apply();
                 Log.d(TAG, "Overriding saved URL for emulator: " + currentBaseUrl);
+                return currentBaseUrl;
+            }
+            // On real device, never allow localhost/127.0.0.1
+            if (!isEmulator() && (savedUrl.contains("localhost") || savedUrl.contains("127.0.0.1"))) {
+                currentBaseUrl = DEVICE_URL;
+                prefs.edit().putString(KEY_BASE_URL, currentBaseUrl).apply();
+                Log.d(TAG, "Overriding saved URL for real device (no localhost): " + currentBaseUrl);
                 return currentBaseUrl;
             }
             currentBaseUrl = savedUrl;
@@ -88,40 +91,27 @@ public class NetworkConfig {
      * Check if running on emulator
      */
     private static boolean isEmulator() {
-        boolean isEmulator = android.os.Build.FINGERPRINT.startsWith("generic")
-                || android.os.Build.FINGERPRINT.startsWith("unknown")
-                || android.os.Build.MODEL.contains("google_sdk")
-                || android.os.Build.MODEL.contains("Emulator")
-                || android.os.Build.MODEL.contains("Android SDK built for x86")
-                || android.os.Build.MANUFACTURER.contains("Genymotion")
-                || (android.os.Build.BRAND.startsWith("generic") && android.os.Build.DEVICE.startsWith("generic"))
-                || "google_sdk".equals(android.os.Build.PRODUCT)
-                || android.os.Build.MODEL.contains("sdk_gphone")
-                || android.os.Build.MODEL.contains("Pixel")
-                || android.os.Build.MODEL.contains("Android SDK built for x86_64");
+        boolean isEmulator = FINGERPRINT.startsWith("generic")
+                || FINGERPRINT.startsWith("unknown")
+                || MODEL.contains("google_sdk")
+                || MODEL.contains("Emulator")
+                || MODEL.contains("Android SDK built for x86")
+                || MANUFACTURER.contains("Genymotion")
+                || (BRAND.startsWith("generic") && DEVICE.startsWith("generic"))
+                || "google_sdk".equals(PRODUCT)
+                || MODEL.contains("sdk_gphone")
+                || MODEL.contains("Pixel")
+                || MODEL.contains("Android SDK built for x86_64");
         
         Log.d(TAG, "Device detection:");
-        Log.d(TAG, "FINGERPRINT: " + android.os.Build.FINGERPRINT);
-        Log.d(TAG, "MODEL: " + android.os.Build.MODEL);
-        Log.d(TAG, "MANUFACTURER: " + android.os.Build.MANUFACTURER);
-        Log.d(TAG, "BRAND: " + android.os.Build.BRAND);
-        Log.d(TAG, "DEVICE: " + android.os.Build.DEVICE);
-        Log.d(TAG, "PRODUCT: " + android.os.Build.PRODUCT);
+        Log.d(TAG, "FINGERPRINT: " + FINGERPRINT);
+        Log.d(TAG, "MODEL: " + MODEL);
+        Log.d(TAG, "MANUFACTURER: " + MANUFACTURER);
+        Log.d(TAG, "BRAND: " + BRAND);
+        Log.d(TAG, "DEVICE: " + DEVICE);
+        Log.d(TAG, "PRODUCT: " + PRODUCT);
         Log.d(TAG, "Is Emulator: " + isEmulator);
         
         return isEmulator;
-    }
-    
-    /**
-     * Get all available URLs for testing
-     */
-    public static String[] getAvailableUrls() {
-        return new String[]{
-            EMULATOR_URL + " (Emulator)",
-            DEVICE_URL + " (Real Device)",
-            LOCALHOST_URL + " (Localhost)",
-            "http://192.168.1.100:8080/ (Common Router IP)",
-            "http://192.168.0.100:8080/ (Common Router IP 2)"
-        };
     }
 } 
