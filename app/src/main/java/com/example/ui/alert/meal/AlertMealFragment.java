@@ -15,6 +15,10 @@ import android.text.*;
 import android.util.*;
 import com.example.service.*;
 
+import java.lang.reflect.*;
+import java.text.*;
+import java.util.*;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AlertMealFragment#newInstance} factory method to
@@ -97,7 +101,7 @@ public class AlertMealFragment extends Fragment {
         } else {
             // If no mealPlan passed in arguments, automatically get the most recent meal plan from the backend
             String userId = getUserId();
-            String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
+            String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             MealPlanService mealPlanService = new MealPlanService(requireContext());
             mealPlanService.getMealPlan(userId, today, new MealPlanService.MealPlanCallback() {
                 @Override
@@ -125,7 +129,7 @@ public class AlertMealFragment extends Fragment {
         // Define mealPatternType
         String mealPatternType = null;
         try {
-            java.lang.reflect.Method m = mealPlan.getClass().getMethod("getMealPatternType");
+            Method m = mealPlan.getClass().getMethod("getMealPatternType");
             mealPatternType = (String) m.invoke(mealPlan);
         } catch (Exception e) {
             mealPatternType = null;
@@ -255,13 +259,13 @@ public class AlertMealFragment extends Fragment {
         }
     }
 
-    private String determinePatternFromMealTypes(java.util.List<MealPlan.DailyMeal> meals) {
+    private String determinePatternFromMealTypes(List<MealPlan.DailyMeal> meals) {
         if (meals == null || meals.isEmpty()) {
             return "3";
         }
         
         // Collect all meal types
-        java.util.List<String> mealTypes = new java.util.ArrayList<>();
+        List<String> mealTypes = new ArrayList<>();
         for (MealPlan.DailyMeal meal : meals) {
             mealTypes.add(meal.getMealType().toLowerCase());
         }
