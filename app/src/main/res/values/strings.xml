@@ -164,17 +164,6 @@
     <string name="lunch">Lunch</string>
     <string name="afternoon">Afternoon</string>
     <string name="dinner">Dinner</string>
-    <string name="nutrition_summary">Nutrition Summary</string>
-    <string name="macronutrients">Macronutrients</string>
-    <string name="create_meal_plan">Create Meal Plan</string>
-
-    <!--Kcal Before-->
-    <string name="the_result_will_be_here">The result will be here</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
-
-    <!--Kcal After-->
-    <string name="nutrition_icon">Nutrition Icon</string>
     <string name="set_your_nutrition_goals">Set Your Nutrition Goals</string>
     <string name="daily_calories">Daily Calories</string>
     <string name="meal_plan_type">Meal Plan Type</string>
@@ -186,8 +175,21 @@
     <string name="_5_meals">5 Meals</string>
     <string name="include_snacks">Include Snacks</string>
     <string name="dietary_restrictions">Dietary Restrictions</string>
+    <string name="calories_percentages_preferences">Calories Percentages Preferences</string>
     <string name="food_preferences_e_g_mediterranean_asian_etc">Food Preferences (e.g., Mediterranean, Asian, etc.)</string>
     <string name="allergies_e_g_nuts_shellfish_etc">Allergies (e.g., nuts, shellfish, etc.)</string>
+    <string name="nutrition_summary">Nutrition Summary</string>
+    <string name="macronutrients">Macronutrients</string>
+    <string name="calories_percentage">Calories Percentage</string>
+    <string name="create_meal_plan">Create Meal Plan</string>
+
+    <!--Kcal Before-->
+    <string name="the_result_will_be_here">The result will be here</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
+    <!--Kcal After-->
+    <string name="nutrition_icon">Nutrition Icon</string>
 
     <!--Alert Training-->
     <string name="set_training_reminder">Set Training Reminder</string>

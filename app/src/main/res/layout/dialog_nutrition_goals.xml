@@ -126,6 +126,67 @@
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
 
+        <!-- Properties Slider -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calories_percentages_preferences"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Protein Slider -->
+        <TextView
+            android:id="@+id/tvProteinPct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Protein: 25%" />
+        <SeekBar
+            android:id="@+id/seekProtein"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="25" />
+
+        <!-- Carbohydrate Slider -->
+        <TextView
+            android:id="@+id/tvCarbPct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Carbohydrate: 55%"
+            android:layout_marginTop="8dp" />
+        <SeekBar
+            android:id="@+id/seekCarb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="55" />
+
+        <!-- Fat Slider -->
+        <TextView
+            android:id="@+id/tvFatPct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fat: 20%"
+            android:layout_marginTop="8dp" />
+        <SeekBar
+            android:id="@+id/seekFat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="20" />
+
+        <TextView
+            android:id="@+id/tvMacroSum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: 100%"
+            android:textColor="@color/secondary_text"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
         <!-- Food Preferences -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

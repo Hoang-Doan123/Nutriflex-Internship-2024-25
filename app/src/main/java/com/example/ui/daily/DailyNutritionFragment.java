@@ -37,7 +37,7 @@ public class DailyNutritionFragment extends Fragment {
     private TextView tvBreakfastMeal, tvBreakfastCalories, tvBreakfastTime;
     private TextView tvLunchMeal, tvLunchCalories, tvLunchTime;
     private TextView tvDinnerMeal, tvDinnerCalories, tvDinnerTime;
-    private TextView tvTotalCalories, tvMacros;
+    private TextView tvTotalCalories, tvMacros, tvMacroPercentages;
     private LinearProgressIndicator progressCalories;
     private FloatingActionButton fabCreateMealPlan;
     private ProgressBar progressBar;
@@ -101,6 +101,7 @@ public class DailyNutritionFragment extends Fragment {
         
         tvTotalCalories = view.findViewById(R.id.tvTotalCalories);
         tvMacros = view.findViewById(R.id.tvMacros);
+        tvMacroPercentages = view.findViewById(R.id.tvMacroPercentages);
         progressCalories = view.findViewById(R.id.progressCalories);
         fabCreateMealPlan = view.findViewById(R.id.fabCreateMealPlan);
         tvMidmorningMeal = view.findViewById(R.id.tvMidmorningMeal);
@@ -182,6 +183,32 @@ public class DailyNutritionFragment extends Fragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_nutrition_goals, null);
 
+        // Bind macro sliders
+        SeekBar seekProtein = dialogView.findViewById(R.id.seekProtein);
+        SeekBar seekCarb = dialogView.findViewById(R.id.seekCarb);
+        SeekBar seekFat = dialogView.findViewById(R.id.seekFat);
+        TextView tvProteinPct = dialogView.findViewById(R.id.tvProteinPct);
+        TextView tvCarbPct = dialogView.findViewById(R.id.tvCarbPct);
+        TextView tvFatPct = dialogView.findViewById(R.id.tvFatPct);
+        TextView tvMacroSum = dialogView.findViewById(R.id.tvMacroSum);
+
+        // Set defaults based on goal
+        applyDefaultMacrosForGoal(tvProteinPct, tvCarbPct, tvFatPct, seekProtein, seekCarb, seekFat);
+        updateMacroSum(tvMacroSum, seekProtein.getProgress(), seekCarb.getProgress(), seekFat.getProgress());
+
+        seekProtein.setOnSeekBarChangeListener(new SimpleSeekListener(progress -> {
+            tvProteinPct.setText(String.format(Locale.getDefault(), "Protein: %d%%", progress));
+            updateMacroSum(tvMacroSum, progress, seekCarb.getProgress(), seekFat.getProgress());
+        }));
+        seekCarb.setOnSeekBarChangeListener(new SimpleSeekListener(progress -> {
+            tvCarbPct.setText(String.format(Locale.getDefault(), "Carbohydrate: %d%%", progress));
+            updateMacroSum(tvMacroSum, seekProtein.getProgress(), progress, seekFat.getProgress());
+        }));
+        seekFat.setOnSeekBarChangeListener(new SimpleSeekListener(progress -> {
+            tvFatPct.setText(String.format(Locale.getDefault(), "Fat: %d%%", progress));
+            updateMacroSum(tvMacroSum, seekProtein.getProgress(), seekCarb.getProgress(), progress);
+        }));
+
         // Set personal data into TextView
         TextView tvMealPlanType = dialogView.findViewById(R.id.tvMealPlanType);
         tvMealPlanType.setText(fetchedGoal != null ? fetchedGoal : "N/A");
@@ -207,15 +234,58 @@ public class DailyNutritionFragment extends Fragment {
 
         builder.setView(dialogView)
             .setTitle("Create Personalized Meal Plan")
-            .setPositiveButton("Generate Plan", (dialog, which) -> {
-                NutritionGoals goals = extractNutritionGoals(dialogView);
-                if (goals != null) {
-                    generateMealPlan(goals);
-                }
-            })
+            .setPositiveButton("Generate Plan", null)
             .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            NutritionGoals goals = extractNutritionGoals(dialogView);
+            if (goals != null) {
+                generateMealPlan(goals);
+                dialog.dismiss();
+            } // else keep dialog open for correction
+        });
+    }
+
+    private void applyDefaultMacrosForGoal(TextView tvProteinPct, TextView tvCarbPct, TextView tvFatPct,
+                                           SeekBar seekProtein, SeekBar seekCarb, SeekBar seekFat) {
+        String goal = fetchedGoal != null ? fetchedGoal : "general_health";
+        int p, c, f;
+        switch (goal) {
+            case "weight_loss":
+                p = 30; c = 40; f = 30; break;
+            case "muscle_gain":
+                p = 35; c = 45; f = 20; break;
+            case "maintenance":
+                p = 25; c = 50; f = 25; break;
+            default:
+                p = 20; c = 55; f = 25; break;
+        }
+        seekProtein.setProgress(p);
+        seekCarb.setProgress(c);
+        seekFat.setProgress(f);
+        tvProteinPct.setText(String.format(Locale.getDefault(), "Protein: %d%%", p));
+        tvCarbPct.setText(String.format(Locale.getDefault(), "Carbohydrate: %d%%", c));
+        tvFatPct.setText(String.format(Locale.getDefault(), "Fat: %d%%", f));
+    }
+
+    private void updateMacroSum(TextView tvMacroSum, int protein, int carb, int fat) {
+        int sum = protein + carb + fat;
+        tvMacroSum.setText(String.format(Locale.getDefault(), "Total: %d%%", sum));
+        try {
+            int color = (sum == 100) ? getResources().getColor(R.color.primary_text) : getResources().getColor(R.color.error);
+            tvMacroSum.setTextColor(color);
+        } catch (Exception ignored) {}
+    }
+
+    private static class SimpleSeekListener implements SeekBar.OnSeekBarChangeListener {
+        interface OnChange { void onChanged(int progress); }
+        private final OnChange onChange;
+        SimpleSeekListener(OnChange onChange) { this.onChange = onChange; }
+        @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { onChange.onChanged(progress); }
+        @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+        @Override public void onStopTrackingTouch(SeekBar seekBar) {}
     }
 
     private NutritionGoals extractNutritionGoals(View dialogView) {
@@ -249,7 +319,7 @@ public class DailyNutritionFragment extends Fragment {
             // Extract food preferences
             TextInputEditText etFoodPreferences = dialogView.findViewById(R.id.etFoodPreferences);
             String foodPreferencesText = etFoodPreferences.getText().toString();
-            List<String> foodPreferences = TextUtils.isEmpty(foodPreferencesText) ? 
+            List<String> foodPreferences = TextUtils.isEmpty(foodPreferencesText) ?
                 new ArrayList<>() : Arrays.asList(foodPreferencesText.split(","));
             Log.d(TAG, "Food preferences: " + foodPreferences);
 
@@ -260,29 +330,19 @@ public class DailyNutritionFragment extends Fragment {
                 new ArrayList<>() : Arrays.asList(allergiesText.split(","));
             Log.d(TAG, "Allergies: " + allergies);
 
-            // Set default macronutrient percentages based on meal plan type
-            double proteinPercentage, carbohydratePercentage, fatPercentage;
-            switch (mealPlanType) {
-                case "weight_loss":
-                    proteinPercentage = 30.0;
-                    carbohydratePercentage = 40.0;
-                    fatPercentage = 30.0;
-                    break;
-                case "muscle_gain":
-                    proteinPercentage = 35.0;
-                    carbohydratePercentage = 45.0;
-                    fatPercentage = 20.0;
-                    break;
-                case "maintenance":
-                    proteinPercentage = 25.0;
-                    carbohydratePercentage = 50.0;
-                    fatPercentage = 25.0;
-                    break;
-                default: // general_health
-                    proteinPercentage = 20.0;
-                    carbohydratePercentage = 55.0;
-                    fatPercentage = 25.0;
-                    break;
+            // Read macro percentages from sliders
+            SeekBar seekProtein = dialogView.findViewById(R.id.seekProtein);
+            SeekBar seekCarb = dialogView.findViewById(R.id.seekCarb);
+            SeekBar seekFat = dialogView.findViewById(R.id.seekFat);
+            double proteinPercentage = seekProtein.getProgress();
+            double carbohydratePercentage = seekCarb.getProgress();
+            double fatPercentage = seekFat.getProgress();
+
+            // Validate exact sum = 100%
+            double sum = proteinPercentage + carbohydratePercentage + fatPercentage;
+            if (Math.abs(sum - 100.0) > 0.001) {
+                Toast.makeText(requireContext(), "Please ensure Protein + Carbohydrate + Fat = 100%", Toast.LENGTH_SHORT).show();
+                return null;
             }
             Log.d(TAG, "Macronutrient percentages - Protein: " + proteinPercentage + 
                       "%, Carbs: " + carbohydratePercentage + "%, Fat: " + fatPercentage + "%");
@@ -292,8 +352,8 @@ public class DailyNutritionFragment extends Fragment {
                 Toast.makeText(requireContext(), "User not logged in. Please log in again.", Toast.LENGTH_SHORT).show();
                 return null;
             }
-            NutritionGoals goals = new NutritionGoals(currentUserId, dailyCalories, proteinPercentage, 
-                                        carbohydratePercentage, fatPercentage, dietaryRestrictions, 
+            NutritionGoals goals = new NutritionGoals(currentUserId, dailyCalories, proteinPercentage,
+                                        carbohydratePercentage, fatPercentage, dietaryRestrictions,
                                         foodPreferences, allergies, mealPlanType, mealsPerDay, includeSnacks, mealPatternType);
             Log.d(TAG, "Nutrition goals created successfully: " + goals.toString());
             return goals;
@@ -504,8 +564,12 @@ public class DailyNutritionFragment extends Fragment {
                       "/" + summary.getTargetCalories() + " cal");
             
             tvTotalCalories.setText(summary.getTotalCalories() + " / " + summary.getTargetCalories());
-            tvMacros.setText(String.format("Protein: %.0fg | Carbs: %.0fg | Fat: %.0fg", 
+            tvMacros.setText(String.format("Protein: %.0fg \nCarbohydrate: %.0fg \nFat: %.0fg",
                                          summary.getTotalProtein(), summary.getTotalCarbohydrates(), summary.getTotalFat()));
+            if (tvMacroPercentages != null) {
+                tvMacroPercentages.setText(String.format("Protein: %.0f%% \nCarbohydrate: %.0f%% \nFat: %.0f%%",
+                        summary.getProteinPercentage(), summary.getCarbohydratePercentage(), summary.getFatPercentage()));
+            }
             
             // Update progress bar
             int progress = (int) ((double) summary.getTotalCalories() / summary.getTargetCalories() * 100);
