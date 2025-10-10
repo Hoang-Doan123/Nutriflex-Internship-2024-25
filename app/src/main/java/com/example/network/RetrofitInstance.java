@@ -1,8 +1,10 @@
 package com.example.network;
 
-import android.content.Context;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import android.content.*;
+import java.util.concurrent.*;
+import okhttp3.*;
+import retrofit2.*;
+import retrofit2.converter.gson.*;
 
 public class RetrofitInstance {
     private static Retrofit retrofit = null;
@@ -19,8 +21,15 @@ public class RetrofitInstance {
         
         if (retrofit == null) {
             String baseUrl = NetworkConfig.getBaseUrl(appContext);
+            OkHttpClient httpClient = new OkHttpClient.Builder()
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+                    .build();
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
+                    .client(httpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
@@ -44,9 +53,16 @@ public class RetrofitInstance {
         if (appContext != null) {
             NetworkConfig.setBaseUrl(appContext, baseUrl);
         }
-        // Rebuild retrofit with new URL
+        // Rebuild retrofit with new URL and same timeouts
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

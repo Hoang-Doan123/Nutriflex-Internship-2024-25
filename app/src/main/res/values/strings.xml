@@ -181,6 +181,7 @@
     <string name="nutrition_summary">Nutrition Summary</string>
     <string name="macronutrients">Macronutrients</string>
     <string name="calories_percentage">Calories Percentage</string>
+    <string name="targets_grams">Target Grams</string>
     <string name="create_meal_plan">Create Meal Plan</string>
 
     <!--Kcal Before-->

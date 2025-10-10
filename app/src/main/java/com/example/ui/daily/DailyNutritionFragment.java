@@ -3,15 +3,14 @@ package com.example.ui.daily;
 import android.annotation.*;
 import android.app.*;
 import android.content.*;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.os.*;
+import android.text.*;
+import android.util.*;
 import android.view.*;
 import android.widget.*;
 
 import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.*;
 
 import com.example.R;
 import com.example.model.*;
@@ -37,7 +36,7 @@ public class DailyNutritionFragment extends Fragment {
     private TextView tvBreakfastMeal, tvBreakfastCalories, tvBreakfastTime;
     private TextView tvLunchMeal, tvLunchCalories, tvLunchTime;
     private TextView tvDinnerMeal, tvDinnerCalories, tvDinnerTime;
-    private TextView tvTotalCalories, tvMacros, tvMacroPercentages;
+    private TextView tvTotalCalories, tvMacros, tvMacroPercentages, tvMacroTargets;
     private LinearProgressIndicator progressCalories;
     private FloatingActionButton fabCreateMealPlan;
     private ProgressBar progressBar;
@@ -102,6 +101,7 @@ public class DailyNutritionFragment extends Fragment {
         tvTotalCalories = view.findViewById(R.id.tvTotalCalories);
         tvMacros = view.findViewById(R.id.tvMacros);
         tvMacroPercentages = view.findViewById(R.id.tvMacroPercentages);
+        tvMacroTargets = view.findViewById(R.id.tvMacroTargets);
         progressCalories = view.findViewById(R.id.progressCalories);
         fabCreateMealPlan = view.findViewById(R.id.fabCreateMealPlan);
         tvMidmorningMeal = view.findViewById(R.id.tvMidmorningMeal);
@@ -564,11 +564,26 @@ public class DailyNutritionFragment extends Fragment {
                       "/" + summary.getTargetCalories() + " cal");
             
             tvTotalCalories.setText(summary.getTotalCalories() + " / " + summary.getTargetCalories());
-            tvMacros.setText(String.format("Protein: %.0fg \nCarbohydrate: %.0fg \nFat: %.0fg",
+            tvMacros.setText(String.format("Protein: %.2fg\nCarbohydrate: %.2fg\nFat: %.2fg",
                                          summary.getTotalProtein(), summary.getTotalCarbohydrates(), summary.getTotalFat()));
             if (tvMacroPercentages != null) {
-                tvMacroPercentages.setText(String.format("Protein: %.0f%% \nCarbohydrate: %.0f%% \nFat: %.0f%%",
+                tvMacroPercentages.setText(String.format("Protein: %.0f%%\nCarbohydrate: %.0f%%\nFat: %.0f%%",
                         summary.getProteinPercentage(), summary.getCarbohydratePercentage(), summary.getFatPercentage()));
+            }
+            if (tvMacroTargets != null) {
+                int total = summary.getTargetCalories();
+                double pPct = summary.getProteinPercentage();
+                double cPct = summary.getCarbohydratePercentage();
+                double fPct = summary.getFatPercentage();
+                double pCal = total * (pPct / 100.0);
+                double cCal = total * (cPct / 100.0);
+                double fCal = total * (fPct / 100.0);
+                double pG = pCal / 4.0;
+                double cG = cCal / 4.0;
+                double fG = fCal / 9.0;
+                tvMacroTargets.setText(String.format(Locale.getDefault(),
+                        "Protein %.2fg\nCarbohydrate %.2fg\nFat %.2fg",
+                        pG, cG, fG));
             }
             
             // Update progress bar
@@ -601,7 +616,9 @@ public class DailyNutritionFragment extends Fragment {
         tvDinnerCalories.setText("0 calories");
         
         tvTotalCalories.setText("0 / 0");
-        tvMacros.setText("Protein: 0g | Carbs: 0g | Fat: 0g");
+        tvMacros.setText("Protein: 0g\nCarbohydrate: 0g\nFat: 0g");
+        tvMacroPercentages.setText("Protein: 0%\nCarbohydrate: 0%\nFat: 0%");
+        tvMacroTargets.setText("Protein: 0g\nCarbohydrate: 0g\nFat: 0g");
         progressCalories.setProgress(0);
         
         Log.d(TAG, "Default meal plan displayed");

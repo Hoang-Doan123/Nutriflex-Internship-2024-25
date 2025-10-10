@@ -142,7 +142,8 @@
             android:id="@+id/tvProteinPct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Protein: 25%" />
+            android:text="Protein: 25%"
+            android:textColor="@color/secondary_text" />
         <SeekBar
             android:id="@+id/seekProtein"
             android:layout_width="match_parent"
@@ -156,6 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Carbohydrate: 55%"
+            android:textColor="@color/secondary_text"
             android:layout_marginTop="8dp" />
         <SeekBar
             android:id="@+id/seekCarb"
@@ -170,6 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fat: 20%"
+            android:textColor="@color/secondary_text"
             android:layout_marginTop="8dp" />
         <SeekBar
             android:id="@+id/seekFat"
