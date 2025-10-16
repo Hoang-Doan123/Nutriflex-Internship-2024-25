@@ -2,7 +2,7 @@ package com.example.ui.me;
 
 import static java.util.Locale.*;
 
-import android.annotation.SuppressLint;
+import android.annotation.*;
 import android.content.*;
 import android.os.Bundle;
 
@@ -14,11 +14,11 @@ import android.widget.*;
 import androidx.annotation.*;
 
 import com.example.R;
-import com.example.model.auth.User;
-import com.example.model.PersonalData;
+import com.example.model.auth.*;
+import com.example.model.*;
 import com.example.service.*;
 import com.example.ui.auth.*;
-import com.example.utils.SessionManager;
+import com.example.utils.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -336,6 +336,13 @@ public class MeFragment extends Fragment {
 
             tvBmrValue.setText("BMR: " + String.format(getDefault(), "%.0f", bmr) + " kcal/day");
             tvTdeeValue.setText("TDEE: " + String.format(getDefault(), "%.0f", tdee) + " kcal/day");
+
+            // Persist latest TDEE for other screens (e.g., default calories in DailyNutritionFragment)
+            try {
+                int tdeeInt = (int) Math.round(tdee);
+                android.content.SharedPreferences prefs = requireContext().getSharedPreferences("NutriFlexPrefs", android.content.Context.MODE_PRIVATE);
+                prefs.edit().putInt("tdee", tdeeInt).apply();
+            } catch (Exception ignored) {}
         } else {
             tvBmrValue.setText("BMR: --");
             tvTdeeValue.setText("TDEE: --");

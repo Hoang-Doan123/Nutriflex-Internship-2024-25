@@ -239,6 +239,15 @@ public class DailyNutritionFragment extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+        // Pre-fill daily calories from latest TDEE if available
+        try {
+            TextInputEditText etDailyCalories = dialogView.findViewById(R.id.etDailyCalories);
+            android.content.SharedPreferences prefs = requireContext().getSharedPreferences(PREF_NAME, android.content.Context.MODE_PRIVATE);
+            int tdee = prefs.getInt("tdee", -1);
+            if (tdee > 0 && etDailyCalories != null) {
+                etDailyCalories.setText(String.valueOf(tdee));
+            }
+        } catch (Exception ignored) {}
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             NutritionGoals goals = extractNutritionGoals(dialogView);
             if (goals != null) {
@@ -293,7 +302,7 @@ public class DailyNutritionFragment extends Fragment {
         try {
             // Extract daily calories
             TextInputEditText etDailyCalories = dialogView.findViewById(R.id.etDailyCalories);
-            int dailyCalories = Integer.parseInt(etDailyCalories.getText().toString());
+            int dailyCalories = Integer.parseInt(Objects.requireNonNull(etDailyCalories.getText()).toString());
             Log.d(TAG, "Daily calories: " + dailyCalories);
 
             // Meal plan type take from fetchedGoal
@@ -318,14 +327,14 @@ public class DailyNutritionFragment extends Fragment {
 
             // Extract food preferences
             TextInputEditText etFoodPreferences = dialogView.findViewById(R.id.etFoodPreferences);
-            String foodPreferencesText = etFoodPreferences.getText().toString();
+            String foodPreferencesText = Objects.requireNonNull(etFoodPreferences.getText()).toString();
             List<String> foodPreferences = TextUtils.isEmpty(foodPreferencesText) ?
                 new ArrayList<>() : Arrays.asList(foodPreferencesText.split(","));
             Log.d(TAG, "Food preferences: " + foodPreferences);
 
             // Extract allergies
             TextInputEditText etAllergies = dialogView.findViewById(R.id.etAllergies);
-            String allergiesText = etAllergies.getText().toString();
+            String allergiesText = Objects.requireNonNull(etAllergies.getText()).toString();
             List<String> allergies = TextUtils.isEmpty(allergiesText) ? 
                 new ArrayList<>() : Arrays.asList(allergiesText.split(","));
             Log.d(TAG, "Allergies: " + allergies);
@@ -451,7 +460,7 @@ public class DailyNutritionFragment extends Fragment {
         if (selectedMealPatternType != null) {
             mealPatternType = selectedMealPatternType;
             Log.d(TAG, "Using selected meal pattern: " + mealPatternType);
-        } else if (mealPlan instanceof MealPlan) {
+        } else {
             // If mealPlan has mealPatternType field, get it (if the backend returns it)
             try {
                 Method m = mealPlan.getClass().getMethod("getMealPatternType");
